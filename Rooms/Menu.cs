@@ -77,10 +77,10 @@ namespace Rooms
             }
             if (IsActive && IsSelectable)
             {
-                if (input.KeyPressed(Keys.Down, Keys.Right) || input.ButtonPressed(Buttons.DPadDown, Buttons.DPadRight))
+                if (input.KeyPressed(Keys.Down, Keys.Right, Keys.S, Keys.D) || input.ButtonPressed(Buttons.DPadDown, Buttons.DPadRight))
                     if (CurrentItem < Items.Count - 1)
                         CurrentItem++;
-                if (input.KeyPressed(Keys.Up, Keys.Left) || input.ButtonPressed(Buttons.DPadUp, Buttons.DPadLeft))
+                if (input.KeyPressed(Keys.Up, Keys.Left, Keys.W, Keys.A) || input.ButtonPressed(Buttons.DPadUp, Buttons.DPadLeft))
                     if (CurrentItem > 0)
                         CurrentItem--;
                 if (input.KeyPressed(Keys.Enter, Keys.Space) || input.ButtonPressed(Buttons.Start, Buttons.X, Buttons.A))

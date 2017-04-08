@@ -13,7 +13,6 @@ namespace Rooms
 {
     public class Player : Thing
     {
-        int direction = 0;
         public Vector2 Velocity;
 
         public void Initialize()
@@ -85,20 +84,7 @@ namespace Rooms
 
         public override void Update(GameTime gameTime)
         {
-            Vector2 tForce = Vector2.Zero;
-            //if (ScreenManager.Input.KeyDown(Keys.Left, Keys.A) || ScreenManager.Input.ButtonDown(Buttons.DPadLeft, Buttons.LeftThumbstickLeft))
-            //    tForce += new Vector2(-(force/5), 0);
-            //if (ScreenManager.Input.KeyDown(Keys.Right, Keys.D) || ScreenManager.Input.ButtonDown(Buttons.DPadLeft, Buttons.LeftThumbstickRight))
-            //    tForce += new Vector2(force/5, 0);
-            //if (ScreenManager.Input.KeyPressed(Keys.Space) || ScreenManager.Input.ButtonPressed(Buttons.A))
-            //{
-            //    Jump();
-            //}
-
-
             UpdateMovement(gameTime);
-
-            thingBody.ApplyForce(tForce);
 
             base.Update(gameTime);
         }
@@ -107,9 +93,6 @@ namespace Rooms
         {
             if (ScreenManager.Input.KeyDown(Keys.Right, Keys.D) || ScreenManager.Input.ButtonDown(Buttons.DPadRight, Buttons.LeftThumbstickRight))
             {
-                direction = 1;
-                //moveAnimation.CurrentFrame = new Vector2(moveAnimation.CurrentFrame.X, 2);
-
                 if (Velocity.X >= 0f)
                 {
                     float tJumpSpeed;
@@ -122,30 +105,21 @@ namespace Rooms
             }
             else if (ScreenManager.Input.KeyDown(Keys.Left, Keys.A) || ScreenManager.Input.ButtonDown(Buttons.DPadLeft, Buttons.LeftThumbstickLeft))
             {
-                direction = 0;
-                if (thingBody.Position.X + (-(stats["movespeed"] + stats["+movespeed"]) * (float)gameTime.ElapsedGameTime.TotalSeconds) > 0)
+                if (Velocity.X <= 0f)
                 {
-                    //moveAnimation.CurrentFrame = new Vector2(moveAnimation.CurrentFrame.X, 1);
+                    float tJumpSpeed;
+                    tJumpSpeed = stats["movespeed"] + stats["+movespeed"];
 
-                    if (Velocity.X <= 0f)
-                    {
-                        float tJumpSpeed;
-                        tJumpSpeed = stats["movespeed"] + stats["+movespeed"];
-
-                        Velocity.X += -tJumpSpeed * (float)gameTime.ElapsedGameTime.TotalSeconds;
-                    }
-                    else
-                        DecreaseX();
+                    Velocity.X += -tJumpSpeed * (float)gameTime.ElapsedGameTime.TotalSeconds;
                 }
+                else
+                    DecreaseX();
             }
             else
                 DecreaseX();
 
             if (ScreenManager.Input.KeyDown(Keys.Down, Keys.S) || ScreenManager.Input.ButtonDown(Buttons.DPadDown, Buttons.LeftThumbstickDown))
             {
-                direction = 3;
-                //moveAnimation.CurrentFrame = new Vector2(moveAnimation.CurrentFrame.X, 2);
-
                 if (Velocity.Y >= 0f)
                 {
                     float tJumpSpeed;
@@ -158,21 +132,15 @@ namespace Rooms
             }
             else if (ScreenManager.Input.KeyDown(Keys.Up, Keys.W) || ScreenManager.Input.ButtonDown(Buttons.DPadUp, Buttons.LeftThumbstickUp))
             {
-                direction = 2;
-                if (thingBody.Position.Y + (-(stats["movespeed"] + stats["+movespeed"]) * (float)gameTime.ElapsedGameTime.TotalSeconds) > 0)
+                if (Velocity.Y <= 0f)
                 {
-                    //moveAnimation.CurrentFrame = new Vector2(moveAnimation.CurrentFrame.X, 1);
+                    float tJumpSpeed;
+                    tJumpSpeed = stats["movespeed"] + stats["+movespeed"];
 
-                    if (Velocity.Y <= 0f)
-                    {
-                        float tJumpSpeed;
-                        tJumpSpeed = stats["movespeed"] + stats["+movespeed"];
-
-                        Velocity.Y += -tJumpSpeed * (float)gameTime.ElapsedGameTime.TotalSeconds;
-                    }
-                    else
-                        DecreaseY();
+                    Velocity.Y += -tJumpSpeed * (float)gameTime.ElapsedGameTime.TotalSeconds;
                 }
+                else
+                    DecreaseY();
             }
             else
                 DecreaseY();
@@ -190,9 +158,13 @@ namespace Rooms
             if (Velocity.Y > 0)
                 if (Velocity.Y > stats["maxspeed"] + stats["+maxspeed"])
                     Velocity = new Vector2(Velocity.X, stats["maxspeed"] + stats["+maxspeed"]);
+            
 
 
+
+            //thingBody.Position += Velocity * ScreenManager.Delta;
             thingBody.Position += Velocity;
+            ScreenManager.PlayerCamera.SetFocalPoint(thingBody.Position);
             //if (HasBasicSkill("Speed Bonus")) stats["+movespeed"] = tSpeedBonus;
         }
     }

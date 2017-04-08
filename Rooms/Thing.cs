@@ -23,6 +23,7 @@ namespace Rooms
         protected Body thingBody;
         protected Dictionary<string, float> stats;
         public Rectangle Rect;
+        public Vector2 Coords;
 
         public Body ThingBody
         {
@@ -34,6 +35,7 @@ namespace Rooms
             Kind = ThingType.Decor;
             Position = Vector2.Zero;
             stats = new Dictionary<string, float>();
+            Coords = Vector2.Zero;
         }
 
         //public Thing(World world)
@@ -62,6 +64,7 @@ namespace Rooms
             Tooltip = tooltip;
             Rect = ScreenManager.Textures2D[ImageName].Bounds;
             thingBody = BodyFactory.CreateRectangle(world, Rect.Width, Rect.Height, 1f, position);
+            Coords = Vector2.Zero;
         }
     }
 }

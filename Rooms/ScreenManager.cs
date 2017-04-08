@@ -29,17 +29,34 @@ namespace Rooms
         public static GameplayScreen GGPScreen;
         public static bool DebugMode = false;
         public static bool ShowFPS = false;
+        public static Vector2 TileSize = new Vector2(32, 32);
+        public static Vector2 Resolution = new Vector2(1440, 900);
         public static Camera PlayerCamera;
         private FrameCounter _frameCounter = new FrameCounter();
         public const string CONTENTPATH = "C:/Prog/Rooms/Rooms/Content/";
         public const string IMAGESPATH = CONTENTPATH + "Images/";
+        public static Dictionary<int, Vector2> RoomSizes;
+        public static float Delta;
+
+        public static void InitRoomSizes()
+        {
+            RoomSizes.Add(0, new Vector2(20, 20));
+            RoomSizes.Add(1, new Vector2(20, 20));
+            RoomSizes.Add(2, new Vector2(24, 24));
+            RoomSizes.Add(3, new Vector2(28, 28));
+            RoomSizes.Add(4, new Vector2(32, 32));
+            RoomSizes.Add(5, new Vector2(36, 36));
+            RoomSizes.Add(6, new Vector2(40, 40));
+            RoomSizes.Add(7, new Vector2(44, 44));
+            RoomSizes.Add(8, new Vector2(48, 48));
+        }
 
 
         public ScreenManager()
         {
             GraphicsDeviceMgr = new GraphicsDeviceManager(this);
-            GraphicsDeviceMgr.PreferredBackBufferWidth = 800;
-            GraphicsDeviceMgr.PreferredBackBufferHeight = 600;
+            GraphicsDeviceMgr.PreferredBackBufferWidth = (int)Resolution.X;
+            GraphicsDeviceMgr.PreferredBackBufferHeight = (int)Resolution.Y;
             GraphicsDeviceMgr.IsFullScreen = false;
             Content.RootDirectory = "Content";
         }
@@ -53,13 +70,19 @@ namespace Rooms
             base.Initialize();
             Input = new InputManager();
             Camera tCam = new Camera(GraphicsDeviceMgr.PreferredBackBufferWidth, GraphicsDeviceMgr.PreferredBackBufferHeight);
+            this.IsMouseVisible = true;
             PlayerCamera = tCam;
             PlayerCamera.SetFocalPoint(new Vector2(GraphicsDeviceMgr.PreferredBackBufferWidth / 2, GraphicsDeviceMgr.PreferredBackBufferHeight / 2));
 
+            RoomSizes = new Dictionary<int, Vector2>();
+            InitRoomSizes();
+
             SpriteFont logoFont = ContentMgr.Load<SpriteFont>("Fonts/AlinCartoon1");
             Fonts.Add(Font.logo01.ToString(), logoFont);
-            SpriteFont debugFont = ContentMgr.Load<SpriteFont>("Fonts/Earth2073");
-            Fonts.Add(Font.debug01.ToString(), debugFont);
+            SpriteFont debug01Font = ContentMgr.Load<SpriteFont>("Fonts/Earth2073");
+            Fonts.Add(Font.debug01.ToString(), debug01Font);
+            SpriteFont debug02Font = ContentMgr.Load<SpriteFont>("Fonts/Earth2073");
+            Fonts.Add(Font.debug02.ToString(), debug02Font);
             SpriteFont menuItem01 = ContentMgr.Load<SpriteFont>("Fonts/TECHNOLIN");
             Fonts.Add(Font.menuItem01.ToString(), menuItem01);
             SpriteFont menuItem02 = ContentMgr.Load<SpriteFont>("Fonts/nasalization-rg");
@@ -121,6 +144,7 @@ namespace Rooms
         {
             try
             {
+                Delta = (float)gameTime.ElapsedGameTime.TotalSeconds;
                 Input.Update();
                 if (Input.KeyPressed(Keys.F12))
                 {

@@ -24,8 +24,9 @@ namespace Rooms
             thingBody = BodyFactory.CreateRectangle(world, Rect.Width, Rect.Height, 1f, position);
         }
 
-        public void Initialize()
+        public void Initialize(Vector2 coords)
         {
+            Coords = coords;
             thingBody.BodyType = BodyType.Static;
             thingBody.Friction = 10f;
             thingBody.CollisionCategories = Category.Cat2; //assigning the entity to a category

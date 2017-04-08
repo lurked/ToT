@@ -19,6 +19,7 @@ public enum Font
 {
     logo01,
     debug01,
+    debug02,
     menuItem01,
     menuItem02
 }
@@ -40,4 +41,21 @@ public enum LevelType
     Dynamic,
     LoadStatic,
     LoadDynamic
+}
+
+public enum ElementType
+{
+    Air,
+    Fire,
+    Earth,
+    Water,
+    Neutral
+}
+
+public enum Cardinals
+{
+    North,
+    East,
+    South,
+    West
 }

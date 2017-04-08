@@ -30,7 +30,7 @@ namespace Rooms
             //mainMenu.Items.Add(new Menu.MenuItem("EncyclUPedia", MenuType.Text, Color.White, "options"));
             mainMenu.Items.Add(new Menu.MenuItem("Options", MenuType.Text, Color.White, "options"));
             mainMenu.Items.Add(new Menu.MenuItem("Exit Game", MenuType.Text, Color.White, "exit"));
-            mainMenu.Position = new Vector2(10, 600 - (mainMenu.Items.Count * 24));
+            mainMenu.Position = new Vector2(10, ScreenManager.Resolution.Y - (mainMenu.Items.Count * 24));
             mainMenu.CurrentItem = 0;
             mainMenu.IsSelectable = true;
             Menus.Add(mainMenu);
