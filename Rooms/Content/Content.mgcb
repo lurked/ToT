@@ -13,3 +13,31 @@
 
 #---------------------------------- Content ---------------------------------#
 
+#begin Fonts/AlinCartoon1.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:PremultiplyAlpha=True
+/processorParam:TextureFormat=Compressed
+/build:Fonts/AlinCartoon1.spritefont
+
+#begin Fonts/Earth2073.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:PremultiplyAlpha=True
+/processorParam:TextureFormat=Compressed
+/build:Fonts/Earth2073.spritefont
+
+#begin Fonts/nasalization-rg.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:PremultiplyAlpha=True
+/processorParam:TextureFormat=Compressed
+/build:Fonts/nasalization-rg.spritefont
+
+#begin Fonts/TECHNOLIN.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:PremultiplyAlpha=True
+/processorParam:TextureFormat=Compressed
+/build:Fonts/TECHNOLIN.spritefont
+
