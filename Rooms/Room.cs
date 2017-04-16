@@ -36,19 +36,19 @@ namespace Rooms
             switch(Element)
             {
                 case ElementType.Air:
-                    ImageName = "pal_green_01";
+                    ImageName = "pal_green_" + ScreenManager.TSize;
                     break;
                 case ElementType.Fire:
-                    ImageName = "pal_orange_01";
+                    ImageName = "pal_orange_" + ScreenManager.TSize;
                     break;
                 case ElementType.Earth:
-                    ImageName = "pal_brown_01";
+                    ImageName = "pal_brown_" + ScreenManager.TSize;
                     break;
                 case ElementType.Water:
-                    ImageName = "pal_blue_01";
+                    ImageName = "pal_blue_" + ScreenManager.TSize;
                     break;
                 default:
-                    ImageName = "pal_grey_01";
+                    ImageName = "pal_grey_" + ScreenManager.TSize;
                     break;
             }
             Size = ScreenManager.RoomSizes[Lvl];
@@ -122,7 +122,7 @@ namespace Rooms
                     break;
             }
         }
-        
+
         public void GenerateRoom(World world, Vector2 position)
         {
             Position = position;
@@ -148,6 +148,32 @@ namespace Rooms
                 Decors[Decors.Count - 1].Initialize(tV);
             }
         }
+
+        //public void GenerateRoom(World world, Vector2 position)
+        //{
+        //    Position = position;
+        //    for (int i = 0; i < ScreenManager.RoomSizes[Lvl].X; i++)
+        //    {
+        //        Vector2 tV = new Vector2(i, 0);
+        //        Decors.Add(new Decor(world, Element.ToString() + Lvl + "_0:" + i, ThingType.Decor, Position + new Vector2(i * ScreenManager.TileSize.X, 0), ImageName, Element.ToString() + Lvl + "_0:" + i));
+        //        Decors[Decors.Count - 1].Initialize(tV);
+
+        //        tV = new Vector2(i, (Size.Y - 1));
+        //        Decors.Add(new Decor(world, Element.ToString() + Lvl + "_" + i + ":" + (Size.Y - 1), ThingType.Decor, Position + new Vector2(i * ScreenManager.TileSize.X, ScreenManager.TileSize.Y * (Size.Y - 1)), ImageName, Element.ToString() + Lvl + "_" + i + ":" + (Size.Y - 1)));
+        //        Decors[Decors.Count - 1].Initialize(tV);
+        //    }
+
+        //    for (int i = 1; i < ScreenManager.RoomSizes[Lvl].Y; i++)
+        //    {
+        //        Vector2 tV = new Vector2(0, i);
+        //        Decors.Add(new Decor(world, Element.ToString() + Lvl + "_" + i + ":0", ThingType.Decor, Position + new Vector2(0, i * ScreenManager.TileSize.X), ImageName, Element.ToString() + Lvl + "_" + i + ":0"));
+        //        Decors[Decors.Count - 1].Initialize(tV);
+
+        //        tV = new Vector2((Size.X - 1), i);
+        //        Decors.Add(new Decor(world, Element.ToString() + Lvl + "_" + (Size.X - 1) + ":" + i, ThingType.Decor, Position + new Vector2(ScreenManager.TileSize.X * (Size.X - 1), i * ScreenManager.TileSize.Y), ImageName, Element.ToString() + Lvl + "_" + (Size.X - 1) + ":" + i));
+        //        Decors[Decors.Count - 1].Initialize(tV);
+        //    }
+        //}
 
     }
 }

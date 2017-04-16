@@ -18,9 +18,9 @@ namespace Rooms
         public void Initialize()
         {
             thingBody.BodyType = BodyType.Dynamic;
-            thingBody.Friction = 100f;
+            thingBody.Friction = 10f;
             thingBody.GravityScale = 0f;
-            thingBody.CollisionCategories = Category.Cat2; //assigning the entity to a category
+            thingBody.CollisionCategories = Category.Cat1; //assigning the entity to a category
             thingBody.CollidesWith = Category.All; //which category will the entity collide with? i pick all in this case
             thingBody.UserData = this; // just leave this be as it is for now
             thingBody.Position = Position; // Sets the position of the object

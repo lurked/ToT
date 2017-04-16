@@ -28,8 +28,9 @@ namespace Rooms
         {
             Coords = coords;
             thingBody.BodyType = BodyType.Static;
-            thingBody.Friction = 10f;
-            thingBody.CollisionCategories = Category.Cat2; //assigning the entity to a category
+            thingBody.Friction = 1000f;
+            thingBody.IsStatic = true;
+            thingBody.CollisionCategories = Category.Cat1; //assigning the entity to a category
             thingBody.CollidesWith = Category.All; //which category will the entity collide with? i pick all in this case
             thingBody.UserData = this; // just leave this be as it is for now
             thingBody.Position = Position; // Sets the position of the object

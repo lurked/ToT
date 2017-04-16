@@ -29,7 +29,8 @@ namespace Rooms
         public static GameplayScreen GGPScreen;
         public static bool DebugMode = false;
         public static bool ShowFPS = false;
-        public static Vector2 TileSize = new Vector2(32, 32);
+        public static int TSize = 48;
+        public static Vector2 TileSize = new Vector2(TSize, TSize);
         public static Vector2 Resolution = new Vector2(1440, 900);
         public static Camera PlayerCamera;
         private FrameCounter _frameCounter = new FrameCounter();
@@ -40,15 +41,15 @@ namespace Rooms
 
         public static void InitRoomSizes()
         {
-            RoomSizes.Add(0, new Vector2(20, 20));
-            RoomSizes.Add(1, new Vector2(20, 20));
-            RoomSizes.Add(2, new Vector2(24, 24));
-            RoomSizes.Add(3, new Vector2(28, 28));
-            RoomSizes.Add(4, new Vector2(32, 32));
-            RoomSizes.Add(5, new Vector2(36, 36));
-            RoomSizes.Add(6, new Vector2(40, 40));
-            RoomSizes.Add(7, new Vector2(44, 44));
-            RoomSizes.Add(8, new Vector2(48, 48));
+            RoomSizes.Add(0, new Vector2(12, 12));
+            RoomSizes.Add(1, new Vector2(12, 12));
+            RoomSizes.Add(2, new Vector2(16, 16));
+            RoomSizes.Add(3, new Vector2(20, 20));
+            RoomSizes.Add(4, new Vector2(24, 24));
+            RoomSizes.Add(5, new Vector2(28, 28));
+            RoomSizes.Add(6, new Vector2(32, 32));
+            RoomSizes.Add(7, new Vector2(36, 36));
+            RoomSizes.Add(8, new Vector2(40, 40));
         }
 
 
