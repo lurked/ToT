@@ -6,8 +6,6 @@ using System.Threading.Tasks;
 
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
-using FarseerPhysics.Dynamics;
-using FarseerPhysics.Factories;
 
 
 namespace Rooms
@@ -20,15 +18,13 @@ namespace Rooms
         public string ImageName;
         public Vector2 Position;
         public bool ToDraw = true;
-        protected Body thingBody;
         protected Dictionary<string, float> stats;
         public Rectangle Rect;
         public Vector2 Coords;
+        public Vector2 Size;
+        public Room ActiveRoom;
+        protected Dictionary<Vector2, Room> Stage;
 
-        public Body ThingBody
-        {
-            get { return thingBody; }
-        }
 
         public Thing()
         {
@@ -36,26 +32,28 @@ namespace Rooms
             Position = Vector2.Zero;
             stats = new Dictionary<string, float>();
             Coords = Vector2.Zero;
+            ActiveRoom = new Room();
+        }
+        
+        public void SetStage(Dictionary<Vector2, Room> stage)
+        {
+            Stage = stage;
         }
 
-        //public Thing(World world)
-        //{
-        //    Kind = ThingType.Decor;
-        //    Position = Vector2.Zero;
-        //}
+        public void SetActiveRoom(Room currentRoom)
+        {
+            ActiveRoom.IsActive = false;
+            ActiveRoom = currentRoom;
+            Position = currentRoom.Position * ScreenManager.TileSize;
+            ActiveRoom.IsActive = true;
+        }
 
-        //public Thing(World world, string name)
-        //{
-        //    Kind = ThingType.Decor;
-        //    Position = Vector2.Zero;
-        //    Name = name;
-        //}
         public virtual void Update(GameTime gameTime)
         {
 
         }
 
-        public Thing(World world, string name, ThingType kind, Vector2 position, string imageName = "", string tooltip = "")
+        public Thing(string name, ThingType kind, Vector2 position, string imageName = "", string tooltip = "")
         {
             Name = name;
             Kind = kind;
@@ -63,7 +61,6 @@ namespace Rooms
             ImageName = imageName;
             Tooltip = tooltip;
             Rect = ScreenManager.Textures2D[ImageName].Bounds;
-            thingBody = BodyFactory.CreateRectangle(world, Rect.Width, Rect.Height, 1f, position);
             Coords = Vector2.Zero;
         }
     }

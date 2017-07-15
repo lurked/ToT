@@ -52,6 +52,29 @@ public enum ElementType
     Neutral
 }
 
+public enum ResourceType
+{
+    Gold,
+    Food,
+    Wood,
+    Production,
+    Energy
+}
+
+
+
+public enum UpgradeTypes
+{
+    Gold,
+    Food,
+    Wood,
+    Production,
+    Energy,
+    Minions
+}
+
+
+
 public enum Cardinals
 {
     North,

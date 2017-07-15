@@ -6,8 +6,6 @@ using System.Threading.Tasks;
 
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
-using FarseerPhysics.Dynamics;
-using FarseerPhysics.Factories;
 
 namespace Rooms
 {
@@ -17,16 +15,16 @@ namespace Rooms
 
         public void Initialize()
         {
-            thingBody.BodyType = BodyType.Dynamic;
-            thingBody.Friction = 10f;
-            thingBody.GravityScale = 0f;
-            thingBody.CollisionCategories = Category.Cat1; //assigning the entity to a category
-            thingBody.CollidesWith = Category.All; //which category will the entity collide with? i pick all in this case
-            thingBody.UserData = this; // just leave this be as it is for now
-            thingBody.Position = Position; // Sets the position of the object
+            //thingBody.BodyType = BodyType.Dynamic;
+            //thingBody.Friction = 10f;
+            //thingBody.GravityScale = 0f;
+            //thingBody.CollisionCategories = Category.Cat1; //assigning the entity to a category
+            //thingBody.CollidesWith = Category.All; //which category will the entity collide with? i pick all in this case
+            //thingBody.UserData = this; // just leave this be as it is for now
+            //thingBody.Position = Position; // Sets the position of the object
         }
 
-        public Player(World world, string name, ThingType kind, Vector2 position, string imageName = "", string tooltip = "")
+        public Player(string name, ThingType kind, Vector2 position, string imageName = "", string tooltip = "")
         {
             Name = name;
             Kind = kind;
@@ -34,8 +32,6 @@ namespace Rooms
             ImageName = imageName;
             Tooltip = tooltip;
             Rect = ScreenManager.Textures2D[ImageName].Bounds;
-            //thingBody = BodyFactory.CreateRectangle(world, Rect.Width, Rect.Height, 1f, position);
-            thingBody = BodyFactory.CreateCircle(world, Rect.Width / 2, 1f, position);
             InitPlayer();
         }
 
@@ -50,36 +46,27 @@ namespace Rooms
             Velocity = Vector2.Zero;
         }
 
-        private void DecreaseX()
+        public Vector2 FindClickedThing(Vector2 ClickedPosition)
         {
-            if (Velocity.X > 0f)
-            {
-                Velocity.X -= 0.02f;
-                if (Velocity.X < 0f)
-                    Velocity.X = 0f;
-            }
-            else if (Velocity.X < 0f)
-            {
-                Velocity.X += 0.02f;
-                if (Velocity.X > 0f)
-                    Velocity.X = 0f;
-            }
-        }
+            Vector2 tV = new Vector2(999999, 999999);
 
-        private void DecreaseY()
-        {
-            if (Velocity.Y > 0f)
+            float x0, x1, y0, y1;
+
+            foreach (KeyValuePair<Vector2, Room> entry in Stage)
             {
-                Velocity.Y -= 0.02f;
-                if (Velocity.Y < 0f)
-                    Velocity.Y = 0f;
+                x0 = entry.Value.Position.X * ScreenManager.TileSize.X;
+                x1 = x0 + ScreenManager.TileSize.X;
+                y0 = entry.Value.Position.Y * ScreenManager.TileSize.Y;
+                y1 = y0 + ScreenManager.TileSize.Y;
+
+                if (ClickedPosition.X >= x0 && ClickedPosition.X <= x1
+                    && ClickedPosition.Y >= y0 && ClickedPosition.Y <= y1)
+                {
+                    tV = entry.Key;
+                }
             }
-            else if (Velocity.Y < 0f)
-            {
-                Velocity.Y += 0.02f;
-                if (Velocity.Y > 0f)
-                    Velocity.Y = 0f;
-            }
+
+            return tV;
         }
 
         public override void Update(GameTime gameTime)
@@ -91,81 +78,54 @@ namespace Rooms
 
         private void UpdateMovement(GameTime gameTime)
         {
-            if (ScreenManager.Input.KeyDown(Keys.Right, Keys.D) || ScreenManager.Input.ButtonDown(Buttons.DPadRight, Buttons.LeftThumbstickRight))
-            {
-                if (Velocity.X >= 0f)
-                {
-                    float tJumpSpeed;
-                    tJumpSpeed = stats["movespeed"] + stats["+movespeed"];
+            Vector2 tV;
 
-                    Velocity.X += tJumpSpeed * (float)gameTime.ElapsedGameTime.TotalSeconds;
-                }
-                else
-                    DecreaseX();
-            }
-            else if (ScreenManager.Input.KeyDown(Keys.Left, Keys.A) || ScreenManager.Input.ButtonDown(Buttons.DPadLeft, Buttons.LeftThumbstickLeft))
+            if (ScreenManager.Input.MouseRightPressed())
             {
-                if (Velocity.X <= 0f)
+                tV = FindClickedThing(ScreenManager.Input.MousePosition() + ScreenManager.PlayerCamera.Position);
+                if (tV != new Vector2(999999, 999999))
                 {
-                    float tJumpSpeed;
-                    tJumpSpeed = stats["movespeed"] + stats["+movespeed"];
-
-                    Velocity.X += -tJumpSpeed * (float)gameTime.ElapsedGameTime.TotalSeconds;
+                    SetActiveRoom(Stage[tV]);
                 }
-                else
-                    DecreaseX();
             }
             else
-                DecreaseX();
-
-            if (ScreenManager.Input.KeyDown(Keys.Down, Keys.S) || ScreenManager.Input.ButtonDown(Buttons.DPadDown, Buttons.LeftThumbstickDown))
             {
-                if (Velocity.Y >= 0f)
+                if (ScreenManager.Input.KeyPressed(Keys.Right, Keys.D) || ScreenManager.Input.ButtonPressed(Buttons.DPadRight, Buttons.LeftThumbstickRight))
                 {
-                    float tJumpSpeed;
-                    tJumpSpeed = stats["movespeed"] + stats["+movespeed"];
-
-                    Velocity.Y += tJumpSpeed * (float)gameTime.ElapsedGameTime.TotalSeconds;
+                    tV = new Vector2(ActiveRoom.Position.X + 1, ActiveRoom.Position.Y);
+                    if (Stage.ContainsKey(tV))
+                    {
+                        SetActiveRoom(Stage[tV]);
+                    }
                 }
-                else
-                    DecreaseY();
-            }
-            else if (ScreenManager.Input.KeyDown(Keys.Up, Keys.W) || ScreenManager.Input.ButtonDown(Buttons.DPadUp, Buttons.LeftThumbstickUp))
-            {
-                if (Velocity.Y <= 0f)
+                else if (ScreenManager.Input.KeyPressed(Keys.Left, Keys.A) || ScreenManager.Input.ButtonPressed(Buttons.DPadLeft, Buttons.LeftThumbstickLeft))
                 {
-                    float tJumpSpeed;
-                    tJumpSpeed = stats["movespeed"] + stats["+movespeed"];
-
-                    Velocity.Y += -tJumpSpeed * (float)gameTime.ElapsedGameTime.TotalSeconds;
+                    tV = new Vector2(ActiveRoom.Position.X - 1, ActiveRoom.Position.Y);
+                    if (Stage.ContainsKey(tV))
+                    {
+                        SetActiveRoom(Stage[tV]);
+                    }
                 }
-                else
-                    DecreaseY();
+
+                if (ScreenManager.Input.KeyPressed(Keys.Down, Keys.S) || ScreenManager.Input.ButtonPressed(Buttons.DPadDown, Buttons.LeftThumbstickDown))
+                {
+                    tV = new Vector2(ActiveRoom.Position.X, ActiveRoom.Position.Y + 1);
+                    if (Stage.ContainsKey(tV))
+                    {
+                        SetActiveRoom(Stage[tV]);
+                    }
+                }
+                else if (ScreenManager.Input.KeyPressed(Keys.Up, Keys.W) || ScreenManager.Input.ButtonPressed(Buttons.DPadUp, Buttons.LeftThumbstickUp))
+                {
+                    tV = new Vector2(ActiveRoom.Position.X, ActiveRoom.Position.Y - 1);
+                    if (Stage.ContainsKey(tV))
+                    {
+                        SetActiveRoom(Stage[tV]);
+                    }
+                }
             }
-            else
-                DecreaseY();
 
-            if (Velocity.X < 0)
-                if (Velocity.X < -stats["maxspeed"] - stats["+maxspeed"])
-                    Velocity.X = -stats["maxspeed"] - stats["+maxspeed"];
-            if (Velocity.X > 0)
-                if (Velocity.X > stats["maxspeed"] + stats["+maxspeed"])
-                    Velocity = new Vector2(stats["maxspeed"] + stats["+maxspeed"], Velocity.Y);
-
-            if (Velocity.Y < 0)
-                if (Velocity.Y < -stats["maxspeed"] - stats["+maxspeed"])
-                    Velocity.Y = -stats["maxspeed"] - stats["+maxspeed"];
-            if (Velocity.Y > 0)
-                if (Velocity.Y > stats["maxspeed"] + stats["+maxspeed"])
-                    Velocity = new Vector2(Velocity.X, stats["maxspeed"] + stats["+maxspeed"]);
-            
-
-
-
-            //thingBody.Position += Velocity * ScreenManager.Delta;
-            thingBody.Position += Velocity;
-            ScreenManager.PlayerCamera.SetFocalPoint(thingBody.Position);
-            //if (HasBasicSkill("Speed Bonus")) stats["+movespeed"] = tSpeedBonus;
+            ScreenManager.PlayerCamera.SetFocalPoint(Position);
         }
     }
 }

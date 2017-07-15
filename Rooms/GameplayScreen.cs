@@ -11,10 +11,6 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
 
-using FarseerPhysics;
-using FarseerPhysics.Dynamics;
-using FarseerPhysics.Collision;
-using FarseerPhysics.Factories;
 
 namespace Rooms
 {
@@ -22,8 +18,7 @@ namespace Rooms
     {
         public Level CurrentLevel;
         public Player Player1;
-
-        protected World world;
+        public static int Turn = 0;
 
         public GameplayScreen()
         {
@@ -32,42 +27,36 @@ namespace Rooms
 
         public void Initialize()
         {
-            world = new World(new Vector2(0, 8192));
 
             CurrentLevel = new Level();
-            CurrentLevel.GenerateLevel(world, LevelType.Static, "base01", "");
+            CurrentLevel.GenerateLevel(LevelType.Static, "base01", "");
+
+            Player1 = new Player("Noob", ThingType.Player, ScreenManager.TileSize / 2, "player01", "A noob player");
+            Player1.Initialize();
+            Player1.SetStage(CurrentLevel.Stage);
+            Player1.SetActiveRoom(CurrentLevel.Stage[Vector2.Zero]);
             
 
-            Player1 = new Player(world, "Noob", ThingType.Player, (ScreenManager.RoomSizes[0] * ScreenManager.TileSize) / 2, "player01", "A noob player");
-            Player1.Initialize();
         }
 
         public override void Update(GameTime gameTime, InputManager input)
         { 
-            world.Step(Math.Min((float) gameTime.ElapsedGameTime.TotalSeconds, 1f / 60f));
-            Player1.Update(gameTime);
+            //Player1.Update(gameTime);
             base.Update(gameTime, input);
         }
 
         public override void Draw(GameTime gameTime)
         {
             base.Draw(gameTime);
-            DrawRoom(CurrentLevel.MainRoom);
-            DrawRooms(CurrentLevel.RoomsNorth);
-            DrawRooms(CurrentLevel.RoomsEast);
-            DrawRooms(CurrentLevel.RoomsSouth);
-            DrawRooms(CurrentLevel.RoomsWest);
-            ScreenManager.Sprites.Draw(ScreenManager.Textures2D[Player1.ImageName], Player1.ThingBody.Position, null, Color.White, 0f, new Vector2(Player1.Rect.Width / 2, Player1.Rect.Height / 2), 1f, SpriteEffects.None, 0f);
+
+            foreach (KeyValuePair<Vector2, Room> entry in CurrentLevel.Stage)
+                DrawRoom(entry.Value);
+
+            ScreenManager.Sprites.Draw(ScreenManager.Textures2D[Player1.ImageName], Player1.Position + (ScreenManager.TileSize / 2), null, Color.White, 0f, new Vector2(Player1.Rect.Width / 2, Player1.Rect.Height / 2), 1f, SpriteEffects.None, 0f);
             if (ScreenManager.DebugMode)
             {
-                ScreenManager.Sprites.DrawString(ScreenManager.Fonts[Font.debug01.ToString()], (int)Player1.ThingBody.Position.X + ":" + (int)Player1.ThingBody.Position.Y, Player1.ThingBody.Position - new Vector2(24, 24), Color.Red, 0f, Vector2.Zero, 0.6f, SpriteEffects.None, 0f);
+                ScreenManager.Sprites.DrawString(ScreenManager.Fonts[Font.debug01.ToString()], (int)Player1.Position.X + ":" + (int)Player1.Position.Y, Player1.Position - new Vector2(24, 24), Color.Red, 0f, Vector2.Zero, 0.6f, SpriteEffects.None, 0f);
             }
-        }
-
-        public void DrawRooms(List<Room> rooms)
-        {
-            foreach (Room tR in rooms)
-                DrawRoom(tR);
         }
 
         private void DrawRoom(Room room)
@@ -76,12 +65,16 @@ namespace Rooms
             foreach (Thing tT in room.Decors)
                 if (tT.ToDraw)
                 {
-                    ScreenManager.Sprites.Draw(ScreenManager.Textures2D[tT.ImageName], tT.ThingBody.Position, null, Color.White, tT.ThingBody.Rotation, new Vector2(tT.Rect.Width / 2, tT.Rect.Height / 2), 1f, SpriteEffects.None, 0f);                    //if (ScreenManager.DebugMode)
-                    if (ScreenManager.DebugMode)
-                        ScreenManager.Sprites.DrawString(ScreenManager.Fonts[Font.debug02.ToString()], (int)tT.Coords.X + ":" + (int)tT.Coords.Y, (tT.ThingBody.Position - new Vector2(15, 15)), Color.DarkRed, 0f, Vector2.Zero, 0.6f, SpriteEffects.None, 0f);
+                    Color tCol = Color.White;
+                    if (room.IsActive)
+                        tCol = Color.Blue;
+                    //ScreenManager.Sprites.Draw(ScreenManager.Textures2D[tT.ImageName], tT.Position + (room.Position * ScreenManager.TSize), null, Color.White, 0f, new Vector2(tT.Rect.Width / 2, tT.Rect.Height / 2), 1f, SpriteEffects.None, 0f);                    //if (ScreenManager.DebugMode)
+                    ScreenManager.Sprites.Draw(ScreenManager.Textures2D[tT.ImageName], tT.Position + (room.Position * ScreenManager.TSize), null, tCol);                    //if (ScreenManager.DebugMode)
+                    //if (ScreenManager.DebugMode)
+                    //    ScreenManager.Sprites.DrawString(ScreenManager.Fonts[Font.debug02.ToString()], (int)tT.Coords.X + ":" + (int)tT.Coords.Y, (tT.Position - new Vector2(15, 15)) + (room.Position * ScreenManager.TSize), Color.DarkRed, 0f, Vector2.Zero, 0.6f, SpriteEffects.None, 0f);
                 }
             if (ScreenManager.DebugMode)
-                ScreenManager.Sprites.DrawString(ScreenManager.Fonts[Font.debug01.ToString()], room.Position.ToString(), (room.Position - new Vector2(15, 15)), Color.Blue);
+                ScreenManager.Sprites.DrawString(ScreenManager.Fonts[Font.debug02.ToString()], (int)room.Position.X + ":" + (int)room.Position.Y, (room.Position - new Vector2(15, 15)) + (room.Position * ScreenManager.TSize), Color.DarkRed, 0f, Vector2.Zero, 0.6f, SpriteEffects.None, 0f);
         }
     }
 }

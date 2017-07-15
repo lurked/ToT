@@ -6,8 +6,6 @@ using System.Threading.Tasks;
 
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
-using FarseerPhysics.Dynamics;
-using FarseerPhysics.Factories;
 
 namespace Rooms
 {
@@ -17,16 +15,16 @@ namespace Rooms
 
         public void Initialize()
         {
-            thingBody.BodyType = BodyType.Dynamic;
-            thingBody.Friction = 100f;
-            thingBody.GravityScale = 0f;
-            thingBody.CollisionCategories = Category.Cat1; //assigning the entity to a category
-            thingBody.CollidesWith = Category.All; //which category will the entity collide with? i pick all in this case
-            thingBody.UserData = this; // just leave this be as it is for now
-            thingBody.Position = Position; // Sets the position of the object
+            //thingBody.BodyType = BodyType.Dynamic;
+            //thingBody.Friction = 100f;
+            //thingBody.GravityScale = 0f;
+            //thingBody.CollisionCategories = Category.Cat1; //assigning the entity to a category
+            //thingBody.CollidesWith = Category.All; //which category will the entity collide with? i pick all in this case
+            //thingBody.UserData = this; // just leave this be as it is for now
+            //thingBody.Position = Position; // Sets the position of the object
         }
 
-        public Enemy(World world, string name, ThingType kind, Vector2 position, string imageName = "", string tooltip = "")
+        public Enemy(string name, ThingType kind, Vector2 position, string imageName = "", string tooltip = "")
         {
             Name = name;
             Kind = kind;
@@ -35,7 +33,7 @@ namespace Rooms
             Tooltip = tooltip;
             Rect = ScreenManager.Textures2D[ImageName].Bounds;
             //thingBody = BodyFactory.CreateRectangle(world, Rect.Width, Rect.Height, 1f, position);
-            thingBody = BodyFactory.CreateCircle(world, Rect.Width / 2, 1f, position);
+            //thingBody = BodyFactory.CreateCircle(world, Rect.Width / 2, 1f, position);
             InitEnemy();
         }
 
@@ -63,14 +61,14 @@ namespace Rooms
             //}
             UpdateMovement(gameTime);
 
-            thingBody.ApplyForce(tForce);
+            //thingBody.ApplyForce(tForce);
 
             base.Update(gameTime);
         }
 
         private void UpdateMovement(GameTime gameTime)
         {
-            thingBody.Position += Velocity;
+            //thingBody.Position += Velocity;
             //if (HasBasicSkill("Speed Bonus")) stats["+movespeed"] = tSpeedBonus;
         }
     }

@@ -29,28 +29,14 @@ namespace Rooms
         public static GameplayScreen GGPScreen;
         public static bool DebugMode = false;
         public static bool ShowFPS = false;
-        public static int TSize = 48;
+        public static int TSize = 192;
         public static Vector2 TileSize = new Vector2(TSize, TSize);
         public static Vector2 Resolution = new Vector2(1440, 900);
         public static Camera PlayerCamera;
         private FrameCounter _frameCounter = new FrameCounter();
-        public const string CONTENTPATH = "C:/Prog/Rooms/Rooms/Content/";
+        public const string CONTENTPATH = "C:/Prog/Rooms4R/Rooms/Content/";
         public const string IMAGESPATH = CONTENTPATH + "Images/";
-        public static Dictionary<int, Vector2> RoomSizes;
         public static float Delta;
-
-        public static void InitRoomSizes()
-        {
-            RoomSizes.Add(0, new Vector2(12, 12));
-            RoomSizes.Add(1, new Vector2(12, 12));
-            RoomSizes.Add(2, new Vector2(16, 16));
-            RoomSizes.Add(3, new Vector2(20, 20));
-            RoomSizes.Add(4, new Vector2(24, 24));
-            RoomSizes.Add(5, new Vector2(28, 28));
-            RoomSizes.Add(6, new Vector2(32, 32));
-            RoomSizes.Add(7, new Vector2(36, 36));
-            RoomSizes.Add(8, new Vector2(40, 40));
-        }
 
 
         public ScreenManager()
@@ -75,8 +61,6 @@ namespace Rooms
             PlayerCamera = tCam;
             PlayerCamera.SetFocalPoint(new Vector2(GraphicsDeviceMgr.PreferredBackBufferWidth / 2, GraphicsDeviceMgr.PreferredBackBufferHeight / 2));
 
-            RoomSizes = new Dictionary<int, Vector2>();
-            InitRoomSizes();
 
             SpriteFont logoFont = ContentMgr.Load<SpriteFont>("Fonts/AlinCartoon1");
             Fonts.Add(Font.logo01.ToString(), logoFont);
@@ -355,7 +339,7 @@ namespace Rooms
 
             GraphicsDevice.Clear(ScreenList[startIndex].BackgroundColor);
             GraphicsDeviceMgr.GraphicsDevice.Clear(ScreenList[startIndex].BackgroundColor);
-            Sprites.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, null, null, null, null, PlayerCamera.ViewMatrix);
+            Sprites.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend, SamplerState.LinearWrap, null, null, null, PlayerCamera.ViewMatrix);
 
             for (var i = startIndex; i < ScreenList.Count; i++)
             {
