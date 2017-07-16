@@ -16,8 +16,8 @@ namespace Rooms
         public string ImageName;
         public int Lvl;
         public bool IsActive;
-
-        
+        public Dictionary<ResourceType, int> Resources;
+        public Dictionary<UpgradeType, int> Upgrades;
 
         public Room()
         {
@@ -25,6 +25,8 @@ namespace Rooms
             RoomPosition = Vector2.Zero;
             Decors = new List<Decor>();
             Element = ElementType.Neutral;
+            Resources = new Dictionary<ResourceType, int>();
+            Upgrades = new Dictionary<UpgradeType, int>();
             IsActive = false;
         }
 

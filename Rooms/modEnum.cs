@@ -63,7 +63,7 @@ public enum ResourceType
 
 
 
-public enum UpgradeTypes
+public enum UpgradeType
 {
     Gold,
     Food,
@@ -73,12 +73,48 @@ public enum UpgradeTypes
     Minions
 }
 
-
-
 public enum Cardinals
 {
     North,
     East,
     South,
     West
+}
+
+public enum UIType
+{
+    Basic,
+    BasicInvis,
+    BasicOpaque
+}
+
+public enum UIItemType
+{
+    TextFix,
+    TextFloating,
+    ImageFix,
+    ImageFloating
+}
+
+public enum UIAction
+{
+    None,
+    Info,
+    BuyTile,
+    UpgradeTile
+}
+
+public enum UIItemsFlow
+{
+    Vertical,
+    Horizontal,
+    Flow
+}
+
+public enum UITemplate
+{
+    toolbar01,
+    playerSheet,
+    realmSheet,
+    turn01
 }

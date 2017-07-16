@@ -72,7 +72,8 @@ namespace Rooms
         public override void Update(GameTime gameTime)
         {
             UpdateMovement(gameTime);
-
+            ScreenManager.GGPScreen.GameUIs[UITemplate.toolbar01].Position = new Vector2(2, 2) + ScreenManager.PlayerCamera.Position;
+            ScreenManager.GGPScreen.GameUIs[UITemplate.turn01].Position = new Vector2(ScreenManager.Resolution.X - ScreenManager.GGPScreen.GameUIs[UITemplate.turn01].Size.X, ScreenManager.Resolution.Y - ScreenManager.GGPScreen.GameUIs[UITemplate.turn01].Size.Y) + ScreenManager.PlayerCamera.Position;
             base.Update(gameTime);
         }
 

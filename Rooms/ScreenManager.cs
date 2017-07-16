@@ -201,6 +201,7 @@ namespace Rooms
                         break;
                     case ClientState.Game:
                         GGPScreen.Player1.Update(gameTime);
+                        GGPScreen.UpdateUIs(gameTime);
                         break;
                     default:
                         if (Input.KeyPressed(Keys.Escape) || Input.ButtonPressed(Buttons.Back))
