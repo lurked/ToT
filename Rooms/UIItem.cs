@@ -16,7 +16,9 @@ namespace Rooms
         public string Text;
         public Vector2 Position;
         public UIAction Action;
+        public string ActionText;
         public Vector2 ItemSize;
+        public Rectangle ItemRect;  
         public Color TextColor;
         public SpriteFont TextFont;
 
@@ -29,6 +31,7 @@ namespace Rooms
             TextFont = ScreenManager.Fonts[Font.menuItem02.ToString()];
             ItemSize = TextFont.MeasureString(Text);
             TextColor = Color.White;
+            
         }
 
         public UIItem(UIItemType iType, string text, Color textColor, SpriteFont textFont, UIAction action = UIAction.None)
@@ -39,6 +42,7 @@ namespace Rooms
             TextFont = textFont;
             ItemSize = TextFont.MeasureString(Text);
             TextColor = textColor;
+            Action = action;
         }
 
     }

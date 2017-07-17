@@ -21,6 +21,7 @@ namespace Rooms
         public Vector2 Size;
         public Color BackColor;
         public float BackAlpha = 1f;
+        public bool IsActive = false;
 
         Vector2 coor;
         Texture2D rect;
@@ -42,6 +43,17 @@ namespace Rooms
             Size = size;
             Position = position;
             Items = new List<UIItem>();
+            BackColor = Color.DarkSlateGray;
+        }
+
+        public void Unload()
+        {
+            uiType = UIType.Basic;
+            ID = "";
+            Name = "";
+            Size = Vector2.Zero;
+            Position = Vector2.Zero;
+            Items = null;
             BackColor = Color.DarkSlateGray;
         }
 
@@ -70,7 +82,7 @@ namespace Rooms
                     case UIItemsFlow.Horizontal:
                         if (tY < tUII.ItemSize.Y)
                             tY = tUII.ItemSize.Y + 4f;
-                        tX += tUII.ItemSize.X;
+                        tX += tUII.ItemSize.X + 2f;
                         break;
                     default:
                         tX = Size.X;
@@ -93,11 +105,11 @@ namespace Rooms
             foreach (UIItem tUII in Items)
             {
                 tUII.Position = new Vector2(tX, tY);
+                tUII.ItemRect = new Rectangle((int)tX, (int)tY, (int)Size.X, (int)Size.Y);
                 switch(ItemsFlow)
                 {
                     case UIItemsFlow.Vertical:
                         tY += tUII.ItemSize.Y;
-                        
                         break;
                     case UIItemsFlow.Horizontal:
                         tX += tUII.ItemSize.X;
@@ -112,13 +124,13 @@ namespace Rooms
                     data = new Color[(int)Size.X * (int)Size.Y];
                     for (int i = 0; i < data.Length; ++i) data[i] = BackColor;
                     rect.SetData(data);
-                    //coor = Position + ScreenManager.PlayerCamera.Position;
                     coor = Position;
                     break;
                 default:
 
                     break;
             }
+            
         }
 
         public void Update()
@@ -137,23 +149,31 @@ namespace Rooms
 
         public void Draw(GameTime gameTime)
         {
+            Color SelectColor = Color.White;
+            float tBack = BackAlpha;
+            if (IsActive)
+            {
+                SelectColor = Color.DarkGray;
+                tBack = 1f;
+            }
+                
             switch (uiType)
             {
                 case UIType.Basic:
                 case UIType.BasicOpaque:
-                    ScreenManager.Sprites.Draw(rect, coor, Color.White * BackAlpha);
+                    ScreenManager.Sprites.Draw(rect, coor, SelectColor * tBack);
                     break;
                 default:
 
                     break;
             }
-            
 
             foreach (UIItem tUII in Items)
             {
                 ScreenManager.Sprites.DrawString(tUII.TextFont, tUII.Text, tUII.Position + Position, tUII.TextColor);
             }
-            //ScreenManager.Sprites.DrawString(ScreenManager.Fonts[Font.debug01.ToString()], (int)Player1.Position.X + ":" + (int)Player1.Position.Y, Player1.Position - new Vector2(24, 24), Color.Red, 0f, Vector2.Zero, 0.6f, SpriteEffects.None, 0f);
+            if (ScreenManager.DebugMode)
+                ScreenManager.Sprites.DrawString(ScreenManager.Fonts[Font.debug01.ToString()], Position.X + ":" + Position.Y + "|Size=" + Size.X + ":" + Size.Y, Position, Color.Red, 0f, Vector2.Zero, 0.6f, SpriteEffects.None, 0f);
         }
     }
 }

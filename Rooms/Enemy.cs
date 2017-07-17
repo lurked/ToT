@@ -51,25 +51,15 @@ namespace Rooms
         public override void Update(GameTime gameTime)
         {
             Vector2 tForce = Vector2.Zero;
-            //if (ScreenManager.Input.KeyDown(Keys.Left, Keys.A) || ScreenManager.Input.ButtonDown(Buttons.DPadLeft, Buttons.LeftThumbstickLeft))
-            //    tForce += new Vector2(-(force/5), 0);
-            //if (ScreenManager.Input.KeyDown(Keys.Right, Keys.D) || ScreenManager.Input.ButtonDown(Buttons.DPadLeft, Buttons.LeftThumbstickRight))
-            //    tForce += new Vector2(force/5, 0);
-            //if (ScreenManager.Input.KeyPressed(Keys.Space) || ScreenManager.Input.ButtonPressed(Buttons.A))
-            //{
-            //    Jump();
-            //}
-            UpdateMovement(gameTime);
 
-            //thingBody.ApplyForce(tForce);
+            UpdateMovement(gameTime);
 
             base.Update(gameTime);
         }
 
         private void UpdateMovement(GameTime gameTime)
         {
-            //thingBody.Position += Velocity;
-            //if (HasBasicSkill("Speed Bonus")) stats["+movespeed"] = tSpeedBonus;
+
         }
     }
 }

@@ -52,17 +52,17 @@ namespace Rooms
 
             float x0, x1, y0, y1;
 
-            foreach (KeyValuePair<Vector2, Room> entry in Stage)
+            foreach (KeyValuePair<Vector2, Room> room in Stage)
             {
-                x0 = entry.Value.Position.X * ScreenManager.TileSize.X;
+                x0 = room.Value.Position.X * ScreenManager.TileSize.X;
                 x1 = x0 + ScreenManager.TileSize.X;
-                y0 = entry.Value.Position.Y * ScreenManager.TileSize.Y;
+                y0 = room.Value.Position.Y * ScreenManager.TileSize.Y;
                 y1 = y0 + ScreenManager.TileSize.Y;
 
                 if (ClickedPosition.X >= x0 && ClickedPosition.X <= x1
                     && ClickedPosition.Y >= y0 && ClickedPosition.Y <= y1)
                 {
-                    tV = entry.Key;
+                    tV = room.Key;
                 }
             }
 
@@ -73,7 +73,9 @@ namespace Rooms
         {
             UpdateMovement(gameTime);
             ScreenManager.GGPScreen.GameUIs[UITemplate.toolbar01].Position = new Vector2(2, 2) + ScreenManager.PlayerCamera.Position;
+            ScreenManager.GGPScreen.GameUIs[UITemplate.income].Position = new Vector2(2 + ScreenManager.Resolution.X - 100, 2) + ScreenManager.PlayerCamera.Position;
             ScreenManager.GGPScreen.GameUIs[UITemplate.turn01].Position = new Vector2(ScreenManager.Resolution.X - ScreenManager.GGPScreen.GameUIs[UITemplate.turn01].Size.X, ScreenManager.Resolution.Y - ScreenManager.GGPScreen.GameUIs[UITemplate.turn01].Size.Y) + ScreenManager.PlayerCamera.Position;
+            ScreenManager.GGPScreen.GameUIs[UITemplate.log].Position = new Vector2(2, ScreenManager.Resolution.Y - 180) + ScreenManager.PlayerCamera.Position;
             base.Update(gameTime);
         }
 

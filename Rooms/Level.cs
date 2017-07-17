@@ -32,33 +32,33 @@ namespace Rooms
             if (name == "base01")
             {
 
-                AddRoom(Vector2.Zero);
-                AddRoom(new Vector2(1, 0));
-                AddRoom(new Vector2(2, 0));
-                AddRoom(new Vector2(3, 0));
+                AddRoom(Vector2.Zero, 0);
+                AddRoom(new Vector2(1, 0), 1);
+                AddRoom(new Vector2(2, 0), 1);
+                AddRoom(new Vector2(3, 0), 1);
                 //AddRoom(new Vector2(3, 3));
-                AddRoom(new Vector2(0, 1));
-                AddRoom(new Vector2(0, 2));
-                AddRoom(new Vector2(0, 3));
+                AddRoom(new Vector2(0, 1), 1);
+                AddRoom(new Vector2(0, 2), 1);
+                AddRoom(new Vector2(0, 3), 1);
                 //AddRoom(new Vector2(-3, 3));
-                AddRoom(new Vector2(-1, 0));
-                AddRoom(new Vector2(-2, 0));
-                AddRoom(new Vector2(-3, 0));
+                AddRoom(new Vector2(-1, 0), 1);
+                AddRoom(new Vector2(-2, 0), 1);
+                AddRoom(new Vector2(-3, 0), 1);
                 //AddRoom(new Vector2(-3, -3));
-                AddRoom(new Vector2(0, -1));
-                AddRoom(new Vector2(0, -2));
-                AddRoom(new Vector2(0, -3));
+                AddRoom(new Vector2(0, -1), 1);
+                AddRoom(new Vector2(0, -2), 1);
+                AddRoom(new Vector2(0, -3), 1);
                 //AddRoom(new Vector2(3, -3));
 
                 Stage[Vector2.Zero].IsActive = true;
             }
         }
 
-        private void AddRoom(Vector2 roomIndex)
+        private void AddRoom(Vector2 roomIndex, int lvl)
         {
             Room tRoom = new Room();
-            tRoom.Initialize(ElementType.Neutral);
-            tRoom.GenerateRoom(roomIndex);
+            tRoom.Initialize();
+            tRoom.GenerateRoom(roomIndex, lvl);
             Stage.Add(roomIndex, tRoom);
         }
     }

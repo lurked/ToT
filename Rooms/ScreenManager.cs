@@ -72,6 +72,8 @@ namespace Rooms
             Fonts.Add(Font.menuItem01.ToString(), menuItem01);
             SpriteFont menuItem02 = ContentMgr.Load<SpriteFont>("Fonts/nasalization-rg");
             Fonts.Add(Font.menuItem02.ToString(), menuItem02);
+            SpriteFont menuItem03 = ContentMgr.Load<SpriteFont>("Fonts/nasalization-rg-small");
+            Fonts.Add(Font.menuItem03.ToString(), menuItem03);
 
             InitializeTextures();
 

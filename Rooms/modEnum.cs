@@ -21,7 +21,8 @@ public enum Font
     debug01,
     debug02,
     menuItem01,
-    menuItem02
+    menuItem02,
+    menuItem03
 }
 
 public enum ThingType
@@ -101,7 +102,8 @@ public enum UIAction
     None,
     Info,
     BuyTile,
-    UpgradeTile
+    UpgradeTile,
+    EndTurn
 }
 
 public enum UIItemsFlow
@@ -116,5 +118,7 @@ public enum UITemplate
     toolbar01,
     playerSheet,
     realmSheet,
-    turn01
+    turn01,
+    log,
+    income
 }
