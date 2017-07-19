@@ -48,7 +48,7 @@ namespace ToT
             ActiveRoom.IsActive = true;
 
             RefreshExpendUIs();
-            ScreenManager.GGPScreen.TogTileSheet(false);
+            ScreenManager.TogTileSheet(false);
         }
 
         public void RefreshExpendUIs()
@@ -63,11 +63,11 @@ namespace ToT
         {
             if (!ScreenManager.GGPScreen.CurrentLevel.Stage.ContainsKey(position))
             {
-                ScreenManager.GGPScreen.GameUIs[uiTemplate].ToDraw = true;
-                ScreenManager.GGPScreen.GameUIs[uiTemplate].Items[0].ActionText = position.X + ":" + position.Y;
+                ScreenManager.GameUIs[uiTemplate].ToDraw = true;
+                ScreenManager.GameUIs[uiTemplate].Items[0].ActionText = position.X + ":" + position.Y;
             }
             else
-                ScreenManager.GGPScreen.GameUIs[uiTemplate].ToDraw = false;
+                ScreenManager.GameUIs[uiTemplate].ToDraw = false;
                 
         }
 

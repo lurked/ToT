@@ -72,22 +72,22 @@ namespace ToT
         public override void Update(GameTime gameTime)
         {
             UpdateMovement(gameTime);
-            ScreenManager.GGPScreen.GameUIs[UITemplate.toolbar01].Position = new Vector2(2, 2) + ScreenManager.PlayerCamera.Position;
-            ScreenManager.GGPScreen.GameUIs[UITemplate.income].Position = new Vector2(2 + ScreenManager.Resolution.X - ScreenManager.GGPScreen.GameUIs[UITemplate.income].Size.X, 2) + ScreenManager.PlayerCamera.Position;
-            ScreenManager.GGPScreen.GameUIs[UITemplate.tileSheet].Position = ActiveRoom.RoomPosition + new Vector2(ScreenManager.TileSize.X - 28, 0);
-            ScreenManager.GGPScreen.GameUIs[UITemplate.tileExpendNorth].Position = ActiveRoom.RoomPosition + new Vector2((ScreenManager.TileSize.X / 2) - 14, -14);
-            ScreenManager.GGPScreen.GameUIs[UITemplate.tileExpendEast].Position = ActiveRoom.RoomPosition + new Vector2((ScreenManager.TileSize.X) - 14, (ScreenManager.TileSize.Y / 2) - 14);
-            ScreenManager.GGPScreen.GameUIs[UITemplate.tileExpendSouth].Position = ActiveRoom.RoomPosition + new Vector2((ScreenManager.TileSize.X / 2) - 14, (ScreenManager.TileSize.Y) - 14);
-            ScreenManager.GGPScreen.GameUIs[UITemplate.tileExpendWest].Position = ActiveRoom.RoomPosition + new Vector2(-14, (ScreenManager.TileSize.Y / 2) - 14);
-            ScreenManager.GGPScreen.GameUIs[UITemplate.turn01].Position = ScreenManager.Resolution - ScreenManager.GGPScreen.GameUIs[UITemplate.turn01].Size + ScreenManager.PlayerCamera.Position;
-            ScreenManager.GGPScreen.GameUIs[UITemplate.log].Position = new Vector2(2, ScreenManager.Resolution.Y - ScreenManager.GGPScreen.GameUIs[UITemplate.log].Size.Y) + ScreenManager.PlayerCamera.Position;
-            if (ScreenManager.GGPScreen.TTToggled)
+            ScreenManager.GameUIs[UITemplate.toolbar01].Position = new Vector2(2, 2) + ScreenManager.PlayerCamera.Position;
+            ScreenManager.GameUIs[UITemplate.income].Position = new Vector2(2 + ScreenManager.Resolution.X - ScreenManager.GameUIs[UITemplate.income].Size.X, 2) + ScreenManager.PlayerCamera.Position;
+            ScreenManager.GameUIs[UITemplate.tileSheet].Position = ActiveRoom.RoomPosition + new Vector2(ScreenManager.TileSize.X - 28, 0);
+            ScreenManager.GameUIs[UITemplate.tileExpendNorth].Position = ActiveRoom.RoomPosition + new Vector2((ScreenManager.TileSize.X / 2) - 14, -14);
+            ScreenManager.GameUIs[UITemplate.tileExpendEast].Position = ActiveRoom.RoomPosition + new Vector2((ScreenManager.TileSize.X) - 14, (ScreenManager.TileSize.Y / 2) - 14);
+            ScreenManager.GameUIs[UITemplate.tileExpendSouth].Position = ActiveRoom.RoomPosition + new Vector2((ScreenManager.TileSize.X / 2) - 14, (ScreenManager.TileSize.Y) - 14);
+            ScreenManager.GameUIs[UITemplate.tileExpendWest].Position = ActiveRoom.RoomPosition + new Vector2(-14, (ScreenManager.TileSize.Y / 2) - 14);
+            ScreenManager.GameUIs[UITemplate.turn01].Position = ScreenManager.Resolution - ScreenManager.GameUIs[UITemplate.turn01].Size + ScreenManager.PlayerCamera.Position;
+            ScreenManager.GameUIs[UITemplate.log].Position = new Vector2(2, ScreenManager.Resolution.Y - ScreenManager.GameUIs[UITemplate.log].Size.Y) + ScreenManager.PlayerCamera.Position;
+            if (ScreenManager.TTToggled)
             {
-                ScreenManager.GGPScreen.GameUIs[UITemplate.tooltip].ToDraw = true;
-                ScreenManager.GGPScreen.GameUIs[UITemplate.tooltip].Position = ScreenManager.Input.MousePosition() + ScreenManager.PlayerCamera.Position + new Vector2(5, -5);
+                ScreenManager.GameUIs[UITemplate.tooltip].ToDraw = true;
+                ScreenManager.GameUIs[UITemplate.tooltip].Position = ScreenManager.Input.MousePosition() + ScreenManager.PlayerCamera.Position + new Vector2(5, -5);
             }
             else
-                ScreenManager.GGPScreen.GameUIs[UITemplate.tooltip].ToDraw = false;
+                ScreenManager.GameUIs[UITemplate.tooltip].ToDraw = false;
             base.Update(gameTime);
         }
 

@@ -38,7 +38,12 @@ namespace ToT
         public const string IMAGESPATH = CONTENTPATH + "Images/";
         public static float Delta;
         public static float TotalTime;
-
+        public static Dictionary<UITemplate, UI> GameUIs;
+        public static List<LogEntry> Log;
+        public static bool LogToggled = false;
+        public static bool TTToggled = false;
+        public static string TTText = "";
+        public static UI ActiveUI;
 
         public ScreenManager()
         {
@@ -82,6 +87,10 @@ namespace ToT
 
             IsFixedTimeStep = false;
             GraphicsDeviceMgr.ApplyChanges();
+
+            
+            Log = new List<LogEntry>();
+            GameUIs = new Dictionary<UITemplate, UI>();
 
         }
 
@@ -128,6 +137,26 @@ namespace ToT
             Input = null;
         }
 
+
+
+
+        
+        public static void RefreshLogEntries(List<LogEntry> log)
+        {
+            List<UIItem> logUIIs = new List<UIItem>();
+            logUIIs.Add(new UIItem(UIItemType.TextFix, "Events Journal", Color.CornflowerBlue, Fonts[Font.menuItem02.ToString()], UIItemsFlow.Vertical, UIAction.ToggleLog));
+            foreach (LogEntry tLE in log)
+                if (LogToggled)
+                    logUIIs.Add(new UIItem(UIItemType.TextFix, tLE.Text, tLE.TextColor, Fonts[tLE.TextFont.ToString()], UIItemsFlow.Vertical));
+                else if (tLE.Expiration() >= TotalTime)
+                    logUIIs.Add(new UIItem(UIItemType.TextFix, tLE.Text, tLE.TextColor, Fonts[tLE.TextFont.ToString()], UIItemsFlow.Vertical));
+
+            GameUIs[UITemplate.log].SetUIItems(logUIIs);
+
+        }
+
+
+
         protected override void Update(GameTime gameTime)
         {
             try
@@ -135,6 +164,23 @@ namespace ToT
                 TotalTime = (float)gameTime.TotalGameTime.TotalSeconds;
                 Delta = (float)gameTime.ElapsedGameTime.TotalSeconds;
                 Input.Update();
+
+                CheckHoverUI(Input.MousePosition() + PlayerCamera.Position);
+                if (Input.MousePressed())
+                {
+                    if (ActiveUI != null)
+                    {
+                        if (ActiveUI.ToDraw)
+                        {
+                            foreach (UIItem uiI in ActiveUI.Items)
+                            {
+                                if (Tools.Intersects(Input.MousePosition() + PlayerCamera.Position, new Rectangle(uiI.ItemRect.X + (int)ActiveUI.Position.X, uiI.ItemRect.Y + (int)ActiveUI.Position.Y, uiI.ItemRect.Width, uiI.ItemRect.Height)))
+                                    ExecuteMenuAction(uiI.Action, uiI.ActionText);
+                            }
+                        }
+                    }
+                }
+
                 if (Input.KeyPressed(Keys.F12))
                 {
                     if (DebugMode)
@@ -151,32 +197,31 @@ namespace ToT
                 for (var i = startIndex; i < ScreenList.Count; i++)
                 {
                     ScreenList[i].Update(gameTime, Input);
-                    if (ScreenList[i].MenuAction != null && ScreenList[i].MenuAction != "")
-                    {
-                        string tA = ScreenList[i].MenuAction.ToLower();
-                        switch (tA)
-                        {
-                            case "newgame":
-                                GGPScreen = new GameplayScreen();
-                                GGPScreen.Initialize();
+                    //if (ScreenList[i].MenuAction != null && ScreenList[i].MenuAction != "")
+                    //{
+                    //    string tA = ScreenList[i].MenuAction.ToLower();
+                    //    switch (tA)
+                    //    {
+                    //        case "newgame":
+                    //            GGPScreen = new GameplayScreen();
+                    //            GGPScreen.Initialize();
 
-                                ChangeScreens(MMenuScreen, GGPScreen);
-                                State = ClientState.Game;
-                                break;
-                            case "loadgame":
+                    //            ChangeScreens(MMenuScreen, GGPScreen);
+                    //            State = ClientState.Game;
+                    //            break;
+                    //        case "loadgame":
 
-                                break;
-                            case "options":
+                    //            break;
+                    //        case "options":
 
-                                break;
-                            case "exit":
-                                Exit();
-                                break;
-                        }
+                    //            break;
+                    //        case "exit":
+                    //            Exit();
+                    //            break;
+                    //    }
 
-                        ScreenList[i].MenuAction = "";
-                    }
-                    
+                    //    ScreenList[i].MenuAction = "";
+                    //}                    
                 }
 
 
@@ -226,6 +271,39 @@ namespace ToT
             {
                 PlayerCamera.Update();
                 base.Update(gameTime);
+            }
+        }
+
+        public static void CheckHoverUI(Vector2 RealMousePosition)
+        {
+            ActiveUI = null;
+            bool setTTToggleToFalse = true;
+            foreach (KeyValuePair<UITemplate, UI> ui in GameUIs)
+            {
+                if (ui.Value.ToDraw)
+                {
+                    if (Tools.Intersects(RealMousePosition, new Rectangle((int)ui.Value.Position.X, (int)ui.Value.Position.Y, (int)ui.Value.Size.X, (int)ui.Value.Size.Y)))
+                    {
+                        ActiveUI = ui.Value;
+                        if (ActiveUI.TTText != "" && ActiveUI.TTText != null)
+                        {
+                            TTToggled = true;
+                            setTTToggleToFalse = false;
+                            TTText = ActiveUI.TTText;
+                            SetTTText(TTText);
+                        }
+                        ui.Value.IsActive = true;
+                    }
+                    else
+                        ui.Value.IsActive = false;
+                }
+                else
+                    ui.Value.IsActive = false;
+            }
+            if (setTTToggleToFalse)
+            {
+                TTToggled = false;
+                TTText = "";
             }
         }
 
@@ -332,7 +410,240 @@ namespace ToT
             RemoveScreen(currentScreen);
             AddScreen(targetScreen);
         }
-        
+
+
+
+        public static void SetTTText(string text)
+        {
+            List<UIItem> tUIIs = new List<UIItem>();
+
+            tUIIs.Add(new UIItem(UIItemType.TextFix, text, Color.White, ScreenManager.Fonts[Font.menuItem03.ToString()], UIItemsFlow.Vertical));
+
+            GameUIs[UITemplate.tooltip].SetUIItems(tUIIs);
+        }
+
+        public static void TogTileSheet(bool tog)
+        {
+            for (int i = 1; i < GameUIs[UITemplate.tileSheet].Items.Count; i++)
+                GameUIs[UITemplate.tileSheet].Items[i].ToShow = tog;
+            GameUIs[UITemplate.tileSheet].RefreshSize();
+            GameUIs[UITemplate.tileSheet].UpdateItemsPosition();
+        }
+
+        public static void ToggleTileSheet()
+        {
+            if (GameUIs[UITemplate.tileSheet].Items[1].ToShow)
+                TogTileSheet(false);
+            else
+                TogTileSheet(true);
+
+        }
+
+        public static void ToggleMainMenu(bool visibleOrNot)
+        {
+            GameUIs[UITemplate.mainNew].ToDraw = visibleOrNot;
+            GameUIs[UITemplate.mainLoad].ToDraw = visibleOrNot;
+            GameUIs[UITemplate.mainOptions].ToDraw = visibleOrNot;
+            GameUIs[UITemplate.mainExit].ToDraw = visibleOrNot;
+        }
+
+        public void ExecuteMenuAction(UIAction action, string actionText)
+        {
+            switch (action)
+            {
+                case UIAction.Exit:
+                    Exit();
+                    break;
+                case UIAction.NewGame:
+                    GGPScreen = new GameplayScreen();
+                    GGPScreen.Initialize();
+
+                    ToggleMainMenu(false);
+                    ChangeScreens(MMenuScreen, GGPScreen);
+                    State = ClientState.Game;
+                    break;
+                case UIAction.EndTurn:
+                    GGPScreen.NextTurn();
+                    break;
+                case UIAction.BuyTile:
+                    GGPScreen.AddRoom(actionText);
+                    break;
+                case UIAction.ToggleLog:
+                    if (LogToggled)
+                        LogToggled = false;
+                    else
+                        LogToggled = true;
+                    break;
+                case UIAction.TileSheet:
+                    if (actionText != "")
+                    {
+                        string[] split = actionText.Split(':');
+                        switch (split[1])
+                        {
+                            case "Gold":
+                                GGPScreen.Player1.ActiveRoom.AddResources(int.Parse(split[0]), ResourceType.Gold);
+                                break;
+                            case "Food":
+                                GGPScreen.Player1.ActiveRoom.AddResources(int.Parse(split[0]), ResourceType.Food);
+                                break;
+                            case "Wood":
+                                GGPScreen.Player1.ActiveRoom.AddResources(int.Parse(split[0]), ResourceType.Wood);
+                                break;
+                            case "Production":
+                                GGPScreen.Player1.ActiveRoom.AddResources(int.Parse(split[0]), ResourceType.Production);
+                                break;
+                            case "Energy":
+                                GGPScreen.Player1.ActiveRoom.AddResources(int.Parse(split[0]), ResourceType.Energy);
+                                break;
+                            case "":
+
+                                break;
+                        }
+                    }
+
+                    ToggleTileSheet();
+                    break;
+                default:
+
+                    break;
+            }
+        }
+
+        public static UI GenerateUI(UITemplate uiName)
+        {
+            UI tUI;
+            switch (uiName)
+            {
+                case UITemplate.mainNew:
+                    tUI = new UI(UIType.Basic, uiName.ToString(), "Main Menu - New Game", new Vector2(300, 300), Resolution / 2);
+                    tUI.BackAlpha = 0.0f;
+                    tUI.ItemsFlow = UIItemsFlow.Vertical;
+                    List<UIItem> tUIItems = new List<UIItem>();
+                    tUIItems.Add(new UIItem(UIItemType.TextFix, "New Game", Color.White, ScreenManager.Fonts[Font.menuItem01.ToString()], UIItemsFlow.Vertical, UIAction.NewGame, ""));
+                    tUI.Position = new Vector2(2, Resolution.Y - 120);
+                    tUI.SetUIItems(tUIItems);
+                    break;
+                case UITemplate.mainLoad:
+                    tUI = new UI(UIType.Basic, uiName.ToString(), "Main Menu - Load Game", new Vector2(300, 300), Resolution / 2);
+                    tUI.BackAlpha = 0.0f;
+                    tUI.ItemsFlow = UIItemsFlow.Vertical;
+                    tUIItems = new List<UIItem>();
+                    tUIItems.Add(new UIItem(UIItemType.TextFix, "Load Game", Color.White, ScreenManager.Fonts[Font.menuItem01.ToString()], UIItemsFlow.Vertical, UIAction.LoadGame, "", ""));
+                    tUI.Position = new Vector2(2, Resolution.Y - 90);
+                    tUI.SetUIItems(tUIItems);
+                    break;
+                case UITemplate.mainOptions:
+                    tUI = new UI(UIType.Basic, uiName.ToString(), "Main Menu - Options", new Vector2(300, 300), Resolution / 2);
+                    tUI.BackAlpha = 0.0f;
+                    tUI.ItemsFlow = UIItemsFlow.Vertical;
+                    tUIItems = new List<UIItem>();
+                    tUIItems.Add(new UIItem(UIItemType.TextFix, "Options", Color.White, ScreenManager.Fonts[Font.menuItem01.ToString()], UIItemsFlow.Vertical, UIAction.Options, "", ""));
+                    tUI.Position = new Vector2(2, Resolution.Y - 60);
+                    tUI.SetUIItems(tUIItems);
+                    break;
+                case UITemplate.mainExit:
+                    tUI = new UI(UIType.Basic, uiName.ToString(), "Main Menu - Exit", new Vector2(300, 300), Resolution / 2);
+                    tUI.BackAlpha = 0.0f;
+                    tUI.ItemsFlow = UIItemsFlow.Vertical;
+                    tUIItems = new List<UIItem>();
+                    tUIItems.Add(new UIItem(UIItemType.TextFix, "Exit", Color.White, ScreenManager.Fonts[Font.menuItem01.ToString()], UIItemsFlow.Vertical, UIAction.Exit, "", ""));
+                    tUI.Position = new Vector2(2, Resolution.Y - 30);
+                    tUI.SetUIItems(tUIItems);
+                    break;
+                case UITemplate.toolbar01:
+                    tUI = new UI(UIType.Basic, uiName.ToString(), "Main Tool Bar", new Vector2(300, 300), new Vector2(2, 2));
+                    tUI.BackAlpha = 0.35f;
+                    tUI.ItemsFlow = UIItemsFlow.Horizontal;
+                    GGPScreen.RefreshResourcesUI(tUI);
+                    tUI.Position = new Vector2(2, 2) + ScreenManager.PlayerCamera.Position;
+                    break;
+                case UITemplate.income:
+                    tUI = new UI(UIType.Basic, uiName.ToString(), "Income Panel", new Vector2(300, 300), new Vector2(2, 2));
+                    tUI.BackAlpha = 0.35f;
+                    tUI.ItemsFlow = UIItemsFlow.Vertical;
+                    GGPScreen.RefreshIncomeUI(tUI);
+                    tUI.Position = new Vector2(2 + ScreenManager.Resolution.X - 40, 2) + ScreenManager.PlayerCamera.Position;
+                    break;
+                case UITemplate.turn01:
+                    tUI = new UI(UIType.Basic, uiName.ToString(), "Turns UI", new Vector2(300, 300), new Vector2(2, 2));
+                    tUI.BackAlpha = 0.35f;
+                    tUIItems = new List<UIItem>();
+                    tUIItems.Add(new UIItem(UIItemType.TextFix, "End Turn", Color.CornflowerBlue, ScreenManager.Fonts[Font.menuItem01.ToString()], UIItemsFlow.Vertical, UIAction.EndTurn));
+                    tUI.SetUIItems(tUIItems);
+                    tUI.Position = new Vector2(ScreenManager.Resolution.X - tUI.Size.X, ScreenManager.Resolution.Y - tUI.Size.Y) + ScreenManager.PlayerCamera.Position;
+                    break;
+                case UITemplate.tileSheet:
+                    tUI = new UI(UIType.Basic, uiName.ToString(), "Tile UI", new Vector2(300, 300), new Vector2(2, 2));
+                    tUI.BackAlpha = 0.35f;
+                    tUIItems = new List<UIItem>();
+                    tUIItems.Add(new UIItem(UIItemType.ImageFix, "", Color.CornflowerBlue, ScreenManager.Fonts[Font.menuItem01.ToString()], UIItemsFlow.Vertical, UIAction.TileSheet, "gear_24"));
+                    tUIItems.Add(new UIItem(UIItemType.TextFix, "Mine", Color.CornflowerBlue, ScreenManager.Fonts[Font.menuItem03.ToString()], UIItemsFlow.Vertical, UIAction.TileSheet, "", "1:Gold"));
+                    tUIItems.Add(new UIItem(UIItemType.TextFix, "Farm", Color.CornflowerBlue, ScreenManager.Fonts[Font.menuItem03.ToString()], UIItemsFlow.Vertical, UIAction.TileSheet, "", "1:Food"));
+                    tUIItems.Add(new UIItem(UIItemType.TextFix, "Lumbermill", Color.CornflowerBlue, ScreenManager.Fonts[Font.menuItem03.ToString()], UIItemsFlow.Vertical, UIAction.TileSheet, "", "1:Wood"));
+                    tUIItems.Add(new UIItem(UIItemType.TextFix, "Workshop", Color.CornflowerBlue, ScreenManager.Fonts[Font.menuItem03.ToString()], UIItemsFlow.Vertical, UIAction.TileSheet, "", "1:Production"));
+                    tUIItems.Add(new UIItem(UIItemType.TextFix, "Energy Source", Color.CornflowerBlue, ScreenManager.Fonts[Font.menuItem03.ToString()], UIItemsFlow.Vertical, UIAction.TileSheet, "", "1:Energy"));
+                    tUI.SetUIItems(tUIItems);
+                    tUI.Position = GGPScreen.Player1.ActiveRoom.Position + new Vector2(ScreenManager.TileSize.X - 28, 0);
+                    break;
+                case UITemplate.tileExpendNorth:
+                    tUI = new UI(UIType.Basic, uiName.ToString(), "Tile Expend - North UI", new Vector2(300, 300), new Vector2(2, 2));
+                    tUI.TTText = "Discover a new tile - North";
+                    tUI.BackAlpha = 0.35f;
+                    tUIItems = new List<UIItem>();
+                    tUIItems.Add(new UIItem(UIItemType.ImageFix, "", Color.CornflowerBlue, ScreenManager.Fonts[Font.menuItem01.ToString()], UIItemsFlow.Vertical, UIAction.BuyTile, "plus_24"));
+                    tUI.SetUIItems(tUIItems);
+                    tUI.Position = GGPScreen.Player1.ActiveRoom.Position + new Vector2((ScreenManager.TileSize.X / 2) - 14, -14);
+                    break;
+                case UITemplate.tileExpendEast:
+                    tUI = new UI(UIType.Basic, uiName.ToString(), "Tile Expend - East UI", new Vector2(300, 300), new Vector2(2, 2));
+                    tUI.TTText = "Discover a new tile - East";
+                    tUI.BackAlpha = 0.35f;
+                    tUIItems = new List<UIItem>();
+                    tUIItems.Add(new UIItem(UIItemType.ImageFix, "", Color.CornflowerBlue, ScreenManager.Fonts[Font.menuItem01.ToString()], UIItemsFlow.Vertical, UIAction.BuyTile, "plus_24"));
+                    tUI.SetUIItems(tUIItems);
+                    tUI.Position = GGPScreen.Player1.ActiveRoom.Position + new Vector2((ScreenManager.TileSize.X) - 14, (ScreenManager.TileSize.Y / 2) - 14);
+                    break;
+                case UITemplate.tileExpendSouth:
+                    tUI = new UI(UIType.Basic, uiName.ToString(), "Tile Expend - South UI", new Vector2(300, 300), new Vector2(2, 2));
+                    tUI.TTText = "Discover a new tile - South";
+                    tUI.BackAlpha = 0.35f;
+                    tUIItems = new List<UIItem>();
+                    tUIItems.Add(new UIItem(UIItemType.ImageFix, "", Color.CornflowerBlue, ScreenManager.Fonts[Font.menuItem01.ToString()], UIItemsFlow.Vertical, UIAction.BuyTile, "plus_24"));
+                    tUI.SetUIItems(tUIItems);
+                    tUI.Position = GGPScreen.Player1.ActiveRoom.Position + new Vector2((ScreenManager.TileSize.X / 2) - 14, (ScreenManager.TileSize.Y) - 14);
+                    break;
+                case UITemplate.tileExpendWest:
+                    tUI = new UI(UIType.Basic, uiName.ToString(), "Tile Expend - West UI", new Vector2(300, 300), new Vector2(2, 2));
+                    tUI.TTText = "Discover a new tile - West";
+                    tUI.BackAlpha = 0.35f;
+                    tUIItems = new List<UIItem>();
+                    tUIItems.Add(new UIItem(UIItemType.ImageFix, "", Color.CornflowerBlue, ScreenManager.Fonts[Font.menuItem01.ToString()], UIItemsFlow.Vertical, UIAction.BuyTile, "plus_24"));
+                    tUI.SetUIItems(tUIItems);
+                    tUI.Position = GGPScreen.Player1.ActiveRoom.Position + new Vector2(-14, (ScreenManager.TileSize.Y / 2) - 14);
+                    break;
+                case UITemplate.log:
+                    tUI = new UI(UIType.BasicInvis, uiName.ToString(), "Events Journal", new Vector2(300, 300), new Vector2(2, ScreenManager.Resolution.Y - 180));
+                    tUI.BackAlpha = 0.35f;
+                    tUI.ItemsFlow = UIItemsFlow.Vertical;
+                    tUIItems = new List<UIItem>();
+                    tUIItems.Add(new UIItem(UIItemType.TextFix, "Events Journal", Color.CornflowerBlue, ScreenManager.Fonts[Font.menuItem02.ToString()], UIItemsFlow.Vertical, UIAction.ToggleLog));
+                    tUI.SetUIItems(tUIItems);
+                    tUI.Position = new Vector2(2, ScreenManager.Resolution.Y) + ScreenManager.PlayerCamera.Position;
+                    break;
+                case UITemplate.tooltip:
+                    tUI = new UI(UIType.Basic, uiName.ToString(), "Tool Tips", new Vector2(300, 300), new Vector2(2, ScreenManager.Resolution.Y));
+                    tUI.BackAlpha = 0.40f;
+                    tUI.ItemsFlow = UIItemsFlow.Vertical;
+                    tUI.Position = ScreenManager.Input.MousePosition();
+                    tUI.ToDraw = false;
+                    break;
+                default:
+                    tUI = new UI();
+                    break;
+            }
+            return tUI;
+        }
+
 
         protected override void Draw(GameTime gameTime)
         {
@@ -350,6 +661,9 @@ namespace ToT
             {
                 ScreenList[i].Draw(gameTime);
             }
+
+            foreach (KeyValuePair<UITemplate, UI> ui in GameUIs)
+                ui.Value.Draw(gameTime);
 
             if (DebugMode)
             {

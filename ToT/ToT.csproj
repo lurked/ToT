@@ -52,7 +52,6 @@
     <Compile Include="Level.cs" />
     <Compile Include="LogEntry.cs" />
     <Compile Include="MainMenuScreen.cs" />
-    <Compile Include="Menu.cs" />
     <Compile Include="modEnum.cs" />
     <Compile Include="modStatic.cs" />
     <Compile Include="Player.cs" />
