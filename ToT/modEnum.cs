@@ -106,7 +106,8 @@ public enum UIAction
     BuyTile,
     UpgradeTile,
     EndTurn,
-    TileSheet
+    TileSheet,
+    ToggleLog
 }
 
 public enum UIItemsFlow
@@ -128,5 +129,6 @@ public enum UITemplate
     tileExpendNorth,
     tileExpendEast,
     tileExpendWest,
-    tileExpendSouth
+    tileExpendSouth,
+    tooltip
 }

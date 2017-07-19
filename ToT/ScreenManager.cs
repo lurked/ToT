@@ -37,6 +37,7 @@ namespace ToT
         public const string CONTENTPATH = "C:/Prog/ToT/ToT/Content/";
         public const string IMAGESPATH = CONTENTPATH + "Images/";
         public static float Delta;
+        public static float TotalTime;
 
 
         public ScreenManager()
@@ -131,6 +132,7 @@ namespace ToT
         {
             try
             {
+                TotalTime = (float)gameTime.TotalGameTime.TotalSeconds;
                 Delta = (float)gameTime.ElapsedGameTime.TotalSeconds;
                 Input.Update();
                 if (Input.KeyPressed(Keys.F12))
@@ -306,7 +308,7 @@ namespace ToT
                 Models.Remove(modelName);
             }
         }
-
+        
         public static void AddScreen(GameScreen gameScreen)
         {
             if (ScreenList == null)

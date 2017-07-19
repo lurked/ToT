@@ -47,6 +47,15 @@ namespace ToT
             GeneratePods();
         }
 
+        public void AddResources(int qty, ResourceType res)
+        {
+            if (Resources.ContainsKey(res))
+                Resources[res] += qty;
+            else
+                Resources.Add(res, qty);
+            ScreenManager.GGPScreen.RefreshIncome();
+        }
+
         public void GeneratePods()
         {
             switch(Lvl)

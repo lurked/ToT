@@ -79,10 +79,15 @@ namespace ToT
             ScreenManager.GGPScreen.GameUIs[UITemplate.tileExpendEast].Position = ActiveRoom.RoomPosition + new Vector2((ScreenManager.TileSize.X) - 14, (ScreenManager.TileSize.Y / 2) - 14);
             ScreenManager.GGPScreen.GameUIs[UITemplate.tileExpendSouth].Position = ActiveRoom.RoomPosition + new Vector2((ScreenManager.TileSize.X / 2) - 14, (ScreenManager.TileSize.Y) - 14);
             ScreenManager.GGPScreen.GameUIs[UITemplate.tileExpendWest].Position = ActiveRoom.RoomPosition + new Vector2(-14, (ScreenManager.TileSize.Y / 2) - 14);
-            //(ScreenManager.TileSize.Y / 2)
-            //ScreenManager.GGPScreen.GameUIs[UITemplate.turn01].Position = new Vector2(ScreenManager.Resolution.X - ScreenManager.GGPScreen.GameUIs[UITemplate.turn01].Size.X, ScreenManager.Resolution.Y - ScreenManager.GGPScreen.GameUIs[UITemplate.turn01].Size.Y) + ScreenManager.PlayerCamera.Position;
             ScreenManager.GGPScreen.GameUIs[UITemplate.turn01].Position = ScreenManager.Resolution - ScreenManager.GGPScreen.GameUIs[UITemplate.turn01].Size + ScreenManager.PlayerCamera.Position;
-            ScreenManager.GGPScreen.GameUIs[UITemplate.log].Position = new Vector2(2, ScreenManager.Resolution.Y - 180) + ScreenManager.PlayerCamera.Position;
+            ScreenManager.GGPScreen.GameUIs[UITemplate.log].Position = new Vector2(2, ScreenManager.Resolution.Y - ScreenManager.GGPScreen.GameUIs[UITemplate.log].Size.Y) + ScreenManager.PlayerCamera.Position;
+            if (ScreenManager.GGPScreen.TTToggled)
+            {
+                ScreenManager.GGPScreen.GameUIs[UITemplate.tooltip].ToDraw = true;
+                ScreenManager.GGPScreen.GameUIs[UITemplate.tooltip].Position = ScreenManager.Input.MousePosition() + ScreenManager.PlayerCamera.Position + new Vector2(5, -5);
+            }
+            else
+                ScreenManager.GGPScreen.GameUIs[UITemplate.tooltip].ToDraw = false;
             base.Update(gameTime);
         }
 

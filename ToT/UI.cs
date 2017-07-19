@@ -23,6 +23,7 @@ namespace ToT
         public float BackAlpha = 1f;
         public bool IsActive = false;
         public bool ToDraw = true;
+        public string TTText;
 
         Vector2 coor;
         Texture2D rect;
@@ -73,32 +74,36 @@ namespace ToT
 
             foreach(UIItem tUII in Items)
             {
-                switch(ItemsFlow)
+                if (tUII.ToShow)
                 {
-                    case UIItemsFlow.Vertical:
-                        if (tX < tUII.ItemSize.X)
-                            tX = tUII.ItemSize.X + 4f;
-                        tY += tUII.ItemSize.Y;
-                        break;
-                    case UIItemsFlow.Horizontal:
-                        if (tY < tUII.ItemSize.Y)
-                            tY = tUII.ItemSize.Y + 4f;
-                        tX += tUII.ItemSize.X + 2f;
-                        break;
-                    default:
-                        tX = Size.X;
-                        tY = Size.Y;
-                        exitLoop = true;
+                    switch (ItemsFlow)
+                    {
+                        case UIItemsFlow.Vertical:
+                            if (tX < tUII.ItemSize.X)
+                                tX = tUII.ItemSize.X + 4f;
+                            tY += tUII.ItemSize.Y;
+                            break;
+                        case UIItemsFlow.Horizontal:
+                            if (tY < tUII.ItemSize.Y)
+                                tY = tUII.ItemSize.Y + 4f;
+                            tX += tUII.ItemSize.X + 2f;
+                            break;
+                        default:
+                            tX = Size.X;
+                            tY = Size.Y;
+                            exitLoop = true;
+                            break;
+                    }
+                    if (exitLoop)
                         break;
                 }
-                if (exitLoop)
-                    break;
+                
             }
 
             Size = new Vector2(tX, tY);
         }
 
-        private void UpdateItemsPosition()
+        public void UpdateItemsPosition()
         {
             float tX = 2f;
             float tY = 2f;
@@ -106,16 +111,19 @@ namespace ToT
             foreach (UIItem tUII in Items)
             {
                 tUII.Position = new Vector2(tX, tY);
-                switch (ItemsFlow)
+                if (tUII.ToShow)
                 {
-                    case UIItemsFlow.Vertical:
-                        tUII.ItemRect = new Rectangle((int)tX, (int)tY, (int)Size.X, (int)tUII.ItemSize.Y);
-                        tY += tUII.ItemSize.Y;
-                        break;
-                    case UIItemsFlow.Horizontal:
-                        tUII.ItemRect = new Rectangle((int)tX, (int)tY, (int)tUII.ItemSize.X, (int)Size.Y);
-                        tX += tUII.ItemSize.X;
-                        break;
+                    switch (ItemsFlow)
+                    {
+                        case UIItemsFlow.Vertical:
+                            tUII.ItemRect = new Rectangle((int)tX, (int)tY, (int)Size.X, (int)tUII.ItemSize.Y);
+                            tY += tUII.ItemSize.Y;
+                            break;
+                        case UIItemsFlow.Horizontal:
+                            tUII.ItemRect = new Rectangle((int)tX, (int)tY, (int)tUII.ItemSize.X, (int)Size.Y);
+                            tX += tUII.ItemSize.X;
+                            break;
+                    }
                 }
             }
             switch(uiType)
@@ -137,6 +145,7 @@ namespace ToT
 
         public void Update()
         {
+
             switch (uiType)
             {
                 case UIType.Basic:
@@ -175,23 +184,24 @@ namespace ToT
 
                 foreach (UIItem tUII in Items)
                 {
-                    switch (tUII.ItemType)
-                    {
-                        case UIItemType.ImageFix:
-                            ScreenManager.Sprites.Draw(ScreenManager.Textures2D[tUII.ImageName], tUII.Position + Position, null, Color.White);
-                            break;
-                        case UIItemType.TextImage:
-                            ScreenManager.Sprites.DrawString(tUII.TextFont, tUII.Text, tUII.Position + Position, tUII.TextColor);
-                            ScreenManager.Sprites.Draw(ScreenManager.Textures2D[tUII.ImageName], tUII.Position + Position + new Vector2(tUII.ItemSize.X, 0), null, Color.White);
-                            break;
-                        case UIItemType.ImageText:
-                            ScreenManager.Sprites.Draw(ScreenManager.Textures2D[tUII.ImageName], tUII.Position + Position, null, Color.White);
-                            ScreenManager.Sprites.DrawString(tUII.TextFont, tUII.Text, tUII.Position + Position + new Vector2(ScreenManager.Textures2D[tUII.ImageName].Width, 0), tUII.TextColor);
-                            break;
-                        default:
-                            ScreenManager.Sprites.DrawString(tUII.TextFont, tUII.Text, tUII.Position + Position, tUII.TextColor);
-                            break;
-                    }
+                    if (tUII.ToShow)
+                        switch (tUII.ItemType)
+                        {
+                            case UIItemType.ImageFix:
+                                ScreenManager.Sprites.Draw(ScreenManager.Textures2D[tUII.ImageName], tUII.Position + Position, null, Color.White);
+                                break;
+                            case UIItemType.TextImage:
+                                ScreenManager.Sprites.DrawString(tUII.TextFont, tUII.Text, tUII.Position + Position, tUII.TextColor);
+                                ScreenManager.Sprites.Draw(ScreenManager.Textures2D[tUII.ImageName], tUII.Position + Position + new Vector2(tUII.ItemSize.X, 0), null, Color.White);
+                                break;
+                            case UIItemType.ImageText:
+                                ScreenManager.Sprites.Draw(ScreenManager.Textures2D[tUII.ImageName], tUII.Position + Position, null, Color.White);
+                                ScreenManager.Sprites.DrawString(tUII.TextFont, tUII.Text, tUII.Position + Position + new Vector2(ScreenManager.Textures2D[tUII.ImageName].Width, 0), tUII.TextColor);
+                                break;
+                            default:
+                                ScreenManager.Sprites.DrawString(tUII.TextFont, tUII.Text, tUII.Position + Position, tUII.TextColor);
+                                break;
+                        }
 
                 }
                 if (ScreenManager.DebugMode)

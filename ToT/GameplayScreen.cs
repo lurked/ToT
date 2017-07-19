@@ -24,7 +24,11 @@ namespace ToT
         public Dictionary<ResourceType, int> Income;
         public Dictionary<UITemplate, UI> GameUIs;
         public Dictionary<int, int> TileLevelReqs;
+        public List<LogEntry> Log;
         public UI ActiveUI;
+        public bool LogToggled = false;
+        public bool TTToggled = false;
+        public string TTText = "";
 
         public GameplayScreen()
         {
@@ -67,40 +71,51 @@ namespace ToT
             Player1.Initialize();
             Player1.SetStage(CurrentLevel.Stage);
 
+            Log = new List<LogEntry>();
+            Log.Add(new LogEntry("Generating Rivetting Tales of Tiles..."));
+
             GameUIs = new Dictionary<UITemplate, UI >();
 
             GameUIs.Add(UITemplate.toolbar01, GenerateUI(UITemplate.toolbar01));
             GameUIs.Add(UITemplate.turn01, GenerateUI(UITemplate.turn01));
             GameUIs.Add(UITemplate.log, GenerateUI(UITemplate.log));
+            RefreshLogEntries(Log);
             GameUIs.Add(UITemplate.income, GenerateUI(UITemplate.income));
-            GameUIs.Add(UITemplate.tileSheet, GenerateUI(UITemplate.tileSheet));
             GameUIs.Add(UITemplate.tileExpendNorth, GenerateUI(UITemplate.tileExpendNorth));
             GameUIs.Add(UITemplate.tileExpendEast, GenerateUI(UITemplate.tileExpendEast));
             GameUIs.Add(UITemplate.tileExpendSouth, GenerateUI(UITemplate.tileExpendSouth));
             GameUIs.Add(UITemplate.tileExpendWest, GenerateUI(UITemplate.tileExpendWest));
+            GameUIs.Add(UITemplate.tileSheet, GenerateUI(UITemplate.tileSheet));
+            GameUIs.Add(UITemplate.tooltip, GenerateUI(UITemplate.tooltip));
 
             IncrementResources();
             RefreshIncome();
 
-
             Player1.SetActiveRoom(CurrentLevel.Stage[Vector2.Zero]);
+
+            TogTileSheet(false);
         }
-        
+
+        public void RefreshLogEntries(List<LogEntry> log)
+        {
+            List<UIItem> logUIIs = new List<UIItem>();
+            logUIIs.Add(new UIItem(UIItemType.TextFix, "Events Journal", Color.CornflowerBlue, ScreenManager.Fonts[Font.menuItem02.ToString()], UIItemsFlow.Vertical, UIAction.ToggleLog));
+            foreach (LogEntry tLE in log)
+                if (LogToggled)
+                    logUIIs.Add(new UIItem(UIItemType.TextFix, tLE.Text, tLE.TextColor, ScreenManager.Fonts[tLE.TextFont.ToString()], UIItemsFlow.Vertical));
+                else if (tLE.Expiration() >= ScreenManager.TotalTime)
+                    logUIIs.Add(new UIItem(UIItemType.TextFix, tLE.Text, tLE.TextColor, ScreenManager.Fonts[tLE.TextFont.ToString()], UIItemsFlow.Vertical));
+
+            GameUIs[UITemplate.log].SetUIItems(logUIIs);
+           
+        }
+
         public void NextTurn()
         {
+            Log.Add(new LogEntry("End of turn " + Turn + ". Beginning of turn " + (Turn + 1) + "."));
             Turn += 1;
             IncrementResources();
         }
-
-        //public void RefreshResources()
-        //{
-        //    //foreach (KeyValuePair<Vector2, Tile> room in CurrentLevel.Stage)
-        //    //    foreach (KeyValuePair<ResourceType, int> res in room.Value.Resources)
-        //    foreach (KeyValuePair<ResourceType, int> res in room.Value.Resources)
-        //        Resources[res.Key] += res.Value;
-
-        //    RefreshResourcesUI(GameUIs[UITemplate.toolbar01]);
-        //}
 
         public void RefreshIncome()
         {
@@ -228,6 +243,7 @@ namespace ToT
         #region User Interface
         public void UpdateUIs(GameTime gameTime)
         {
+            RefreshLogEntries(Log);
             foreach (KeyValuePair<UITemplate, UI> ui in GameUIs)
                 ui.Value.Update();
         }
@@ -235,10 +251,10 @@ namespace ToT
         private void RefreshResourcesUI(UI tUI)
         {
             List<UIItem> tUIItems = new List<UIItem>();
-            tUIItems.Add(new UIItem(UIItemType.TextFix, "Turn " + Turn, Color.CornflowerBlue, ScreenManager.Fonts[Font.menuItem03.ToString()], UIItemsFlow.Vertical, UIAction.None));
-            tUIItems.Add(new UIItem(UIItemType.TextFix, "Tile lvl " + CurrentTileLevel, Color.CornflowerBlue, ScreenManager.Fonts[Font.menuItem03.ToString()], UIItemsFlow.Vertical, UIAction.None));
+            tUIItems.Add(new UIItem(UIItemType.TextFix, "Turn " + Turn, Color.CornflowerBlue, ScreenManager.Fonts[Font.menuItem03.ToString()], UIItemsFlow.Horizontal, UIAction.None));
+            //tUIItems.Add(new UIItem(UIItemType.TextFix, "Tile lvl " + CurrentTileLevel, Color.CornflowerBlue, ScreenManager.Fonts[Font.menuItem03.ToString()], UIItemsFlow.Vertical, UIAction.None));
             foreach (KeyValuePair<ResourceType, int> res in Resources)
-                tUIItems.Add(new UIItem(UIItemType.ImageText, res.Value.ToString(), Color.White, ScreenManager.Fonts[Font.menuItem03.ToString()], UIItemsFlow.Vertical, UIAction.None, "resource_" + res.Key.ToString().ToLower()));
+                tUIItems.Add(new UIItem(UIItemType.ImageText, res.Value.ToString(), Color.White, ScreenManager.Fonts[Font.menuItem03.ToString()], UIItemsFlow.Horizontal, UIAction.None, "resource_" + res.Key.ToString().ToLower()));
             tUI.SetUIItems(tUIItems);
         }
 
@@ -253,6 +269,7 @@ namespace ToT
         public void CheckHoverUI(Vector2 RealMousePosition)
         {
             ActiveUI = null;
+            bool setTTToggleToFalse = true;
             foreach (KeyValuePair<UITemplate, UI> ui in GameUIs)
             {
                 if (ui.Value.ToDraw)
@@ -260,6 +277,13 @@ namespace ToT
                     if (Tools.Intersects(RealMousePosition, new Rectangle((int)ui.Value.Position.X, (int)ui.Value.Position.Y, (int)ui.Value.Size.X, (int)ui.Value.Size.Y)))
                     {
                         ActiveUI = ui.Value;
+                        if (ActiveUI.TTText != "" && ActiveUI.TTText != null)
+                        {
+                            TTToggled = true;
+                            setTTToggleToFalse = false;
+                            TTText = ActiveUI.TTText;
+                            SetTTText(TTText);
+                        }
                         ui.Value.IsActive = true;
                     }
                     else
@@ -268,6 +292,37 @@ namespace ToT
                 else
                     ui.Value.IsActive = false;
             }
+            if (setTTToggleToFalse)
+            {
+                TTToggled = false;
+                TTText = "";
+            }
+        }
+
+        public void SetTTText(string text)
+        {
+            List<UIItem> tUIIs = new List<UIItem>();
+
+            tUIIs.Add(new UIItem(UIItemType.TextFix, text, Color.White, ScreenManager.Fonts[Font.menuItem03.ToString()], UIItemsFlow.Vertical));
+
+            GameUIs[UITemplate.tooltip].SetUIItems(tUIIs);
+        }
+
+        public void TogTileSheet(bool tog)
+        {
+            for (int i = 1; i < GameUIs[UITemplate.tileSheet].Items.Count; i++)
+                GameUIs[UITemplate.tileSheet].Items[i].ToShow = tog;
+            GameUIs[UITemplate.tileSheet].RefreshSize();
+            GameUIs[UITemplate.tileSheet].UpdateItemsPosition();
+        }
+
+        public void ToggleTileSheet()
+        {
+            if (GameUIs[UITemplate.tileSheet].Items[1].ToShow)
+                TogTileSheet(false);
+            else
+                TogTileSheet(true);
+
         }
 
         public void ExecuteMenuAction(UIAction action, string actionText)
@@ -279,6 +334,41 @@ namespace ToT
                     break;
                 case UIAction.BuyTile:
                     AddRoom(actionText);
+                    break;
+                case UIAction.ToggleLog:
+                    if (LogToggled)
+                        LogToggled = false;
+                    else
+                        LogToggled = true;
+                    break;
+                case UIAction.TileSheet:
+                    if (actionText != "")
+                    {
+                        string[] split = actionText.Split(':');
+                        switch(split[1])
+                        {
+                            case "Gold":
+                                Player1.ActiveRoom.AddResources(int.Parse(split[0]), ResourceType.Gold);
+                                break;
+                            case "Food":
+                                Player1.ActiveRoom.AddResources(int.Parse(split[0]), ResourceType.Food);
+                                break;
+                            case "Wood":
+                                Player1.ActiveRoom.AddResources(int.Parse(split[0]), ResourceType.Wood);
+                                break;
+                            case "Production":
+                                Player1.ActiveRoom.AddResources(int.Parse(split[0]), ResourceType.Production);
+                                break;
+                            case "Energy":
+                                Player1.ActiveRoom.AddResources(int.Parse(split[0]), ResourceType.Energy);
+                                break;
+                            case "":
+
+                                break;
+                        }
+                    }
+                    
+                    ToggleTileSheet();
                     break;
                 default:
 
@@ -294,7 +384,7 @@ namespace ToT
                 case UITemplate.toolbar01:
                     tUI = new UI(UIType.Basic, uiName.ToString(), "Main Tool Bar", new Vector2(300, 300), new Vector2(2, 2));
                     tUI.BackAlpha = 0.35f;
-                    tUI.ItemsFlow = UIItemsFlow.Vertical;
+                    tUI.ItemsFlow = UIItemsFlow.Horizontal;
                     RefreshResourcesUI(tUI);
                     tUI.Position = new Vector2(2, 2) + ScreenManager.PlayerCamera.Position;
                     break;
@@ -319,11 +409,17 @@ namespace ToT
                     tUI.BackAlpha = 0.35f;
                     tUIItems = new List<UIItem>();
                     tUIItems.Add(new UIItem(UIItemType.ImageFix, "", Color.CornflowerBlue, ScreenManager.Fonts[Font.menuItem01.ToString()], UIItemsFlow.Vertical, UIAction.TileSheet, "gear_24"));
+                    tUIItems.Add(new UIItem(UIItemType.TextFix, "Mine", Color.CornflowerBlue, ScreenManager.Fonts[Font.menuItem03.ToString()], UIItemsFlow.Vertical, UIAction.TileSheet, "", "1:Gold"));
+                    tUIItems.Add(new UIItem(UIItemType.TextFix, "Farm", Color.CornflowerBlue, ScreenManager.Fonts[Font.menuItem03.ToString()], UIItemsFlow.Vertical, UIAction.TileSheet, "", "1:Food"));
+                    tUIItems.Add(new UIItem(UIItemType.TextFix, "Lumbermill", Color.CornflowerBlue, ScreenManager.Fonts[Font.menuItem03.ToString()], UIItemsFlow.Vertical, UIAction.TileSheet, "", "1:Wood"));
+                    tUIItems.Add(new UIItem(UIItemType.TextFix, "Workshop", Color.CornflowerBlue, ScreenManager.Fonts[Font.menuItem03.ToString()], UIItemsFlow.Vertical, UIAction.TileSheet, "", "1:Production"));
+                    tUIItems.Add(new UIItem(UIItemType.TextFix, "Energy Source", Color.CornflowerBlue, ScreenManager.Fonts[Font.menuItem03.ToString()], UIItemsFlow.Vertical, UIAction.TileSheet, "", "1:Energy"));
                     tUI.SetUIItems(tUIItems);
                     tUI.Position = Player1.ActiveRoom.Position + new Vector2(ScreenManager.TileSize.X - 28, 0);
                     break;
                 case UITemplate.tileExpendNorth:
                     tUI = new UI(UIType.Basic, uiName.ToString(), "Tile Expend - North UI", new Vector2(300, 300), new Vector2(2, 2));
+                    tUI.TTText = "Discover a new tile - North";
                     tUI.BackAlpha = 0.35f;
                     tUIItems = new List<UIItem>();
                     tUIItems.Add(new UIItem(UIItemType.ImageFix, "", Color.CornflowerBlue, ScreenManager.Fonts[Font.menuItem01.ToString()], UIItemsFlow.Vertical, UIAction.BuyTile, "plus_24"));
@@ -332,6 +428,7 @@ namespace ToT
                     break;
                 case UITemplate.tileExpendEast:
                     tUI = new UI(UIType.Basic, uiName.ToString(), "Tile Expend - East UI", new Vector2(300, 300), new Vector2(2, 2));
+                    tUI.TTText = "Discover a new tile - East";
                     tUI.BackAlpha = 0.35f;
                     tUIItems = new List<UIItem>();
                     tUIItems.Add(new UIItem(UIItemType.ImageFix, "", Color.CornflowerBlue, ScreenManager.Fonts[Font.menuItem01.ToString()], UIItemsFlow.Vertical, UIAction.BuyTile, "plus_24"));
@@ -340,6 +437,7 @@ namespace ToT
                     break;
                 case UITemplate.tileExpendSouth:
                     tUI = new UI(UIType.Basic, uiName.ToString(), "Tile Expend - South UI", new Vector2(300, 300), new Vector2(2, 2));
+                    tUI.TTText = "Discover a new tile - South";
                     tUI.BackAlpha = 0.35f;
                     tUIItems = new List<UIItem>();
                     tUIItems.Add(new UIItem(UIItemType.ImageFix, "", Color.CornflowerBlue, ScreenManager.Fonts[Font.menuItem01.ToString()], UIItemsFlow.Vertical, UIAction.BuyTile, "plus_24"));
@@ -348,6 +446,7 @@ namespace ToT
                     break;
                 case UITemplate.tileExpendWest:
                     tUI = new UI(UIType.Basic, uiName.ToString(), "Tile Expend - West UI", new Vector2(300, 300), new Vector2(2, 2));
+                    tUI.TTText = "Discover a new tile - West";
                     tUI.BackAlpha = 0.35f;
                     tUIItems = new List<UIItem>();
                     tUIItems.Add(new UIItem(UIItemType.ImageFix, "", Color.CornflowerBlue, ScreenManager.Fonts[Font.menuItem01.ToString()], UIItemsFlow.Vertical, UIAction.BuyTile, "plus_24"));
@@ -357,11 +456,18 @@ namespace ToT
                 case UITemplate.log:
                     tUI = new UI(UIType.BasicInvis, uiName.ToString(), "Events Journal", new Vector2(300, 300), new Vector2(2, ScreenManager.Resolution.Y - 180));
                     tUI.BackAlpha = 0.35f;
-                    tUI.ItemsFlow = UIItemsFlow.Horizontal;
+                    tUI.ItemsFlow = UIItemsFlow.Vertical;
                     tUIItems = new List<UIItem>();
-                    tUIItems.Add(new UIItem(UIItemType.TextFix, "Events Journal", Color.CornflowerBlue, ScreenManager.Fonts[Font.menuItem02.ToString()], UIItemsFlow.Vertical, UIAction.None));
+                    tUIItems.Add(new UIItem(UIItemType.TextFix, "Events Journal", Color.CornflowerBlue, ScreenManager.Fonts[Font.menuItem02.ToString()], UIItemsFlow.Vertical, UIAction.ToggleLog));
                     tUI.SetUIItems(tUIItems);
-                    tUI.Position = new Vector2(2, ScreenManager.Resolution.Y - 180) + ScreenManager.PlayerCamera.Position;
+                    tUI.Position = new Vector2(2, ScreenManager.Resolution.Y) + ScreenManager.PlayerCamera.Position;
+                    break;
+                case UITemplate.tooltip:
+                    tUI = new UI(UIType.BasicInvis, uiName.ToString(), "Tool Tips", new Vector2(300, 300), new Vector2(2, ScreenManager.Resolution.Y));
+                    tUI.BackAlpha = 0.40f;
+                    tUI.ItemsFlow = UIItemsFlow.Vertical;
+                    tUI.Position = ScreenManager.PlayerCamera.Position;
+                    tUI.ToDraw = false;
                     break;
                 default:
                     tUI = new UI();

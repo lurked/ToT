@@ -23,6 +23,7 @@ namespace ToT
         public SpriteFont TextFont;
         public string ImageName;
         private UIItemsFlow uiFlow;
+        public bool ToShow;
 
         public UIItem()
         {
@@ -35,9 +36,10 @@ namespace ToT
             TextColor = Color.White;
             ImageName = "resource_gold";
             uiFlow = UIItemsFlow.Vertical;
+            ToShow = true;
         }
 
-        public UIItem(UIItemType iType, string text, Color textColor, SpriteFont textFont, UIItemsFlow flow, UIAction action = UIAction.None, string imageName = "resource_gold")
+        public UIItem(UIItemType iType, string text, Color textColor, SpriteFont textFont, UIItemsFlow flow, UIAction action = UIAction.None, string imageName = "resource_gold", string actionText = "")
         {
             uiFlow = flow;
             ImageName = imageName;
@@ -55,6 +57,8 @@ namespace ToT
                 ItemSize = vText;
             TextColor = textColor;
             Action = action;
+            ToShow = true;
+            ActionText = actionText;
         }
 
     }

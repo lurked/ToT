@@ -27,7 +27,6 @@ namespace ToT
             mainMenu = new Menu();
             mainMenu.Items.Add(new Menu.MenuItem("New Game", MenuType.Text, Color.White, "newgame"));
             mainMenu.Items.Add(new Menu.MenuItem("Load Game", MenuType.Text, Color.White, "loadgame"));
-            //mainMenu.Items.Add(new Menu.MenuItem("EncyclUPedia", MenuType.Text, Color.White, "options"));
             mainMenu.Items.Add(new Menu.MenuItem("Options", MenuType.Text, Color.White, "options"));
             mainMenu.Items.Add(new Menu.MenuItem("Exit Game", MenuType.Text, Color.White, "exit"));
             mainMenu.Position = new Vector2(10, ScreenManager.Resolution.Y - (mainMenu.Items.Count * 24));

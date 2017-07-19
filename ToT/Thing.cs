@@ -48,6 +48,7 @@ namespace ToT
             ActiveRoom.IsActive = true;
 
             RefreshExpendUIs();
+            ScreenManager.GGPScreen.TogTileSheet(false);
         }
 
         public void RefreshExpendUIs()
