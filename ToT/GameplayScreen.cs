@@ -49,6 +49,7 @@ namespace ToT
             TileLevelReqs.Add(8, 784);
             TileLevelReqs.Add(9, 1108);
             TileLevelReqs.Add(10, 1508);
+            TileLevelReqs.Add(11, 2000);
 
             Resources = new Dictionary<ResourceType, int>();
             Resources.Add(ResourceType.Gold, 0);
