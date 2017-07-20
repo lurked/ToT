@@ -16,12 +16,14 @@ namespace ToT
         public string Params;
         public List<Decor> Decors;
         public Dictionary<Vector2, Tile> Stage;
+        public Dictionary<ResourceType, int> Resources;
         public int Turn;
 
         public Level()
         {
             Decors = new List<Decor>();
             Stage = new Dictionary<Vector2, Tile>();
+            Resources = new Dictionary<ResourceType, int>();
         }
         
         public void GenerateLevel(LevelType type, string name, string lParams)

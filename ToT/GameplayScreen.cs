@@ -19,7 +19,6 @@ namespace ToT
         public Level CurrentLevel;
         public Player Player1;
         public int CurrentTileLevel = 1;
-        public Dictionary<ResourceType, int> Resources;
         public Dictionary<ResourceType, int> Income;
         public Dictionary<int, int> TileLevelReqs;
 
@@ -44,13 +43,6 @@ namespace ToT
             TileLevelReqs.Add(10, 1508);
             TileLevelReqs.Add(11, 2000);
 
-            Resources = new Dictionary<ResourceType, int>();
-            Resources.Add(ResourceType.Gold, 0);
-            Resources.Add(ResourceType.Food, 0);
-            Resources.Add(ResourceType.Wood, 0);
-            Resources.Add(ResourceType.Energy, 0);
-            Resources.Add(ResourceType.Production, 0);
-
             Income = new Dictionary<ResourceType, int>();
             Income.Add(ResourceType.Gold, 0);
             Income.Add(ResourceType.Food, 0);
@@ -60,7 +52,15 @@ namespace ToT
 
             CurrentLevel = new Level();
             if (levelToLoad == "")
+            {
                 CurrentLevel.GenerateLevel(LevelType.Static, "base01", "");
+                
+                CurrentLevel.Resources.Add(ResourceType.Gold, 0);
+                CurrentLevel.Resources.Add(ResourceType.Food, 0);
+                CurrentLevel.Resources.Add(ResourceType.Wood, 0);
+                CurrentLevel.Resources.Add(ResourceType.Energy, 0);
+                CurrentLevel.Resources.Add(ResourceType.Production, 0);
+            }
             else
             {
                 CurrentLevel = FileManager.LoadLevel(ScreenManager.SAVESPATH + levelToLoad + FileManager.GAMEFILES_EXT_LEVEL);
@@ -123,7 +123,7 @@ namespace ToT
         {
             foreach (KeyValuePair<Vector2, Tile> room in CurrentLevel.Stage)
                 foreach (KeyValuePair<ResourceType, int> res in room.Value.Resources)
-                    Resources[res.Key] += res.Value;
+                    CurrentLevel.Resources[res.Key] += res.Value;
 
             RefreshResourcesUI(ScreenManager.GameUIs[UITemplate.toolbar01]);
         }
@@ -223,7 +223,7 @@ namespace ToT
             List<UIItem> tUIItems = new List<UIItem>();
             tUIItems.Add(new UIItem(UIItemType.TextFix, "Turn " + CurrentLevel.Turn, Color.CornflowerBlue, ScreenManager.Fonts[Font.menuItem03.ToString()], UIItemsFlow.Horizontal, UIAction.None));
             //tUIItems.Add(new UIItem(UIItemType.TextFix, "Tile lvl " + CurrentTileLevel, Color.CornflowerBlue, ScreenManager.Fonts[Font.menuItem03.ToString()], UIItemsFlow.Vertical, UIAction.None));
-            foreach (KeyValuePair<ResourceType, int> res in Resources)
+            foreach (KeyValuePair<ResourceType, int> res in CurrentLevel.Resources)
                 tUIItems.Add(new UIItem(UIItemType.ImageText, res.Value.ToString(), Color.White, ScreenManager.Fonts[Font.menuItem03.ToString()], UIItemsFlow.Horizontal, UIAction.None, "resource_" + res.Key.ToString().ToLower()));
             tUI.SetUIItems(tUIItems);
         }

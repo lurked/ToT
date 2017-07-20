@@ -418,6 +418,7 @@ namespace ToT
         {
             GameUIs[UITemplate.mainNew].ToDraw = visibleOrNot;
             GameUIs[UITemplate.mainLoad].ToDraw = visibleOrNot;
+            GameUIs[UITemplate.mainLoadSaves].ToDraw = visibleOrNot;
             GameUIs[UITemplate.mainOptions].ToDraw = visibleOrNot;
             GameUIs[UITemplate.mainExit].ToDraw = visibleOrNot;
         }
