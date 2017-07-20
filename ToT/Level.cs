@@ -16,18 +16,20 @@ namespace ToT
         public string Params;
         public List<Decor> Decors;
         public Dictionary<Vector2, Tile> Stage;
+        public int Turn;
 
         public Level()
         {
             Decors = new List<Decor>();
             Stage = new Dictionary<Vector2, Tile>();
         }
-
+        
         public void GenerateLevel(LevelType type, string name, string lParams)
         {
             LType = type;
             Name = name;
             Params = lParams;
+            Turn = 1;
 
             if (name == "base01")
             {
@@ -68,6 +70,12 @@ namespace ToT
             tRoom.GenerateRoom(roomIndex, lvl);
             Stage.Add(roomIndex, tRoom);
             ScreenManager.GGPScreen.CurrentTileLevel = ScreenManager.GGPScreen.GetCurrentTileLevel();
+        }
+
+        public void Save()
+        {
+            string sLevel = FileManager.SerializeLevel(this);
+            FileManager.SaveToFile(sLevel, ScreenManager.SAVESPATH + "ToT" + DateTime.Now.ToShortDateString().Replace("/", "") + "T" + Turn.ToString() + FileManager.GAMEFILES_EXT_LEVEL);
         }
     }
 }

@@ -36,6 +36,7 @@ namespace ToT
         private FrameCounter _frameCounter = new FrameCounter();
         public const string CONTENTPATH = "C:/Prog/ToT/ToT/Content/";
         public const string IMAGESPATH = CONTENTPATH + "Images/";
+        public const string SAVESPATH = CONTENTPATH + "Saves/";
         public static float Delta;
         public static float TotalTime;
         public static Dictionary<UITemplate, UI> GameUIs;
@@ -44,6 +45,7 @@ namespace ToT
         public static bool TTToggled = false;
         public static string TTText = "";
         public static UI ActiveUI;
+        public static bool LoadToggled = false;
 
         public ScreenManager()
         {
@@ -195,34 +197,7 @@ namespace ToT
                     startIndex--;
                 }
                 for (var i = startIndex; i < ScreenList.Count; i++)
-                {
                     ScreenList[i].Update(gameTime, Input);
-                    //if (ScreenList[i].MenuAction != null && ScreenList[i].MenuAction != "")
-                    //{
-                    //    string tA = ScreenList[i].MenuAction.ToLower();
-                    //    switch (tA)
-                    //    {
-                    //        case "newgame":
-                    //            GGPScreen = new GameplayScreen();
-                    //            GGPScreen.Initialize();
-
-                    //            ChangeScreens(MMenuScreen, GGPScreen);
-                    //            State = ClientState.Game;
-                    //            break;
-                    //        case "loadgame":
-
-                    //            break;
-                    //        case "options":
-
-                    //            break;
-                    //        case "exit":
-                    //            Exit();
-                    //            break;
-                    //    }
-
-                    //    ScreenList[i].MenuAction = "";
-                    //}                    
-                }
 
 
                 switch (State)
@@ -447,6 +422,28 @@ namespace ToT
             GameUIs[UITemplate.mainExit].ToDraw = visibleOrNot;
         }
 
+        public void LoadSavedGames()
+        {
+            
+            if (LoadToggled)
+            {
+                
+                LoadToggled = false;
+            }
+            else
+            {
+                List<UIItem> tUIItems = new List<UIItem>();
+                List<string> tSaves = FileManager.GetSaves(SAVESPATH);
+                foreach(string save in tSaves)
+                    tUIItems.Add(new UIItem(UIItemType.TextFix, save, Color.White, Fonts[Font.menuItem03.ToString()], UIItemsFlow.Vertical, UIAction.LoadGame, "", save));
+
+                GameUIs[UITemplate.mainLoadSaves].Position = new Vector2(152, Resolution.Y - 90);
+                GameUIs[UITemplate.mainLoadSaves].SetUIItems(tUIItems);
+                GameUIs[UITemplate.mainLoadSaves].ToDraw = true;
+                LoadToggled = true;
+            }
+        }
+
         public void ExecuteMenuAction(UIAction action, string actionText)
         {
             switch (action)
@@ -461,6 +458,21 @@ namespace ToT
                     ToggleMainMenu(false);
                     ChangeScreens(MMenuScreen, GGPScreen);
                     State = ClientState.Game;
+                    break;
+                case UIAction.LoadGame:
+                    if (actionText == "")
+                    {
+                        LoadSavedGames();
+                    }
+                    else
+                    {
+                        GGPScreen = new GameplayScreen();
+                        GGPScreen.Initialize(actionText);
+
+                        ToggleMainMenu(false);
+                        ChangeScreens(MMenuScreen, GGPScreen);
+                        State = ClientState.Game;
+                    }
                     break;
                 case UIAction.EndTurn:
                     GGPScreen.NextTurn();
@@ -519,7 +531,7 @@ namespace ToT
                     tUI.BackAlpha = 0.0f;
                     tUI.ItemsFlow = UIItemsFlow.Vertical;
                     List<UIItem> tUIItems = new List<UIItem>();
-                    tUIItems.Add(new UIItem(UIItemType.TextFix, "New Game", Color.White, ScreenManager.Fonts[Font.menuItem01.ToString()], UIItemsFlow.Vertical, UIAction.NewGame, ""));
+                    tUIItems.Add(new UIItem(UIItemType.TextFix, "New Game", Color.White, Fonts[Font.menuItem01.ToString()], UIItemsFlow.Vertical, UIAction.NewGame, ""));
                     tUI.Position = new Vector2(2, Resolution.Y - 120);
                     tUI.SetUIItems(tUIItems);
                     break;
@@ -528,16 +540,22 @@ namespace ToT
                     tUI.BackAlpha = 0.0f;
                     tUI.ItemsFlow = UIItemsFlow.Vertical;
                     tUIItems = new List<UIItem>();
-                    tUIItems.Add(new UIItem(UIItemType.TextFix, "Load Game", Color.White, ScreenManager.Fonts[Font.menuItem01.ToString()], UIItemsFlow.Vertical, UIAction.LoadGame, "", ""));
+                    tUIItems.Add(new UIItem(UIItemType.TextFix, "Load Game", Color.White, Fonts[Font.menuItem01.ToString()], UIItemsFlow.Vertical, UIAction.LoadGame, "", ""));
                     tUI.Position = new Vector2(2, Resolution.Y - 90);
                     tUI.SetUIItems(tUIItems);
+                    break;
+                case UITemplate.mainLoadSaves:
+                    tUI = new UI(UIType.Basic, uiName.ToString(), "Main Menu - Saved Games", new Vector2(300, 300), Resolution / 2);
+                    tUI.BackAlpha = 0.0f;
+                    tUI.ItemsFlow = UIItemsFlow.Vertical;
+                    tUI.ToDraw = false;
                     break;
                 case UITemplate.mainOptions:
                     tUI = new UI(UIType.Basic, uiName.ToString(), "Main Menu - Options", new Vector2(300, 300), Resolution / 2);
                     tUI.BackAlpha = 0.0f;
                     tUI.ItemsFlow = UIItemsFlow.Vertical;
                     tUIItems = new List<UIItem>();
-                    tUIItems.Add(new UIItem(UIItemType.TextFix, "Options", Color.White, ScreenManager.Fonts[Font.menuItem01.ToString()], UIItemsFlow.Vertical, UIAction.Options, "", ""));
+                    tUIItems.Add(new UIItem(UIItemType.TextFix, "Options", Color.White, Fonts[Font.menuItem01.ToString()], UIItemsFlow.Vertical, UIAction.Options, "", ""));
                     tUI.Position = new Vector2(2, Resolution.Y - 60);
                     tUI.SetUIItems(tUIItems);
                     break;
@@ -546,7 +564,7 @@ namespace ToT
                     tUI.BackAlpha = 0.0f;
                     tUI.ItemsFlow = UIItemsFlow.Vertical;
                     tUIItems = new List<UIItem>();
-                    tUIItems.Add(new UIItem(UIItemType.TextFix, "Exit", Color.White, ScreenManager.Fonts[Font.menuItem01.ToString()], UIItemsFlow.Vertical, UIAction.Exit, "", ""));
+                    tUIItems.Add(new UIItem(UIItemType.TextFix, "Exit", Color.White, Fonts[Font.menuItem01.ToString()], UIItemsFlow.Vertical, UIAction.Exit, "", ""));
                     tUI.Position = new Vector2(2, Resolution.Y - 30);
                     tUI.SetUIItems(tUIItems);
                     break;
@@ -555,86 +573,86 @@ namespace ToT
                     tUI.BackAlpha = 0.35f;
                     tUI.ItemsFlow = UIItemsFlow.Horizontal;
                     GGPScreen.RefreshResourcesUI(tUI);
-                    tUI.Position = new Vector2(2, 2) + ScreenManager.PlayerCamera.Position;
+                    tUI.Position = new Vector2(2, 2) + PlayerCamera.Position;
                     break;
                 case UITemplate.income:
                     tUI = new UI(UIType.Basic, uiName.ToString(), "Income Panel", new Vector2(300, 300), new Vector2(2, 2));
                     tUI.BackAlpha = 0.35f;
                     tUI.ItemsFlow = UIItemsFlow.Vertical;
                     GGPScreen.RefreshIncomeUI(tUI);
-                    tUI.Position = new Vector2(2 + ScreenManager.Resolution.X - 40, 2) + ScreenManager.PlayerCamera.Position;
+                    tUI.Position = new Vector2(2 + Resolution.X - 40, 2) + PlayerCamera.Position;
                     break;
                 case UITemplate.turn01:
                     tUI = new UI(UIType.Basic, uiName.ToString(), "Turns UI", new Vector2(300, 300), new Vector2(2, 2));
                     tUI.BackAlpha = 0.35f;
                     tUIItems = new List<UIItem>();
-                    tUIItems.Add(new UIItem(UIItemType.TextFix, "End Turn", Color.CornflowerBlue, ScreenManager.Fonts[Font.menuItem01.ToString()], UIItemsFlow.Vertical, UIAction.EndTurn));
+                    tUIItems.Add(new UIItem(UIItemType.TextFix, "End Turn", Color.CornflowerBlue, Fonts[Font.menuItem01.ToString()], UIItemsFlow.Vertical, UIAction.EndTurn));
                     tUI.SetUIItems(tUIItems);
-                    tUI.Position = new Vector2(ScreenManager.Resolution.X - tUI.Size.X, ScreenManager.Resolution.Y - tUI.Size.Y) + ScreenManager.PlayerCamera.Position;
+                    tUI.Position = new Vector2(Resolution.X - tUI.Size.X, Resolution.Y - tUI.Size.Y) + PlayerCamera.Position;
                     break;
                 case UITemplate.tileSheet:
                     tUI = new UI(UIType.Basic, uiName.ToString(), "Tile UI", new Vector2(300, 300), new Vector2(2, 2));
                     tUI.BackAlpha = 0.35f;
                     tUIItems = new List<UIItem>();
-                    tUIItems.Add(new UIItem(UIItemType.ImageFix, "", Color.CornflowerBlue, ScreenManager.Fonts[Font.menuItem01.ToString()], UIItemsFlow.Vertical, UIAction.TileSheet, "gear_24"));
-                    tUIItems.Add(new UIItem(UIItemType.TextFix, "Mine", Color.CornflowerBlue, ScreenManager.Fonts[Font.menuItem03.ToString()], UIItemsFlow.Vertical, UIAction.TileSheet, "", "1:Gold"));
-                    tUIItems.Add(new UIItem(UIItemType.TextFix, "Farm", Color.CornflowerBlue, ScreenManager.Fonts[Font.menuItem03.ToString()], UIItemsFlow.Vertical, UIAction.TileSheet, "", "1:Food"));
-                    tUIItems.Add(new UIItem(UIItemType.TextFix, "Lumbermill", Color.CornflowerBlue, ScreenManager.Fonts[Font.menuItem03.ToString()], UIItemsFlow.Vertical, UIAction.TileSheet, "", "1:Wood"));
-                    tUIItems.Add(new UIItem(UIItemType.TextFix, "Workshop", Color.CornflowerBlue, ScreenManager.Fonts[Font.menuItem03.ToString()], UIItemsFlow.Vertical, UIAction.TileSheet, "", "1:Production"));
-                    tUIItems.Add(new UIItem(UIItemType.TextFix, "Energy Source", Color.CornflowerBlue, ScreenManager.Fonts[Font.menuItem03.ToString()], UIItemsFlow.Vertical, UIAction.TileSheet, "", "1:Energy"));
+                    tUIItems.Add(new UIItem(UIItemType.ImageFix, "", Color.CornflowerBlue, Fonts[Font.menuItem01.ToString()], UIItemsFlow.Vertical, UIAction.TileSheet, "gear_24"));
+                    tUIItems.Add(new UIItem(UIItemType.TextFix, "Mine", Color.CornflowerBlue, Fonts[Font.menuItem03.ToString()], UIItemsFlow.Vertical, UIAction.TileSheet, "", "1:Gold"));
+                    tUIItems.Add(new UIItem(UIItemType.TextFix, "Farm", Color.CornflowerBlue, Fonts[Font.menuItem03.ToString()], UIItemsFlow.Vertical, UIAction.TileSheet, "", "1:Food"));
+                    tUIItems.Add(new UIItem(UIItemType.TextFix, "Lumbermill", Color.CornflowerBlue, Fonts[Font.menuItem03.ToString()], UIItemsFlow.Vertical, UIAction.TileSheet, "", "1:Wood"));
+                    tUIItems.Add(new UIItem(UIItemType.TextFix, "Workshop", Color.CornflowerBlue, Fonts[Font.menuItem03.ToString()], UIItemsFlow.Vertical, UIAction.TileSheet, "", "1:Production"));
+                    tUIItems.Add(new UIItem(UIItemType.TextFix, "Energy Source", Color.CornflowerBlue, Fonts[Font.menuItem03.ToString()], UIItemsFlow.Vertical, UIAction.TileSheet, "", "1:Energy"));
                     tUI.SetUIItems(tUIItems);
-                    tUI.Position = GGPScreen.Player1.ActiveRoom.Position + new Vector2(ScreenManager.TileSize.X - 28, 0);
+                    tUI.Position = GGPScreen.Player1.ActiveRoom.Position + new Vector2(TileSize.X - 28, 0);
                     break;
                 case UITemplate.tileExpendNorth:
                     tUI = new UI(UIType.Basic, uiName.ToString(), "Tile Expend - North UI", new Vector2(300, 300), new Vector2(2, 2));
                     tUI.TTText = "Discover a new tile - North";
                     tUI.BackAlpha = 0.35f;
                     tUIItems = new List<UIItem>();
-                    tUIItems.Add(new UIItem(UIItemType.ImageFix, "", Color.CornflowerBlue, ScreenManager.Fonts[Font.menuItem01.ToString()], UIItemsFlow.Vertical, UIAction.BuyTile, "plus_24"));
+                    tUIItems.Add(new UIItem(UIItemType.ImageFix, "", Color.CornflowerBlue, Fonts[Font.menuItem01.ToString()], UIItemsFlow.Vertical, UIAction.BuyTile, "plus_24"));
                     tUI.SetUIItems(tUIItems);
-                    tUI.Position = GGPScreen.Player1.ActiveRoom.Position + new Vector2((ScreenManager.TileSize.X / 2) - 14, -14);
+                    tUI.Position = GGPScreen.Player1.ActiveRoom.Position + new Vector2((TileSize.X / 2) - 14, -14);
                     break;
                 case UITemplate.tileExpendEast:
                     tUI = new UI(UIType.Basic, uiName.ToString(), "Tile Expend - East UI", new Vector2(300, 300), new Vector2(2, 2));
                     tUI.TTText = "Discover a new tile - East";
                     tUI.BackAlpha = 0.35f;
                     tUIItems = new List<UIItem>();
-                    tUIItems.Add(new UIItem(UIItemType.ImageFix, "", Color.CornflowerBlue, ScreenManager.Fonts[Font.menuItem01.ToString()], UIItemsFlow.Vertical, UIAction.BuyTile, "plus_24"));
+                    tUIItems.Add(new UIItem(UIItemType.ImageFix, "", Color.CornflowerBlue, Fonts[Font.menuItem01.ToString()], UIItemsFlow.Vertical, UIAction.BuyTile, "plus_24"));
                     tUI.SetUIItems(tUIItems);
-                    tUI.Position = GGPScreen.Player1.ActiveRoom.Position + new Vector2((ScreenManager.TileSize.X) - 14, (ScreenManager.TileSize.Y / 2) - 14);
+                    tUI.Position = GGPScreen.Player1.ActiveRoom.Position + new Vector2((TileSize.X) - 14, (TileSize.Y / 2) - 14);
                     break;
                 case UITemplate.tileExpendSouth:
                     tUI = new UI(UIType.Basic, uiName.ToString(), "Tile Expend - South UI", new Vector2(300, 300), new Vector2(2, 2));
                     tUI.TTText = "Discover a new tile - South";
                     tUI.BackAlpha = 0.35f;
                     tUIItems = new List<UIItem>();
-                    tUIItems.Add(new UIItem(UIItemType.ImageFix, "", Color.CornflowerBlue, ScreenManager.Fonts[Font.menuItem01.ToString()], UIItemsFlow.Vertical, UIAction.BuyTile, "plus_24"));
+                    tUIItems.Add(new UIItem(UIItemType.ImageFix, "", Color.CornflowerBlue, Fonts[Font.menuItem01.ToString()], UIItemsFlow.Vertical, UIAction.BuyTile, "plus_24"));
                     tUI.SetUIItems(tUIItems);
-                    tUI.Position = GGPScreen.Player1.ActiveRoom.Position + new Vector2((ScreenManager.TileSize.X / 2) - 14, (ScreenManager.TileSize.Y) - 14);
+                    tUI.Position = GGPScreen.Player1.ActiveRoom.Position + new Vector2((TileSize.X / 2) - 14, (TileSize.Y) - 14);
                     break;
                 case UITemplate.tileExpendWest:
                     tUI = new UI(UIType.Basic, uiName.ToString(), "Tile Expend - West UI", new Vector2(300, 300), new Vector2(2, 2));
                     tUI.TTText = "Discover a new tile - West";
                     tUI.BackAlpha = 0.35f;
                     tUIItems = new List<UIItem>();
-                    tUIItems.Add(new UIItem(UIItemType.ImageFix, "", Color.CornflowerBlue, ScreenManager.Fonts[Font.menuItem01.ToString()], UIItemsFlow.Vertical, UIAction.BuyTile, "plus_24"));
+                    tUIItems.Add(new UIItem(UIItemType.ImageFix, "", Color.CornflowerBlue, Fonts[Font.menuItem01.ToString()], UIItemsFlow.Vertical, UIAction.BuyTile, "plus_24"));
                     tUI.SetUIItems(tUIItems);
-                    tUI.Position = GGPScreen.Player1.ActiveRoom.Position + new Vector2(-14, (ScreenManager.TileSize.Y / 2) - 14);
+                    tUI.Position = GGPScreen.Player1.ActiveRoom.Position + new Vector2(-14, (TileSize.Y / 2) - 14);
                     break;
                 case UITemplate.log:
-                    tUI = new UI(UIType.BasicInvis, uiName.ToString(), "Events Journal", new Vector2(300, 300), new Vector2(2, ScreenManager.Resolution.Y - 180));
+                    tUI = new UI(UIType.BasicInvis, uiName.ToString(), "Events Journal", new Vector2(300, 300), new Vector2(2, Resolution.Y - 180));
                     tUI.BackAlpha = 0.35f;
                     tUI.ItemsFlow = UIItemsFlow.Vertical;
                     tUIItems = new List<UIItem>();
-                    tUIItems.Add(new UIItem(UIItemType.TextFix, "Events Journal", Color.CornflowerBlue, ScreenManager.Fonts[Font.menuItem02.ToString()], UIItemsFlow.Vertical, UIAction.ToggleLog));
+                    tUIItems.Add(new UIItem(UIItemType.TextFix, "Events Journal", Color.CornflowerBlue, Fonts[Font.menuItem02.ToString()], UIItemsFlow.Vertical, UIAction.ToggleLog));
                     tUI.SetUIItems(tUIItems);
-                    tUI.Position = new Vector2(2, ScreenManager.Resolution.Y) + ScreenManager.PlayerCamera.Position;
+                    tUI.Position = new Vector2(2, Resolution.Y) + PlayerCamera.Position;
                     break;
                 case UITemplate.tooltip:
-                    tUI = new UI(UIType.Basic, uiName.ToString(), "Tool Tips", new Vector2(300, 300), new Vector2(2, ScreenManager.Resolution.Y));
+                    tUI = new UI(UIType.Basic, uiName.ToString(), "Tool Tips", new Vector2(300, 300), new Vector2(2, Resolution.Y));
                     tUI.BackAlpha = 0.40f;
                     tUI.ItemsFlow = UIItemsFlow.Vertical;
-                    tUI.Position = ScreenManager.Input.MousePosition();
+                    tUI.Position = Input.MousePosition();
                     tUI.ToDraw = false;
                     break;
                 default:

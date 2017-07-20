@@ -18,7 +18,6 @@ namespace ToT
     {
         public Level CurrentLevel;
         public Player Player1;
-        public int Turn = 1;
         public int CurrentTileLevel = 1;
         public Dictionary<ResourceType, int> Resources;
         public Dictionary<ResourceType, int> Income;
@@ -29,7 +28,7 @@ namespace ToT
 
         }
 
-        public void Initialize()
+        public void Initialize(string levelToLoad = "")
         {
             TileLevelReqs = new Dictionary<int, int>();
             TileLevelReqs.Add(0, 0);
@@ -60,7 +59,15 @@ namespace ToT
             Income.Add(ResourceType.Production, 0);
 
             CurrentLevel = new Level();
-            CurrentLevel.GenerateLevel(LevelType.Static, "base01", "");
+            if (levelToLoad == "")
+                CurrentLevel.GenerateLevel(LevelType.Static, "base01", "");
+            else
+            {
+                CurrentLevel = FileManager.LoadLevel(ScreenManager.SAVESPATH + levelToLoad + FileManager.GAMEFILES_EXT_LEVEL);
+                CurrentLevel.Stage[Vector2.Zero].IsActive = true;
+            }
+            
+            
 
             Player1 = new Player("Noob", ThingType.Player, ScreenManager.TileSize / 2, "player01", "A noob player");
             Player1.Initialize();
@@ -89,9 +96,12 @@ namespace ToT
 
         public void NextTurn()
         {
-            ScreenManager.Log.Add(new LogEntry("End of turn " + Turn + ". Beginning of turn " + (Turn + 1) + "."));
-            Turn += 1;
+            CurrentLevel.Save();
+            ScreenManager.Log.Add(new LogEntry("End of turn " + CurrentLevel.Turn + ". Beginning of turn " + (CurrentLevel.Turn + 1) + "."));
+
+            CurrentLevel.Turn += 1;
             IncrementResources();
+
         }
 
         public void RefreshIncome()
@@ -140,6 +150,7 @@ namespace ToT
             RefreshIncome();
             RefreshResourcesUI(ScreenManager.GameUIs[UITemplate.toolbar01]);
             Player1.RefreshExpendUIs();
+            CurrentLevel.Save();
         }
 
         public override void Update(GameTime gameTime, InputManager input)
@@ -210,7 +221,7 @@ namespace ToT
         public void RefreshResourcesUI(UI tUI)
         {
             List<UIItem> tUIItems = new List<UIItem>();
-            tUIItems.Add(new UIItem(UIItemType.TextFix, "Turn " + Turn, Color.CornflowerBlue, ScreenManager.Fonts[Font.menuItem03.ToString()], UIItemsFlow.Horizontal, UIAction.None));
+            tUIItems.Add(new UIItem(UIItemType.TextFix, "Turn " + CurrentLevel.Turn, Color.CornflowerBlue, ScreenManager.Fonts[Font.menuItem03.ToString()], UIItemsFlow.Horizontal, UIAction.None));
             //tUIItems.Add(new UIItem(UIItemType.TextFix, "Tile lvl " + CurrentTileLevel, Color.CornflowerBlue, ScreenManager.Fonts[Font.menuItem03.ToString()], UIItemsFlow.Vertical, UIAction.None));
             foreach (KeyValuePair<ResourceType, int> res in Resources)
                 tUIItems.Add(new UIItem(UIItemType.ImageText, res.Value.ToString(), Color.White, ScreenManager.Fonts[Font.menuItem03.ToString()], UIItemsFlow.Horizontal, UIAction.None, "resource_" + res.Key.ToString().ToLower()));

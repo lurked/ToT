@@ -138,5 +138,6 @@ public enum UITemplate
     mainNew,
     mainLoad,
     mainOptions,
-    mainExit
+    mainExit,
+    mainLoadSaves
 }

@@ -37,6 +37,7 @@ namespace ToT
 
             ScreenManager.GameUIs.Add(UITemplate.mainNew, ScreenManager.GenerateUI(UITemplate.mainNew));
             ScreenManager.GameUIs.Add(UITemplate.mainLoad, ScreenManager.GenerateUI(UITemplate.mainLoad));
+            ScreenManager.GameUIs.Add(UITemplate.mainLoadSaves, ScreenManager.GenerateUI(UITemplate.mainLoadSaves));
             ScreenManager.GameUIs.Add(UITemplate.mainOptions, ScreenManager.GenerateUI(UITemplate.mainOptions));
             ScreenManager.GameUIs.Add(UITemplate.mainExit, ScreenManager.GenerateUI(UITemplate.mainExit));
         }
