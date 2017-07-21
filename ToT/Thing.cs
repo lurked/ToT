@@ -65,6 +65,24 @@ namespace ToT
             {
                 ScreenManager.GameUIs[uiTemplate].ToDraw = true;
                 ScreenManager.GameUIs[uiTemplate].Items[0].ActionText = position.X + ":" + position.Y;
+                string tTT = "(" + ScreenManager.GGPScreen.GetTileLevelCostString() + ") Discover a new tile - ";
+                switch (uiTemplate)
+                {
+                    case UITemplate.tileExpendNorth:
+                        tTT += "North";
+                        break;
+                    case UITemplate.tileExpendEast:
+                        tTT += "East";
+                        break;
+                    case UITemplate.tileExpendSouth:
+                        tTT += "South";
+                        break;
+                    case UITemplate.tileExpendWest:
+                        tTT += "West";
+                        break;
+
+                }
+                ScreenManager.GameUIs[uiTemplate].TTText = tTT;
             }
             else
                 ScreenManager.GameUIs[uiTemplate].ToDraw = false;

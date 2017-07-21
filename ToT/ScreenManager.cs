@@ -479,7 +479,15 @@ namespace ToT
                     GGPScreen.NextTurn();
                     break;
                 case UIAction.BuyTile:
-                    GGPScreen.AddRoom(actionText);
+
+                    Dictionary<ResourceType, int> tReqs = GGPScreen.TileLevelCosts[GGPScreen.GetCurrentTileLevel()];
+                    if (GGPScreen.CheckIfPlayerHasResources(tReqs))
+                    {
+                        GGPScreen.SpendResources(tReqs);
+                        GGPScreen.AddRoom(actionText);
+                    }                        
+                    else
+                        Log.Add(new LogEntry("Need more resources to afford a new tile."));
                     break;
                 case UIAction.ToggleLog:
                     if (LogToggled)

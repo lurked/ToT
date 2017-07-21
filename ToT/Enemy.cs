@@ -15,16 +15,10 @@ namespace ToT
 
         public void Initialize()
         {
-            //thingBody.BodyType = BodyType.Dynamic;
-            //thingBody.Friction = 100f;
-            //thingBody.GravityScale = 0f;
-            //thingBody.CollisionCategories = Category.Cat1; //assigning the entity to a category
-            //thingBody.CollidesWith = Category.All; //which category will the entity collide with? i pick all in this case
-            //thingBody.UserData = this; // just leave this be as it is for now
-            //thingBody.Position = Position; // Sets the position of the object
+
         }
 
-        public Enemy(string name, ThingType kind, Vector2 position, string imageName = "", string tooltip = "")
+        public Enemy(string name, ThingType kind, Vector2 position, string imageName = "creature_robot_32", string tooltip = "")
         {
             Name = name;
             Kind = kind;
@@ -32,20 +26,29 @@ namespace ToT
             ImageName = imageName;
             Tooltip = tooltip;
             Rect = ScreenManager.Textures2D[ImageName].Bounds;
-            //thingBody = BodyFactory.CreateRectangle(world, Rect.Width, Rect.Height, 1f, position);
-            //thingBody = BodyFactory.CreateCircle(world, Rect.Width / 2, 1f, position);
-            InitEnemy();
+
+            InitEnemy(name);
         }
 
-        public void InitEnemy(string template = "base01")
+        public void InitEnemy(string template = "base_1")
         {
-            stats.Add("hp", 2f);
-            stats.Add("+hp", 0f);
-            stats.Add("movespeed", 1.5f);
-            stats.Add("+movespeed", 0f);
-            stats.Add("maxspeed", 1f);
-            stats.Add("+maxspeed", 0f);
-            Velocity = Vector2.Zero;
+            switch(template)
+            {
+                case "base_1":
+                    stats.Add("hp", 2f);
+                    stats.Add("+hp", 0f);
+                    stats.Add("movespeed", 1f);
+                    stats.Add("+movespeed", 0f);
+                    ImageName = "creature_robot_32";
+                    break;
+                default:
+                    stats.Add("hp", 2f);
+                    stats.Add("+hp", 0f);
+                    stats.Add("movespeed", 1f);
+                    stats.Add("+movespeed", 0f);
+                    ImageName = "creature_robot_32";
+                    break;
+            }
         }
 
         public override void Update(GameTime gameTime)

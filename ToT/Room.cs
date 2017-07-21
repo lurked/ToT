@@ -16,7 +16,8 @@ namespace ToT
         public int Lvl;
         public bool IsActive;
         public Dictionary<ResourceType, int> Resources;
-        public Dictionary<UpgradeType, int> Upgrades; 
+        public Dictionary<UpgradeType, int> Upgrades;
+        public bool IsSpawn;
 
         public Tile()
         { 
@@ -26,14 +27,16 @@ namespace ToT
             Resources = new Dictionary<ResourceType, int>();
             Upgrades = new Dictionary<UpgradeType, int>();
             IsActive = false;
+            IsSpawn = false;
         }
         public Vector2 RoomPosition
         {
             get { return Position * (ScreenManager.TileSize+new Vector2(1, 1)); }
         }
+
         public void Initialize()
         {
-            ImageName = "pal_green_" + ScreenManager.TSize;            
+            ImageName = "cotton_green_" + ScreenManager.TSize;
         }
 
         public void GenerateRoom(Vector2 position, int lvl)
@@ -41,10 +44,24 @@ namespace ToT
             Position = position;
             Lvl = lvl;
             string tName = "BasicRoom:" + Lvl;
+
+            GeneratePods();
+
+            switch (Lvl)
+            {
+                case 0:
+                    ImageName = "main_01_" + ScreenManager.TSize;
+                    break;
+                default:
+                    ImageName = "cotton_green_" + ScreenManager.TSize;
+                    break;
+            }
+            if (Position.X == 0 || Position.Y == 0)
+                ImageName = "dirt_" + ScreenManager.TSize;
+
             Decor tD = new Decor(tName, ThingType.Decor, Position, ImageName, tName);
             Decors.Add(tD);
             Decors[Decors.Count - 1].Initialize();
-            GeneratePods();
         }
 
         public void AddResources(int qty, ResourceType res)
@@ -66,6 +83,7 @@ namespace ToT
                     Resources.Add(ResourceType.Wood, 1);
                     Resources.Add(ResourceType.Production, 1);
                     Resources.Add(ResourceType.Energy, 1);
+                    MaybeSetAsSpawn(Lvl);
                     break;
                 case 1:
                     AddRandomResources(ResourceType.Gold, 0, 1);
@@ -73,6 +91,7 @@ namespace ToT
                     AddRandomResources(ResourceType.Wood, 0, 1);
                     AddRandomResources(ResourceType.Production, 0, 1);
                     AddRandomResources(ResourceType.Energy, 0, 1);
+                    MaybeSetAsSpawn(Lvl);
                     break;
                 case 2:
                     AddRandomResources(ResourceType.Gold, 0, 2);
@@ -80,6 +99,7 @@ namespace ToT
                     AddRandomResources(ResourceType.Wood, 0, 2);
                     AddRandomResources(ResourceType.Production, 0, 2);
                     AddRandomResources(ResourceType.Energy, 0, 2);
+                    MaybeSetAsSpawn(Lvl);
                     break;
                 case 3:
                     AddRandomResources(ResourceType.Gold, 0, 3);
@@ -87,6 +107,7 @@ namespace ToT
                     AddRandomResources(ResourceType.Wood, 0, 3);
                     AddRandomResources(ResourceType.Production, 0, 3);
                     AddRandomResources(ResourceType.Energy, 0, 3);
+                    MaybeSetAsSpawn(Lvl);
                     break;
                 case 4:
                     AddRandomResources(ResourceType.Gold, 0, 4);
@@ -94,6 +115,7 @@ namespace ToT
                     AddRandomResources(ResourceType.Wood, 0, 4);
                     AddRandomResources(ResourceType.Production, 0, 4);
                     AddRandomResources(ResourceType.Energy, 0, 4);
+                    MaybeSetAsSpawn(Lvl);
                     break;
                 case 5:
                     AddRandomResources(ResourceType.Gold, 0, 5);
@@ -101,6 +123,7 @@ namespace ToT
                     AddRandomResources(ResourceType.Wood, 0, 5);
                     AddRandomResources(ResourceType.Production, 0, 5);
                     AddRandomResources(ResourceType.Energy, 0, 5);
+                    MaybeSetAsSpawn(Lvl);
                     break;
                 default:
                     AddRandomResources(ResourceType.Gold, 0, 1);
@@ -108,8 +131,59 @@ namespace ToT
                     AddRandomResources(ResourceType.Wood, 0, 1);
                     AddRandomResources(ResourceType.Production, 0, 1);
                     AddRandomResources(ResourceType.Energy, 0, 1);
+                    MaybeSetAsSpawn(Lvl);
                     break;
             }
+        }
+
+        private void MaybeSetAsSpawn(int Lvl)
+        {
+            int breakpoint;
+            switch (Lvl)
+            {
+                case 0:
+                    breakpoint = 100;
+                    break;
+                case 1:
+                    breakpoint = 100;
+                    break;
+                case 2:
+                    breakpoint = 80;
+                    break;
+                case 3:
+                    breakpoint = 75;
+                    break;
+                case 4:
+                    breakpoint = 70;
+                    break;
+                case 5:
+                    breakpoint = 65;
+                    break;
+                case 6:
+                    breakpoint = 60;
+                    break;
+                case 7:
+                    breakpoint = 55;
+                    break;
+                case 8:
+                    breakpoint = 50;
+                    break;
+                case 9:
+                    breakpoint = 45;
+                    break;
+                case 10:
+                    breakpoint = 40;
+                    break;
+                case 11:
+                    breakpoint = 35;
+                    break;
+                default:
+                    breakpoint = 100;
+                    break;
+            }
+            int iRand = StaticRandom.Instance.Next(0, 100);
+            if (iRand >= breakpoint)
+                IsSpawn = true;
         }
 
         private int AddRandomResources(ResourceType res, int minRes, int maxRes)

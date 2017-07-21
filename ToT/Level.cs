@@ -17,6 +17,7 @@ namespace ToT
         public List<Decor> Decors;
         public Dictionary<Vector2, Tile> Stage;
         public Dictionary<ResourceType, int> Resources;
+        public List<Enemy> Enemies;
         public int Turn;
 
         public Level()
@@ -24,6 +25,7 @@ namespace ToT
             Decors = new List<Decor>();
             Stage = new Dictionary<Vector2, Tile>();
             Resources = new Dictionary<ResourceType, int>();
+            Enemies = new List<Enemy>();
         }
         
         public void GenerateLevel(LevelType type, string name, string lParams)
