@@ -56,8 +56,9 @@ namespace ToT
                     ImageName = "cotton_green_" + ScreenManager.TSize;
                     break;
             }
-            if (Position.X == 0 || Position.Y == 0)
-                ImageName = "dirt_" + ScreenManager.TSize;
+            if (ImageName != "main_01_" + ScreenManager.TSize)
+                if (Position.X == 0 || Position.Y == 0)
+                    ImageName = "dirt_" + ScreenManager.TSize;
 
             Decor tD = new Decor(tName, ThingType.Decor, Position, ImageName, tName);
             Decors.Add(tD);
