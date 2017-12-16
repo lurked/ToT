@@ -292,6 +292,9 @@ namespace ToT
                 }
             if (ScreenManager.DebugMode)
                 ScreenManager.Sprites.DrawString(ScreenManager.Fonts[Font.debug02.ToString()], (int)room.Position.X + ":" + (int)room.Position.Y, (room.Position - new Vector2(15, 15)) + (room.Position * ScreenManager.TSize), Color.DarkRed, 0f, Vector2.Zero, 0.6f, SpriteEffects.None, 0f);
+            
+            if (room.TileBuilding != null)
+                ScreenManager.Sprites.Draw(ScreenManager.Textures2D["tower_" + room.TileBuilding.Level], (room.BuildingPosition), null, Color.White);
         }
 
 #endregion

@@ -49,6 +49,8 @@ namespace ToT
 
             RefreshExpendUIs();
             ScreenManager.TogTileSheet(false);
+            ScreenManager.TogBuildUI(false);
+            ScreenManager.TogImproveUI(false);
         }
 
         public void RefreshExpendUIs()

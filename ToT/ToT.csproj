@@ -61,6 +61,7 @@
     <Compile Include="ScreenManager.cs" />
     <Compile Include="SplashScreen.cs" />
     <Compile Include="Thing.cs" />
+    <Compile Include="Building.cs" />
     <Compile Include="UI.cs" />
     <Compile Include="UIItem.cs" />
   </ItemGroup>

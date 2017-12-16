@@ -145,3 +145,11 @@ public enum UITemplate
     improveUI,
     buildUI
 }
+
+public enum BuildingType
+{
+    Tower_Normal,
+    Tower_Red,
+    Tower_Blue,
+    Tower_Yellow
+}

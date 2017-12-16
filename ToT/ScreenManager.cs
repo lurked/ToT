@@ -397,8 +397,16 @@ namespace ToT
             GameUIs[UITemplate.tooltip].SetUIItems(tUIIs);
         }
 
+        public static void HideTileUIs()
+        {
+            GameUIs[UITemplate.buildUI].ToDraw = false;
+            GameUIs[UITemplate.improveUI].ToDraw = false;
+        }
+
         public static void TogTileSheet(bool tog)
         {
+            HideTileUIs();
+
             for (int i = 1; i < GameUIs[UITemplate.tileSheet].Items.Count; i++)
                 GameUIs[UITemplate.tileSheet].Items[i].ToShow = tog;
             GameUIs[UITemplate.tileSheet].RefreshSize();
@@ -410,18 +418,18 @@ namespace ToT
             if (GameUIs[UITemplate.tileSheet].Items[1].ToShow)
                 TogTileSheet(false);
             else
-            {
-                TogBuildUI(false);
-                TogImproveUI(false);
                 TogTileSheet(true);
-            }                
 
         }
 
         public static void TogImproveUI(bool tog)
         {
-            for (int i = 1; i < GameUIs[UITemplate.improveUI].Items.Count; i++)
-                GameUIs[UITemplate.improveUI].Items[i].ToShow = tog;
+            HideTileUIs();
+
+            GameUIs[UITemplate.improveUI].ToDraw = tog;
+            if (tog)
+                for (int i = 1; i < GameUIs[UITemplate.improveUI].Items.Count; i++)
+                    GameUIs[UITemplate.improveUI].Items[i].ToShow = tog;
             GameUIs[UITemplate.improveUI].RefreshSize();
             GameUIs[UITemplate.improveUI].UpdateItemsPosition();
         }
@@ -431,18 +439,18 @@ namespace ToT
             if (GameUIs[UITemplate.improveUI].Items[1].ToShow)
                 TogImproveUI(false);
             else
-            {
-                TogTileSheet(false);
-                TogBuildUI(false);
                 TogImproveUI(true);
-            }
 
         }
 
         public static void TogBuildUI(bool tog)
         {
-            for (int i = 1; i < GameUIs[UITemplate.buildUI].Items.Count; i++)
-                GameUIs[UITemplate.buildUI].Items[i].ToShow = tog;
+            HideTileUIs();
+
+            GameUIs[UITemplate.buildUI].ToDraw = tog;
+            if (tog)
+                for (int i = 1; i < GameUIs[UITemplate.buildUI].Items.Count; i++)
+                    GameUIs[UITemplate.buildUI].Items[i].ToShow = tog;
             GameUIs[UITemplate.buildUI].RefreshSize();
             GameUIs[UITemplate.buildUI].UpdateItemsPosition();
         }
@@ -452,11 +460,7 @@ namespace ToT
             if (GameUIs[UITemplate.buildUI].Items[1].ToShow)
                 TogBuildUI(false);
             else
-            {
-                TogImproveUI(false);
-                TogTileSheet(false);
                 TogBuildUI(true);
-            }
 
         }
 
@@ -539,13 +543,15 @@ namespace ToT
                     switch (actionText.ToLower())
                     {
                         case "buildui":
+                            TogTileSheet(false);
                             TogBuildUI(true);
                             break;
                         case "improveui":
+                            TogTileSheet(false);
                             TogImproveUI(true);
                             break;
                     }
-                    ToggleTileSheet();
+                    //ToggleTileSheet();
                     break;
                 case UIAction.ToggleLog:
                     if (LogToggled)
@@ -564,31 +570,31 @@ namespace ToT
                             {
                                 case "gold":
                                     GGPScreen.Player1.ActiveRoom.AddResources(int.Parse(split[0]), ResourceType.Gold);
-                                    ToggleImproveUI();
+                                    TogImproveUI(false);
                                     break;
                                 case "food":
                                     GGPScreen.Player1.ActiveRoom.AddResources(int.Parse(split[0]), ResourceType.Food);
-                                    ToggleImproveUI();
+                                    TogImproveUI(false);
                                     break;
                                 case "production":
                                     GGPScreen.Player1.ActiveRoom.AddResources(int.Parse(split[0]), ResourceType.Production);
-                                    ToggleImproveUI();
+                                    TogImproveUI(false);
                                     break;
                                 case "energy":
                                     GGPScreen.Player1.ActiveRoom.AddResources(int.Parse(split[0]), ResourceType.Energy);
-                                    ToggleImproveUI();
+                                    TogImproveUI(false);
                                     break;
                                 case "tower":
                                     GGPScreen.Player1.ActiveRoom.AddThing(int.Parse(split[0]), ThingType.Tower);
-                                    ToggleImproveUI();
+                                    TogImproveUI(false);
                                     break;
                                 case "guard":
                                     GGPScreen.Player1.ActiveRoom.AddThing(int.Parse(split[0]), ThingType.Guard);
-                                    ToggleImproveUI();
+                                    TogImproveUI(false);
                                     break;
                                 case "special":
                                     GGPScreen.Player1.ActiveRoom.AddThing(int.Parse(split[0]), ThingType.Special);
-                                    ToggleImproveUI();
+                                    TogImproveUI(false);
                                     break;
                                 case "":
                                     break;

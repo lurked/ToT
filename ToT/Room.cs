@@ -18,6 +18,7 @@ namespace ToT
         public Dictionary<ResourceType, int> Resources;
         public Dictionary<UpgradeType, int> Upgrades;
         public bool IsSpawn;
+        public Building TileBuilding;
 
         public Tile()
         { 
@@ -31,7 +32,12 @@ namespace ToT
         }
         public Vector2 RoomPosition
         {
-            get { return Position * (ScreenManager.TileSize+new Vector2(1, 1)); }
+            get { return Position * (ScreenManager.TileSize + new Vector2(1, 1)); }
+        }
+
+        public Vector2 BuildingPosition
+        {
+            get { return RoomPosition + ScreenManager.TileSize/2 - new Vector2(64, 64)/2; }
         }
 
         public void Initialize()
@@ -76,7 +82,21 @@ namespace ToT
 
         public void AddThing(int qty, ThingType tType)
         {
-            //ICITTE
+            switch(tType)
+            {
+                case ThingType.Tower:
+                    SetTower(BuildingType.Tower_Normal, qty);
+                    break;
+            }
+        }
+
+        public void SetTower(BuildingType tType, int lvl)
+        {
+            TileBuilding = new Building
+            {
+                TType = tType,
+                Level = lvl
+            };
         }
 
         public void GeneratePods()
