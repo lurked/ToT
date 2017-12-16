@@ -410,7 +410,53 @@ namespace ToT
             if (GameUIs[UITemplate.tileSheet].Items[1].ToShow)
                 TogTileSheet(false);
             else
+            {
+                TogBuildUI(false);
+                TogImproveUI(false);
                 TogTileSheet(true);
+            }                
+
+        }
+
+        public static void TogImproveUI(bool tog)
+        {
+            for (int i = 1; i < GameUIs[UITemplate.improveUI].Items.Count; i++)
+                GameUIs[UITemplate.improveUI].Items[i].ToShow = tog;
+            GameUIs[UITemplate.improveUI].RefreshSize();
+            GameUIs[UITemplate.improveUI].UpdateItemsPosition();
+        }
+
+        public static void ToggleImproveUI()
+        {
+            if (GameUIs[UITemplate.improveUI].Items[1].ToShow)
+                TogImproveUI(false);
+            else
+            {
+                TogTileSheet(false);
+                TogBuildUI(false);
+                TogImproveUI(true);
+            }
+
+        }
+
+        public static void TogBuildUI(bool tog)
+        {
+            for (int i = 1; i < GameUIs[UITemplate.buildUI].Items.Count; i++)
+                GameUIs[UITemplate.buildUI].Items[i].ToShow = tog;
+            GameUIs[UITemplate.buildUI].RefreshSize();
+            GameUIs[UITemplate.buildUI].UpdateItemsPosition();
+        }
+
+        public static void ToggleBuildUI()
+        {
+            if (GameUIs[UITemplate.buildUI].Items[1].ToShow)
+                TogBuildUI(false);
+            else
+            {
+                TogImproveUI(false);
+                TogTileSheet(false);
+                TogBuildUI(true);
+            }
 
         }
 
@@ -425,17 +471,17 @@ namespace ToT
 
         public void LoadSavedGames()
         {
-            
+
             if (LoadToggled)
             {
-                
+
                 LoadToggled = false;
             }
             else
             {
                 List<UIItem> tUIItems = new List<UIItem>();
                 List<string> tSaves = FileManager.GetSaves(SAVESPATH);
-                foreach(string save in tSaves)
+                foreach (string save in tSaves)
                     tUIItems.Add(new UIItem(UIItemType.TextFix, save, Color.White, Fonts[Font.menuItem03.ToString()], UIItemsFlow.Vertical, UIAction.LoadGame, "", save));
 
                 GameUIs[UITemplate.mainLoadSaves].Position = new Vector2(152, Resolution.Y - 90);
@@ -489,6 +535,18 @@ namespace ToT
                     else
                         Log.Add(new LogEntry("Need more resources to afford a new tile."));
                     break;
+                case UIAction.UpgradeTile:
+                    switch (actionText.ToLower())
+                    {
+                        case "buildui":
+                            TogBuildUI(true);
+                            break;
+                        case "improveui":
+                            TogImproveUI(true);
+                            break;
+                    }
+                    ToggleTileSheet();
+                    break;
                 case UIAction.ToggleLog:
                     if (LogToggled)
                         LogToggled = false;
@@ -498,31 +556,49 @@ namespace ToT
                 case UIAction.TileSheet:
                     if (actionText != "")
                     {
-                        string[] split = actionText.Split(':');
-                        switch (split[1])
+                        if (actionText.Contains(':'))
                         {
-                            case "Gold":
-                                GGPScreen.Player1.ActiveRoom.AddResources(int.Parse(split[0]), ResourceType.Gold);
-                                break;
-                            case "Food":
-                                GGPScreen.Player1.ActiveRoom.AddResources(int.Parse(split[0]), ResourceType.Food);
-                                break;
-                            case "Wood":
-                                GGPScreen.Player1.ActiveRoom.AddResources(int.Parse(split[0]), ResourceType.Wood);
-                                break;
-                            case "Production":
-                                GGPScreen.Player1.ActiveRoom.AddResources(int.Parse(split[0]), ResourceType.Production);
-                                break;
-                            case "Energy":
-                                GGPScreen.Player1.ActiveRoom.AddResources(int.Parse(split[0]), ResourceType.Energy);
-                                break;
-                            case "":
+                            string[] split = actionText.Split(':');
 
-                                break;
-                        }
+                            switch (split[1].ToLower())
+                            {
+                                case "gold":
+                                    GGPScreen.Player1.ActiveRoom.AddResources(int.Parse(split[0]), ResourceType.Gold);
+                                    ToggleImproveUI();
+                                    break;
+                                case "food":
+                                    GGPScreen.Player1.ActiveRoom.AddResources(int.Parse(split[0]), ResourceType.Food);
+                                    ToggleImproveUI();
+                                    break;
+                                case "production":
+                                    GGPScreen.Player1.ActiveRoom.AddResources(int.Parse(split[0]), ResourceType.Production);
+                                    ToggleImproveUI();
+                                    break;
+                                case "energy":
+                                    GGPScreen.Player1.ActiveRoom.AddResources(int.Parse(split[0]), ResourceType.Energy);
+                                    ToggleImproveUI();
+                                    break;
+                                case "tower":
+                                    GGPScreen.Player1.ActiveRoom.AddThing(int.Parse(split[0]), ThingType.Tower);
+                                    ToggleImproveUI();
+                                    break;
+                                case "guard":
+                                    GGPScreen.Player1.ActiveRoom.AddThing(int.Parse(split[0]), ThingType.Guard);
+                                    ToggleImproveUI();
+                                    break;
+                                case "special":
+                                    GGPScreen.Player1.ActiveRoom.AddThing(int.Parse(split[0]), ThingType.Special);
+                                    ToggleImproveUI();
+                                    break;
+                                case "":
+                                    break;
+                            }
+                        }                      
                     }
-
-                    ToggleTileSheet();
+                    else
+                    {
+                        ToggleTileSheet();
+                    }
                     break;
                 default:
 
@@ -604,11 +680,33 @@ namespace ToT
                     tUI.BackAlpha = 0.35f;
                     tUIItems = new List<UIItem>();
                     tUIItems.Add(new UIItem(UIItemType.ImageFix, "", Color.CornflowerBlue, Fonts[Font.menuItem01.ToString()], UIItemsFlow.Vertical, UIAction.TileSheet, "gear_24"));
+                    tUIItems.Add(new UIItem(UIItemType.TextFix, "Upgrade", Color.CornflowerBlue, Fonts[Font.menuItem03.ToString()], UIItemsFlow.Vertical, UIAction.UpgradeTile, "", "ImproveUI"));
+                    tUIItems.Add(new UIItem(UIItemType.TextFix, "Building", Color.CornflowerBlue, Fonts[Font.menuItem03.ToString()], UIItemsFlow.Vertical, UIAction.UpgradeTile, "", "BuildUI"));
+                    tUI.SetUIItems(tUIItems);
+                    tUI.Position = GGPScreen.Player1.ActiveRoom.Position + new Vector2(TileSize.X - 28, 0);
+                    break;
+                case UITemplate.improveUI:
+                    tUI = new UI(UIType.Basic, uiName.ToString(), "Upgrade UI", new Vector2(300, 300), new Vector2(2, 2));
+                    tUI.BackAlpha = 0.35f;
+                    tUIItems = new List<UIItem>();
+                    tUIItems.Add(new UIItem(UIItemType.ImageFix, "", Color.CornflowerBlue, Fonts[Font.menuItem01.ToString()], UIItemsFlow.Vertical, UIAction.TileSheet, "gear_24"));
                     tUIItems.Add(new UIItem(UIItemType.TextFix, "Mine", Color.CornflowerBlue, Fonts[Font.menuItem03.ToString()], UIItemsFlow.Vertical, UIAction.TileSheet, "", "1:Gold"));
                     tUIItems.Add(new UIItem(UIItemType.TextFix, "Farm", Color.CornflowerBlue, Fonts[Font.menuItem03.ToString()], UIItemsFlow.Vertical, UIAction.TileSheet, "", "1:Food"));
-                    tUIItems.Add(new UIItem(UIItemType.TextFix, "Lumbermill", Color.CornflowerBlue, Fonts[Font.menuItem03.ToString()], UIItemsFlow.Vertical, UIAction.TileSheet, "", "1:Wood"));
                     tUIItems.Add(new UIItem(UIItemType.TextFix, "Workshop", Color.CornflowerBlue, Fonts[Font.menuItem03.ToString()], UIItemsFlow.Vertical, UIAction.TileSheet, "", "1:Production"));
                     tUIItems.Add(new UIItem(UIItemType.TextFix, "Energy Source", Color.CornflowerBlue, Fonts[Font.menuItem03.ToString()], UIItemsFlow.Vertical, UIAction.TileSheet, "", "1:Energy"));
+
+                    tUI.SetUIItems(tUIItems);
+                    tUI.Position = GGPScreen.Player1.ActiveRoom.Position + new Vector2(TileSize.X - 28, 0);
+                    break;
+                case UITemplate.buildUI:
+                    tUI = new UI(UIType.Basic, uiName.ToString(), "Building UI", new Vector2(300, 300), new Vector2(2, 2));
+                    tUI.BackAlpha = 0.35f;
+                    tUIItems = new List<UIItem>();
+                    tUIItems.Add(new UIItem(UIItemType.ImageFix, "", Color.CornflowerBlue, Fonts[Font.menuItem01.ToString()], UIItemsFlow.Vertical, UIAction.TileSheet, "gear_24"));
+                    tUIItems.Add(new UIItem(UIItemType.TextFix, "Guard", Color.CornflowerBlue, Fonts[Font.menuItem03.ToString()], UIItemsFlow.Vertical, UIAction.TileSheet, "", "0:Guard"));
+                    tUIItems.Add(new UIItem(UIItemType.TextFix, "Tower", Color.CornflowerBlue, Fonts[Font.menuItem03.ToString()], UIItemsFlow.Vertical, UIAction.TileSheet, "", "0:Tower"));
+                    tUIItems.Add(new UIItem(UIItemType.TextFix, "Special", Color.CornflowerBlue, Fonts[Font.menuItem03.ToString()], UIItemsFlow.Vertical, UIAction.TileSheet, "", "0:Special"));
+
                     tUI.SetUIItems(tUIItems);
                     tUI.Position = GGPScreen.Player1.ActiveRoom.Position + new Vector2(TileSize.X - 28, 0);
                     break;

@@ -33,7 +33,10 @@ public enum ThingType
     NPC,
     Player,
     Resource,
-    Sign
+    Sign,
+    Tower,
+    Guard,
+    Special
 }
 
 public enum LevelType
@@ -57,7 +60,6 @@ public enum ResourceType
 {
     Gold,
     Food,
-    Wood,
     Production,
     Energy
 }
@@ -68,7 +70,6 @@ public enum UpgradeType
 {
     Gold,
     Food,
-    Wood,
     Production,
     Energy,
     Minions
@@ -111,7 +112,8 @@ public enum UIAction
     NewGame,
     LoadGame,
     Options,
-    Exit
+    Exit,
+    BuildTile
 }
 
 public enum UIItemsFlow
@@ -139,5 +141,7 @@ public enum UITemplate
     mainLoad,
     mainOptions,
     mainExit,
-    mainLoadSaves
+    mainLoadSaves,
+    improveUI,
+    buildUI
 }

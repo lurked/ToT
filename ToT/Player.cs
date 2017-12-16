@@ -75,6 +75,8 @@ namespace ToT
             ScreenManager.GameUIs[UITemplate.toolbar01].Position = new Vector2(2, 2) + ScreenManager.PlayerCamera.Position;
             ScreenManager.GameUIs[UITemplate.income].Position = new Vector2(2 + ScreenManager.Resolution.X - ScreenManager.GameUIs[UITemplate.income].Size.X, 2) + ScreenManager.PlayerCamera.Position;
             ScreenManager.GameUIs[UITemplate.tileSheet].Position = ActiveRoom.RoomPosition + new Vector2(ScreenManager.TileSize.X - 28, 0);
+            ScreenManager.GameUIs[UITemplate.buildUI].Position = ActiveRoom.RoomPosition + new Vector2(ScreenManager.TileSize.X - 28, 0);
+            ScreenManager.GameUIs[UITemplate.improveUI].Position = ActiveRoom.RoomPosition + new Vector2(ScreenManager.TileSize.X - 28, 0);
             ScreenManager.GameUIs[UITemplate.tileExpendNorth].Position = ActiveRoom.RoomPosition + new Vector2((ScreenManager.TileSize.X / 2) - 14, -14);
             ScreenManager.GameUIs[UITemplate.tileExpendEast].Position = ActiveRoom.RoomPosition + new Vector2((ScreenManager.TileSize.X) - 14, (ScreenManager.TileSize.Y / 2) - 14);
             ScreenManager.GameUIs[UITemplate.tileExpendSouth].Position = ActiveRoom.RoomPosition + new Vector2((ScreenManager.TileSize.X / 2) - 14, (ScreenManager.TileSize.Y) - 14);

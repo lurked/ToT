@@ -37,7 +37,6 @@ namespace ToT
             Income = new Dictionary<ResourceType, int>();
             Income.Add(ResourceType.Gold, 0);
             Income.Add(ResourceType.Food, 0);
-            Income.Add(ResourceType.Wood, 0);
             Income.Add(ResourceType.Energy, 0);
             Income.Add(ResourceType.Production, 0);
 
@@ -48,7 +47,6 @@ namespace ToT
 
                 CurrentLevel.Resources.Add(ResourceType.Gold, 0);
                 CurrentLevel.Resources.Add(ResourceType.Food, 0);
-                CurrentLevel.Resources.Add(ResourceType.Wood, 0);
                 CurrentLevel.Resources.Add(ResourceType.Energy, 0);
                 CurrentLevel.Resources.Add(ResourceType.Production, 0);
             }
@@ -76,6 +74,8 @@ namespace ToT
             ScreenManager.GameUIs.Add(UITemplate.log, ScreenManager.GenerateUI(UITemplate.log));
             ScreenManager.RefreshLogEntries(ScreenManager.Log);
             ScreenManager.GameUIs.Add(UITemplate.tooltip, ScreenManager.GenerateUI(UITemplate.tooltip));
+            ScreenManager.GameUIs.Add(UITemplate.improveUI, ScreenManager.GenerateUI(UITemplate.improveUI));
+            ScreenManager.GameUIs.Add(UITemplate.buildUI, ScreenManager.GenerateUI(UITemplate.buildUI));
 
             IncrementResources();
             RefreshIncome();
@@ -83,6 +83,8 @@ namespace ToT
             Player1.SetActiveRoom(CurrentLevel.Stage[Vector2.Zero]);
 
             ScreenManager.TogTileSheet(false);
+            ScreenManager.TogImproveUI(false);
+            ScreenManager.TogBuildUI(false);
         }
 
         private void InitTileLevelCosts()
@@ -195,7 +197,6 @@ namespace ToT
         {
             Income[ResourceType.Gold] = 0;
             Income[ResourceType.Food] = 0;
-            Income[ResourceType.Wood] = 0;
             Income[ResourceType.Production] = 0;
             Income[ResourceType.Energy] = 0;
 

@@ -74,6 +74,11 @@ namespace ToT
             ScreenManager.GGPScreen.RefreshIncome();
         }
 
+        public void AddThing(int qty, ThingType tType)
+        {
+            //ICITTE
+        }
+
         public void GeneratePods()
         {
             switch(Lvl)
@@ -81,7 +86,6 @@ namespace ToT
                 case 0:
                     Resources.Add(ResourceType.Gold, 1);
                     Resources.Add(ResourceType.Food, 1);
-                    Resources.Add(ResourceType.Wood, 1);
                     Resources.Add(ResourceType.Production, 1);
                     Resources.Add(ResourceType.Energy, 1);
                     MaybeSetAsSpawn(Lvl);
@@ -89,50 +93,38 @@ namespace ToT
                 case 1:
                     AddRandomResources(ResourceType.Gold, 0, 1);
                     AddRandomResources(ResourceType.Food, 0, 1);
-                    AddRandomResources(ResourceType.Wood, 0, 1);
                     AddRandomResources(ResourceType.Production, 0, 1);
                     AddRandomResources(ResourceType.Energy, 0, 1);
-                    MaybeSetAsSpawn(Lvl);
                     break;
                 case 2:
                     AddRandomResources(ResourceType.Gold, 0, 2);
                     AddRandomResources(ResourceType.Food, 0, 2);
-                    AddRandomResources(ResourceType.Wood, 0, 2);
                     AddRandomResources(ResourceType.Production, 0, 2);
                     AddRandomResources(ResourceType.Energy, 0, 2);
-                    MaybeSetAsSpawn(Lvl);
                     break;
                 case 3:
                     AddRandomResources(ResourceType.Gold, 0, 3);
                     AddRandomResources(ResourceType.Food, 0, 3);
-                    AddRandomResources(ResourceType.Wood, 0, 3);
                     AddRandomResources(ResourceType.Production, 0, 3);
                     AddRandomResources(ResourceType.Energy, 0, 3);
-                    MaybeSetAsSpawn(Lvl);
                     break;
                 case 4:
                     AddRandomResources(ResourceType.Gold, 0, 4);
                     AddRandomResources(ResourceType.Food, 0, 4);
-                    AddRandomResources(ResourceType.Wood, 0, 4);
                     AddRandomResources(ResourceType.Production, 0, 4);
                     AddRandomResources(ResourceType.Energy, 0, 4);
-                    MaybeSetAsSpawn(Lvl);
                     break;
                 case 5:
                     AddRandomResources(ResourceType.Gold, 0, 5);
                     AddRandomResources(ResourceType.Food, 0, 5);
-                    AddRandomResources(ResourceType.Wood, 0, 5);
                     AddRandomResources(ResourceType.Production, 0, 5);
                     AddRandomResources(ResourceType.Energy, 0, 5);
-                    MaybeSetAsSpawn(Lvl);
                     break;
                 default:
                     AddRandomResources(ResourceType.Gold, 0, 1);
                     AddRandomResources(ResourceType.Food, 0, 1);
-                    AddRandomResources(ResourceType.Wood, 0, 1);
                     AddRandomResources(ResourceType.Production, 0, 1);
                     AddRandomResources(ResourceType.Energy, 0, 1);
-                    MaybeSetAsSpawn(Lvl);
                     break;
             }
         }
