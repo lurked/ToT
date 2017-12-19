@@ -22,6 +22,7 @@ namespace ToT
         public Dictionary<ResourceType, int> Income;
         public Dictionary<int, int> TileLevelReqs;
         public Dictionary<int, Dictionary<ResourceType, int>> TileLevelCosts;
+        public int nbTilesToDraw;
 
         public GameplayScreen()
         {
@@ -160,8 +161,35 @@ namespace ToT
             ScreenManager.Log.Add(new LogEntry("End of turn " + CurrentLevel.Turn + ". Beginning of turn " + (CurrentLevel.Turn + 1) + "."));
 
             CurrentLevel.Turn += 1;
+            MoveEnemies();
             SpawnEnemies();
             IncrementResources();            
+        }
+
+        public void MoveEnemies()
+        {
+            foreach(Enemy tE in CurrentLevel.Enemies)
+                if (tE.Position.X == 1 ||
+                    tE.Position.X == -1 ||
+                    tE.Position.Y == 1 ||
+                    tE.Position.Y == -1)
+                {
+                    CurrentLevel.Stage[Vector2.Zero].Durability--;
+                }
+                else
+                {
+                    if (tE.Position.X != 0)
+                        if (tE.Position.X > 0)
+                            tE.Position = new Vector2(tE.Position.X - 1, tE.Position.Y);
+                        else
+                            tE.Position = new Vector2(tE.Position.X + 1, tE.Position.Y);
+
+                    if (tE.Position.Y != 0)
+                        if (tE.Position.Y > 0)
+                            tE.Position = new Vector2(tE.Position.X, tE.Position.Y - 1);
+                        else
+                            tE.Position = new Vector2(tE.Position.X, tE.Position.Y + 1);
+                }
         }
 
         public void SpawnEnemies()
@@ -253,16 +281,48 @@ namespace ToT
         public override void Draw(GameTime gameTime)
         {
             base.Draw(gameTime);
-
+            nbTilesToDraw = 0;
             foreach (KeyValuePair<Vector2, Tile> room in CurrentLevel.Stage)
-                DrawRoom(room.Value);
+                if (room.Key.X > Player1.ActiveRoom.Position.X + 10 ||
+                    room.Key.X < Player1.ActiveRoom.Position.X - 10 ||
+                    room.Key.Y > Player1.ActiveRoom.Position.Y + 10 ||
+                    room.Key.Y < Player1.ActiveRoom.Position.Y - 10)
+                {
+
+                }
+                else
+                {
+                    DrawRoom(room.Value);
+                    nbTilesToDraw++;
+                }
 
             ScreenManager.Sprites.Draw(ScreenManager.Textures2D[Player1.ImageName], Player1.Position + (ScreenManager.TileSize / 2), null, Color.White, 0f, new Vector2(Player1.Rect.Width / 2, Player1.Rect.Height / 2), 1f, SpriteEffects.None, 0f);
             if (ScreenManager.DebugMode)
             {
                 ScreenManager.Sprites.DrawString(ScreenManager.Fonts[Font.debug01.ToString()], (int)Player1.Position.X + ":" + (int)Player1.Position.Y, Player1.Position - new Vector2(24, 24), Color.Red, 0f, Vector2.Zero, 0.6f, SpriteEffects.None, 0f);
                 ScreenManager.Sprites.DrawString(ScreenManager.Fonts[Font.debug01.ToString()], (ScreenManager.Input.MousePosition() + ScreenManager.PlayerCamera.Position).ToString(), ScreenManager.Input.MousePosition() + ScreenManager.PlayerCamera.Position, Color.Red, 0f, Vector2.Zero, 0.6f, SpriteEffects.None, 0f);
+                ScreenManager.Sprites.DrawString(ScreenManager.Fonts[Font.debug02.ToString()], "NRTD:" + nbTilesToDraw, Player1.Position - new Vector2(24, 38), Color.Blue, 0f, Vector2.Zero, 0.6f, SpriteEffects.None, 0f);
             }
+
+            foreach(Enemy tE in CurrentLevel.Enemies)
+            {
+                if (tE.Position.X > Player1.ActiveRoom.Position.X + 10 ||
+                    tE.Position.X < Player1.ActiveRoom.Position.X - 10 ||
+                    tE.Position.Y > Player1.ActiveRoom.Position.Y + 10 ||
+                    tE.Position.Y < Player1.ActiveRoom.Position.Y - 10)
+                {
+
+                }
+                else
+                {
+                    DrawEnemy(tE);
+                }
+            }
+        }
+
+        private void DrawEnemy(Enemy enemy)
+        {
+            ScreenManager.Sprites.Draw(ScreenManager.Textures2D[enemy.ImageName], enemy.Position * (ScreenManager.TSize + 1), null, Color.White);
         }
 
         private void DrawRoom(Tile room)
@@ -292,11 +352,15 @@ namespace ToT
                     //if (ScreenManager.DebugMode)
                     //    ScreenManager.Sprites.DrawString(ScreenManager.Fonts[Font.debug02.ToString()], (int)tT.Coords.X + ":" + (int)tT.Coords.Y, (tT.Position - new Vector2(15, 15)) + (room.Position * ScreenManager.TSize), Color.DarkRed, 0f, Vector2.Zero, 0.6f, SpriteEffects.None, 0f);
                 }
-            if (ScreenManager.DebugMode)
-                ScreenManager.Sprites.DrawString(ScreenManager.Fonts[Font.debug02.ToString()], (int)room.Position.X + ":" + (int)room.Position.Y, (room.Position - new Vector2(15, 15)) + (room.Position * ScreenManager.TSize), Color.DarkRed, 0f, Vector2.Zero, 0.6f, SpriteEffects.None, 0f);
             
+            if (ScreenManager.DebugMode)
+            {
+                ScreenManager.Sprites.DrawString(ScreenManager.Fonts[Font.debug02.ToString()], (int)room.Position.X + ":" + (int)room.Position.Y, (room.Position - new Vector2(15, 15)) + (room.Position * ScreenManager.TSize), Color.DarkRed, 0f, Vector2.Zero, 0.6f, SpriteEffects.None, 0f);
+            }
+
             if (room.TileBuilding != null)
                 ScreenManager.Sprites.Draw(ScreenManager.Textures2D["tower_" + room.TileBuilding.Level], (room.BuildingPosition), null, Color.White);
+
         }
 
 #endregion
@@ -316,6 +380,8 @@ namespace ToT
             //tUIItems.Add(new UIItem(UIItemType.TextFix, "Tile lvl " + CurrentTileLevel, Color.CornflowerBlue, ScreenManager.Fonts[Font.menuItem03.ToString()], UIItemsFlow.Vertical, UIAction.None));
             foreach (KeyValuePair<ResourceType, int> res in CurrentLevel.Resources)
                 tUIItems.Add(new UIItem(UIItemType.ImageText, res.Value.ToString(), Color.White, ScreenManager.Fonts[Font.menuItem03.ToString()], UIItemsFlow.Horizontal, UIAction.None, "resource_" + res.Key.ToString().ToLower()));
+            tUIItems.Add(new UIItem(UIItemType.ImageText, CurrentLevel.Stage[Vector2.Zero].Durability.ToString(), Color.White, ScreenManager.Fonts[Font.menuItem03.ToString()], UIItemsFlow.Horizontal, UIAction.None, "durability_16"));
+
             tUI.SetUIItems(tUIItems);
         }
 

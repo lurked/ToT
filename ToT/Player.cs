@@ -54,9 +54,9 @@ namespace ToT
 
             foreach (KeyValuePair<Vector2, Tile> room in Stage)
             {
-                x0 = room.Value.Position.X * ScreenManager.TileSize.X;
+                x0 = room.Value.Position.X * (ScreenManager.TileSize.X + 1);
                 x1 = x0 + ScreenManager.TileSize.X;
-                y0 = room.Value.Position.Y * ScreenManager.TileSize.Y;
+                y0 = room.Value.Position.Y * (ScreenManager.TileSize.Y + 1);
                 y1 = y0 + ScreenManager.TileSize.Y;
 
                 if (ClickedPosition.X >= x0 && ClickedPosition.X <= x1

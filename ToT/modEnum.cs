@@ -5,7 +5,8 @@
     Loading,
     MainMenu,
     Game,
-    GameMenu
+    GameMenu,
+    GameOver
 }
 
 public enum MenuType

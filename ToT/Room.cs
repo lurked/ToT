@@ -19,6 +19,7 @@ namespace ToT
         public Dictionary<UpgradeType, int> Upgrades;
         public bool IsSpawn;
         public Building TileBuilding;
+        public int Durability;
 
         public Tile()
         { 
@@ -29,6 +30,7 @@ namespace ToT
             Upgrades = new Dictionary<UpgradeType, int>();
             IsActive = false;
             IsSpawn = false;
+            Durability = 100;
         }
         public Vector2 RoomPosition
         {

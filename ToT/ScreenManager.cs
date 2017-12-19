@@ -25,6 +25,7 @@ namespace ToT
         public static InputManager Input;
         public static ClientState State;
         public static SplashScreen SSplashScreen;
+        public static GameOverScreen GOScreen;
         public static MainMenuScreen MMenuScreen;
         public static GameplayScreen GGPScreen;
         public static bool DebugMode = false;
@@ -226,6 +227,9 @@ namespace ToT
                     case ClientState.Game:
                         GGPScreen.Player1.Update(gameTime);
                         GGPScreen.UpdateUIs(gameTime);
+                        break;
+                    case ClientState.GameOver:
+                        GOScreen.Update(gameTime, Input);
                         break;
                     default:
                         if (Input.KeyPressed(Keys.Escape) || Input.ButtonPressed(Buttons.Back))
@@ -550,6 +554,14 @@ namespace ToT
                     break;
                 case UIAction.EndTurn:
                     GGPScreen.NextTurn();
+
+                    if (GGPScreen.CurrentLevel.Stage[Vector2.Zero].Durability <= 0)
+                    {
+                        State = ClientState.GameOver;
+                        GOScreen = new GameOverScreen();
+                        AddScreen(GOScreen);
+                    }
+                        
                     break;
                 case UIAction.BuyTile:
 
