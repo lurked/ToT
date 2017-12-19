@@ -143,7 +143,8 @@ public enum UITemplate
     mainExit,
     mainLoadSaves,
     improveUI,
-    buildUI
+    buildUI,
+    selectionUI
 }
 
 public enum BuildingType
@@ -151,5 +152,7 @@ public enum BuildingType
     Tower_Normal,
     Tower_Red,
     Tower_Blue,
-    Tower_Yellow
+    Tower_Yellow,
+    Spawn_Enemy_Basic,
+    Spawn_Enemy_Special
 }

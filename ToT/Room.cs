@@ -85,12 +85,12 @@ namespace ToT
             switch(tType)
             {
                 case ThingType.Tower:
-                    SetTower(BuildingType.Tower_Normal, qty);
+                    SetBuilding(BuildingType.Tower_Normal, qty);
                     break;
             }
         }
 
-        public void SetTower(BuildingType tType, int lvl)
+        public void SetBuilding(BuildingType tType, int lvl)
         {
             TileBuilding = new Building
             {
@@ -101,52 +101,58 @@ namespace ToT
 
         public void GeneratePods()
         {
-            switch(Lvl)
+            if (Position.X == 0 && Position.Y == 0)
             {
-                case 0:
-                    Resources.Add(ResourceType.Gold, 1);
-                    Resources.Add(ResourceType.Food, 1);
-                    Resources.Add(ResourceType.Production, 1);
-                    Resources.Add(ResourceType.Energy, 1);
-                    MaybeSetAsSpawn(Lvl);
-                    break;
-                case 1:
-                    AddRandomResources(ResourceType.Gold, 0, 1);
-                    AddRandomResources(ResourceType.Food, 0, 1);
-                    AddRandomResources(ResourceType.Production, 0, 1);
-                    AddRandomResources(ResourceType.Energy, 0, 1);
-                    break;
-                case 2:
-                    AddRandomResources(ResourceType.Gold, 0, 2);
-                    AddRandomResources(ResourceType.Food, 0, 2);
-                    AddRandomResources(ResourceType.Production, 0, 2);
-                    AddRandomResources(ResourceType.Energy, 0, 2);
-                    break;
-                case 3:
-                    AddRandomResources(ResourceType.Gold, 0, 3);
-                    AddRandomResources(ResourceType.Food, 0, 3);
-                    AddRandomResources(ResourceType.Production, 0, 3);
-                    AddRandomResources(ResourceType.Energy, 0, 3);
-                    break;
-                case 4:
-                    AddRandomResources(ResourceType.Gold, 0, 4);
-                    AddRandomResources(ResourceType.Food, 0, 4);
-                    AddRandomResources(ResourceType.Production, 0, 4);
-                    AddRandomResources(ResourceType.Energy, 0, 4);
-                    break;
-                case 5:
-                    AddRandomResources(ResourceType.Gold, 0, 5);
-                    AddRandomResources(ResourceType.Food, 0, 5);
-                    AddRandomResources(ResourceType.Production, 0, 5);
-                    AddRandomResources(ResourceType.Energy, 0, 5);
-                    break;
-                default:
-                    AddRandomResources(ResourceType.Gold, 0, 1);
-                    AddRandomResources(ResourceType.Food, 0, 1);
-                    AddRandomResources(ResourceType.Production, 0, 1);
-                    AddRandomResources(ResourceType.Energy, 0, 1);
-                    break;
+                Resources.Add(ResourceType.Gold, 1);
+                Resources.Add(ResourceType.Food, 1);
+                Resources.Add(ResourceType.Production, 1);
+                Resources.Add(ResourceType.Energy, 1);
             }
+            else if (Position.X == 0 || Position.Y == 0)
+                MaybeSetAsSpawn(Lvl);
+            else
+                switch (Lvl)
+                {
+                    case 0:
+
+                        break;
+                    case 1:
+                        AddRandomResources(ResourceType.Gold, 0, 1);
+                        AddRandomResources(ResourceType.Food, 0, 1);
+                        AddRandomResources(ResourceType.Production, 0, 1);
+                        AddRandomResources(ResourceType.Energy, 0, 1);
+                        break;
+                    case 2:
+                        AddRandomResources(ResourceType.Gold, 0, 2);
+                        AddRandomResources(ResourceType.Food, 0, 2);
+                        AddRandomResources(ResourceType.Production, 0, 2);
+                        AddRandomResources(ResourceType.Energy, 0, 2);
+                        break;
+                    case 3:
+                        AddRandomResources(ResourceType.Gold, 0, 3);
+                        AddRandomResources(ResourceType.Food, 0, 3);
+                        AddRandomResources(ResourceType.Production, 0, 3);
+                        AddRandomResources(ResourceType.Energy, 0, 3);
+                        break;
+                    case 4:
+                        AddRandomResources(ResourceType.Gold, 0, 4);
+                        AddRandomResources(ResourceType.Food, 0, 4);
+                        AddRandomResources(ResourceType.Production, 0, 4);
+                        AddRandomResources(ResourceType.Energy, 0, 4);
+                        break;
+                    case 5:
+                        AddRandomResources(ResourceType.Gold, 0, 5);
+                        AddRandomResources(ResourceType.Food, 0, 5);
+                        AddRandomResources(ResourceType.Production, 0, 5);
+                        AddRandomResources(ResourceType.Energy, 0, 5);
+                        break;
+                    default:
+                        AddRandomResources(ResourceType.Gold, 0, 1);
+                        AddRandomResources(ResourceType.Food, 0, 1);
+                        AddRandomResources(ResourceType.Production, 0, 1);
+                        AddRandomResources(ResourceType.Energy, 0, 1);
+                        break;
+                }
         }
 
         private void MaybeSetAsSpawn(int Lvl)
@@ -196,7 +202,10 @@ namespace ToT
             }
             int iRand = StaticRandom.Instance.Next(0, 100);
             if (iRand >= breakpoint)
+            {
                 IsSpawn = true;
+                SetBuilding(BuildingType.Spawn_Enemy_Basic, Lvl);
+            }
         }
 
         private int AddRandomResources(ResourceType res, int minRes, int maxRes)

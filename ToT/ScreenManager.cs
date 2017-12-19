@@ -464,6 +464,28 @@ namespace ToT
 
         }
 
+        public static void TogSelectionUI(bool tog)
+        {
+            HideTileUIs();
+            TogTileSheet(false);
+
+            GameUIs[UITemplate.buildUI].ToDraw = tog;
+            if (tog)
+                for (int i = 1; i < GameUIs[UITemplate.selectionUI].Items.Count; i++)
+                    GameUIs[UITemplate.selectionUI].Items[i].ToShow = tog;
+            GameUIs[UITemplate.selectionUI].RefreshSize();
+            GameUIs[UITemplate.selectionUI].UpdateItemsPosition();
+        }
+
+        public static void ToggleSelectionUI()
+        {
+            if (GameUIs[UITemplate.selectionUI].Items[1].ToShow)
+                TogSelectionUI(false);
+            else
+                TogSelectionUI(true);
+
+        }
+
         public static void ToggleMainMenu(bool visibleOrNot)
         {
             GameUIs[UITemplate.mainNew].ToDraw = visibleOrNot;
@@ -485,6 +507,7 @@ namespace ToT
             {
                 List<UIItem> tUIItems = new List<UIItem>();
                 List<string> tSaves = FileManager.GetSaves(SAVESPATH);
+                tSaves.Reverse();
                 foreach (string save in tSaves)
                     tUIItems.Add(new UIItem(UIItemType.TextFix, save, Color.White, Fonts[Font.menuItem03.ToString()], UIItemsFlow.Vertical, UIAction.LoadGame, "", save));
 
@@ -610,6 +633,24 @@ namespace ToT
 
                     break;
             }
+        }
+
+        public static UI UpdateSelectionUI(UITemplate uiName)
+        {
+            UI tUI;
+            //ICITTE
+            tUI = new UI(UIType.Basic, uiName.ToString(), "Building UI", new Vector2(300, 300), new Vector2(2, 2));
+            tUI.BackAlpha = 0.35f;
+            List<UIItem> tUIItems = new List<UIItem>();
+            tUIItems.Add(new UIItem(UIItemType.ImageFix, "", Color.CornflowerBlue, Fonts[Font.menuItem01.ToString()], UIItemsFlow.Vertical, UIAction.TileSheet, "gear_24"));
+            tUIItems.Add(new UIItem(UIItemType.TextFix, "Guard", Color.CornflowerBlue, Fonts[Font.menuItem03.ToString()], UIItemsFlow.Vertical, UIAction.TileSheet, "", "0:Guard"));
+            tUIItems.Add(new UIItem(UIItemType.TextFix, "Tower", Color.CornflowerBlue, Fonts[Font.menuItem03.ToString()], UIItemsFlow.Vertical, UIAction.TileSheet, "", "0:Tower"));
+            tUIItems.Add(new UIItem(UIItemType.TextFix, "Special", Color.CornflowerBlue, Fonts[Font.menuItem03.ToString()], UIItemsFlow.Vertical, UIAction.TileSheet, "", "0:Special"));
+
+            tUI.SetUIItems(tUIItems);
+            tUI.Position = GGPScreen.Player1.ActiveRoom.Position + new Vector2(TileSize.X - 28, 0);
+
+            return tUI;
         }
 
         public static UI GenerateUI(UITemplate uiName)

@@ -63,19 +63,20 @@ namespace ToT
             Player1.SetStage(CurrentLevel.Stage);
             ScreenManager.Log.Add(new LogEntry("Generating Rivetting Tales of Tiles..."));
 
-            ScreenManager.GameUIs.Add(UITemplate.toolbar01, ScreenManager.GenerateUI(UITemplate.toolbar01));
-            ScreenManager.GameUIs.Add(UITemplate.turn01, ScreenManager.GenerateUI(UITemplate.turn01));
-            ScreenManager.GameUIs.Add(UITemplate.income, ScreenManager.GenerateUI(UITemplate.income));
+            ScreenManager.GameUIs.Add(UITemplate.toolbar01, ScreenManager.GenerateUI(UITemplate.toolbar01));                        //
+            ScreenManager.GameUIs.Add(UITemplate.turn01, ScreenManager.GenerateUI(UITemplate.turn01));                              //Displays the "End of turn" options.
+            ScreenManager.GameUIs.Add(UITemplate.income, ScreenManager.GenerateUI(UITemplate.income));                              
             ScreenManager.GameUIs.Add(UITemplate.tileExpendNorth, ScreenManager.GenerateUI(UITemplate.tileExpendNorth));
             ScreenManager.GameUIs.Add(UITemplate.tileExpendEast, ScreenManager.GenerateUI(UITemplate.tileExpendEast));
             ScreenManager.GameUIs.Add(UITemplate.tileExpendSouth, ScreenManager.GenerateUI(UITemplate.tileExpendSouth));
-            ScreenManager.GameUIs.Add(UITemplate.tileExpendWest, ScreenManager.GenerateUI(UITemplate.tileExpendWest));
-            ScreenManager.GameUIs.Add(UITemplate.tileSheet, ScreenManager.GenerateUI(UITemplate.tileSheet));
-            ScreenManager.GameUIs.Add(UITemplate.log, ScreenManager.GenerateUI(UITemplate.log));
+            ScreenManager.GameUIs.Add(UITemplate.tileExpendWest, ScreenManager.GenerateUI(UITemplate.tileExpendWest));              
+            ScreenManager.GameUIs.Add(UITemplate.tileSheet, ScreenManager.GenerateUI(UITemplate.tileSheet));                        //Available actions for the current tile.
+            ScreenManager.GameUIs.Add(UITemplate.log, ScreenManager.GenerateUI(UITemplate.log));                                    //Event Journal.
             ScreenManager.RefreshLogEntries(ScreenManager.Log);
             ScreenManager.GameUIs.Add(UITemplate.tooltip, ScreenManager.GenerateUI(UITemplate.tooltip));
-            ScreenManager.GameUIs.Add(UITemplate.improveUI, ScreenManager.GenerateUI(UITemplate.improveUI));
-            ScreenManager.GameUIs.Add(UITemplate.buildUI, ScreenManager.GenerateUI(UITemplate.buildUI));
+            ScreenManager.GameUIs.Add(UITemplate.improveUI, ScreenManager.GenerateUI(UITemplate.improveUI));                        //Improvements available to build on the current tile.
+            ScreenManager.GameUIs.Add(UITemplate.buildUI, ScreenManager.GenerateUI(UITemplate.buildUI));                            //Buildings available to build on the current tile.
+            ScreenManager.GameUIs.Add(UITemplate.selectionUI, ScreenManager.GenerateUI(UITemplate.selectionUI));                    //Shows actions for the currently selected thing.
 
             IncrementResources();
             RefreshIncome();
@@ -85,6 +86,7 @@ namespace ToT
             ScreenManager.TogTileSheet(false);
             ScreenManager.TogImproveUI(false);
             ScreenManager.TogBuildUI(false);
+            ScreenManager.TogSelectionUI(false);
         }
 
         private void InitTileLevelCosts()
@@ -94,8 +96,8 @@ namespace ToT
             for(int i = 1; i < 12; i++)
             {
                 Dictionary<ResourceType, int> tTLCs = new Dictionary<ResourceType, int>();
-                tTLCs.Add(ResourceType.Gold, i * 10);
-                tTLCs.Add(ResourceType.Energy, i * 10);
+                tTLCs.Add(ResourceType.Gold, i * 1);
+                tTLCs.Add(ResourceType.Energy, i * 1);
                 TileLevelCosts.Add(i, tTLCs);
             }
         }

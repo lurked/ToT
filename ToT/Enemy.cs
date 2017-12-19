@@ -26,7 +26,7 @@ namespace ToT
             ImageName = imageName;
             Tooltip = tooltip;
             Rect = ScreenManager.Textures2D[ImageName].Bounds;
-
+            
             InitEnemy(name);
         }
 
