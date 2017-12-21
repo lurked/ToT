@@ -65,8 +65,6 @@ public enum ResourceType
     Energy
 }
 
-
-
 public enum UpgradeType
 {
     Gold,
@@ -156,4 +154,12 @@ public enum BuildingType
     Tower_Yellow,
     Spawn_Enemy_Basic,
     Spawn_Enemy_Special
+}
+
+public enum TowerAttack
+{
+    Normal,
+    Burn,
+    AoE,
+    Bounce
 }

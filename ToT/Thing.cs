@@ -25,7 +25,6 @@ namespace ToT
         public Tile ActiveRoom;
         protected Dictionary<Vector2, Tile> Stage;
 
-
         public Thing()
         {
             Kind = ThingType.Decor;
@@ -38,6 +37,19 @@ namespace ToT
         public void SetStage(Dictionary<Vector2, Tile> stage)
         {
             Stage = stage;
+        }
+
+        public float GetStat(string stat)
+        {
+            float tStat = 0;
+
+            if (stats.ContainsKey(stat))
+                tStat = stats[stat];
+
+            if (stats.ContainsKey("+" + stat))
+                tStat += stats["+" + stat];
+
+            return tStat;
         }
 
         public void SetActiveRoom(Tile currentRoom)

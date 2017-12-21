@@ -64,20 +64,20 @@ namespace ToT
             Player1.SetStage(CurrentLevel.Stage);
             ScreenManager.Log.Add(new LogEntry("Generating Rivetting Tales of Tiles..."));
 
-            ScreenManager.GameUIs.Add(UITemplate.toolbar01, ScreenManager.GenerateUI(UITemplate.toolbar01));                        //
-            ScreenManager.GameUIs.Add(UITemplate.turn01, ScreenManager.GenerateUI(UITemplate.turn01));                              //Displays the "End of turn" options.
-            ScreenManager.GameUIs.Add(UITemplate.income, ScreenManager.GenerateUI(UITemplate.income));                              
-            ScreenManager.GameUIs.Add(UITemplate.tileExpendNorth, ScreenManager.GenerateUI(UITemplate.tileExpendNorth));
-            ScreenManager.GameUIs.Add(UITemplate.tileExpendEast, ScreenManager.GenerateUI(UITemplate.tileExpendEast));
-            ScreenManager.GameUIs.Add(UITemplate.tileExpendSouth, ScreenManager.GenerateUI(UITemplate.tileExpendSouth));
-            ScreenManager.GameUIs.Add(UITemplate.tileExpendWest, ScreenManager.GenerateUI(UITemplate.tileExpendWest));              
-            ScreenManager.GameUIs.Add(UITemplate.tileSheet, ScreenManager.GenerateUI(UITemplate.tileSheet));                        //Available actions for the current tile.
-            ScreenManager.GameUIs.Add(UITemplate.log, ScreenManager.GenerateUI(UITemplate.log));                                    //Event Journal.
+            ScreenManager.AddOrReplaceUI(UITemplate.toolbar01, ScreenManager.GenerateUI(UITemplate.toolbar01));                        //
+            ScreenManager.AddOrReplaceUI(UITemplate.turn01, ScreenManager.GenerateUI(UITemplate.turn01));                              //Displays the "End of turn" options.
+            ScreenManager.AddOrReplaceUI(UITemplate.income, ScreenManager.GenerateUI(UITemplate.income));                              
+            ScreenManager.AddOrReplaceUI(UITemplate.tileExpendNorth, ScreenManager.GenerateUI(UITemplate.tileExpendNorth));
+            ScreenManager.AddOrReplaceUI(UITemplate.tileExpendEast, ScreenManager.GenerateUI(UITemplate.tileExpendEast));
+            ScreenManager.AddOrReplaceUI(UITemplate.tileExpendSouth, ScreenManager.GenerateUI(UITemplate.tileExpendSouth));
+            ScreenManager.AddOrReplaceUI(UITemplate.tileExpendWest, ScreenManager.GenerateUI(UITemplate.tileExpendWest));              
+            ScreenManager.AddOrReplaceUI(UITemplate.tileSheet, ScreenManager.GenerateUI(UITemplate.tileSheet));                        //Available actions for the current tile.
+            ScreenManager.AddOrReplaceUI(UITemplate.log, ScreenManager.GenerateUI(UITemplate.log));                                    //Event Journal.
             ScreenManager.RefreshLogEntries(ScreenManager.Log);
-            ScreenManager.GameUIs.Add(UITemplate.tooltip, ScreenManager.GenerateUI(UITemplate.tooltip));
-            ScreenManager.GameUIs.Add(UITemplate.improveUI, ScreenManager.GenerateUI(UITemplate.improveUI));                        //Improvements available to build on the current tile.
-            ScreenManager.GameUIs.Add(UITemplate.buildUI, ScreenManager.GenerateUI(UITemplate.buildUI));                            //Buildings available to build on the current tile.
-            ScreenManager.GameUIs.Add(UITemplate.selectionUI, ScreenManager.GenerateUI(UITemplate.selectionUI));                    //Shows actions for the currently selected thing.
+            ScreenManager.AddOrReplaceUI(UITemplate.tooltip, ScreenManager.GenerateUI(UITemplate.tooltip));
+            ScreenManager.AddOrReplaceUI(UITemplate.improveUI, ScreenManager.GenerateUI(UITemplate.improveUI));                        //Improvements available to build on the current tile.
+            ScreenManager.AddOrReplaceUI(UITemplate.buildUI, ScreenManager.GenerateUI(UITemplate.buildUI));                            //Buildings available to build on the current tile.
+            ScreenManager.AddOrReplaceUI(UITemplate.selectionUI, ScreenManager.GenerateUI(UITemplate.selectionUI));                    //Shows actions for the currently selected thing.
 
             IncrementResources();
             RefreshIncome();
@@ -178,17 +178,24 @@ namespace ToT
                 }
                 else
                 {
-                    if (tE.Position.X != 0)
-                        if (tE.Position.X > 0)
-                            tE.Position = new Vector2(tE.Position.X - 1, tE.Position.Y);
-                        else
-                            tE.Position = new Vector2(tE.Position.X + 1, tE.Position.Y);
+                    if (tE.TileProgress < 1)
+                        tE.TileProgress += tE.GetStat("movespeed");
+                    if (tE.TileProgress >= 1)
+                    {
+                        if (tE.Position.X != 0)
+                            if (tE.Position.X > 0)
+                                tE.Position = new Vector2(tE.Position.X - 1, tE.Position.Y);
+                            else
+                                tE.Position = new Vector2(tE.Position.X + 1, tE.Position.Y);
 
-                    if (tE.Position.Y != 0)
-                        if (tE.Position.Y > 0)
-                            tE.Position = new Vector2(tE.Position.X, tE.Position.Y - 1);
-                        else
-                            tE.Position = new Vector2(tE.Position.X, tE.Position.Y + 1);
+                        if (tE.Position.Y != 0)
+                            if (tE.Position.Y > 0)
+                                tE.Position = new Vector2(tE.Position.X, tE.Position.Y - 1);
+                            else
+                                tE.Position = new Vector2(tE.Position.X, tE.Position.Y + 1);
+
+                        tE.TileProgress--;
+                    }
                 }
         }
 
@@ -322,7 +329,7 @@ namespace ToT
 
         private void DrawEnemy(Enemy enemy)
         {
-            ScreenManager.Sprites.Draw(ScreenManager.Textures2D[enemy.ImageName], enemy.Position * (ScreenManager.TSize + 1), null, Color.White);
+            ScreenManager.Sprites.Draw(ScreenManager.Textures2D[enemy.ImageName], enemy.DrawPosition(), null, Color.White);
         }
 
         private void DrawRoom(Tile room)
@@ -337,20 +344,16 @@ namespace ToT
                         tCol = Color.LightGray;
                     float resX = 1f;
                     float resY = 1f;
-                    ScreenManager.Sprites.Draw(ScreenManager.Textures2D[tT.ImageName], tT.Position + (room.Position * ScreenManager.TSize), null, room.IsSpawn ? Color.Red : tCol);
-                    foreach(KeyValuePair<ResourceType, int> res in room.Resources)
+                    //ScreenManager.Sprites.Draw(ScreenManager.Textures2D[tT.ImageName], tT.Position + (room.Position * ScreenManager.TSize), null, room.IsSpawn ? Color.Red : tCol);
+                    ScreenManager.Sprites.Draw(ScreenManager.Textures2D[tT.ImageName], tT.Position + (room.Position * ScreenManager.TSize), null, tCol);
+                    foreach (KeyValuePair<ResourceType, int> res in room.Resources)
                     {
                         for (int i = 0; i < res.Value; i++)
                         {
                             ScreenManager.Sprites.Draw(ScreenManager.Textures2D["resource_" + res.Key.ToString().ToLower()], (room.Position + new Vector2(resX + (ScreenManager.Textures2D["resource_" + res.Key.ToString().ToLower()].Width * i), resY)) + (room.Position * ScreenManager.TSize), null, Color.White);
                         }
-                        resY += 16;
-                        //ScreenManager.Sprites.DrawString(ScreenManager.Fonts[Font.debug02.ToString()], res.Value.ToString(), (room.Position + new Vector2(resX, resY)) + (room.Position * ScreenManager.TSize), Color.White, 0f, Vector2.Zero, 0.6f, SpriteEffects.None, 0f);
-                        //resY += (resHeight * 0.6f) - 1f;
-                        
+                        resY += 16;                      
                     }
-                    //if (ScreenManager.DebugMode)
-                    //    ScreenManager.Sprites.DrawString(ScreenManager.Fonts[Font.debug02.ToString()], (int)tT.Coords.X + ":" + (int)tT.Coords.Y, (tT.Position - new Vector2(15, 15)) + (room.Position * ScreenManager.TSize), Color.DarkRed, 0f, Vector2.Zero, 0.6f, SpriteEffects.None, 0f);
                 }
             
             if (ScreenManager.DebugMode)
@@ -359,7 +362,23 @@ namespace ToT
             }
 
             if (room.TileBuilding != null)
-                ScreenManager.Sprites.Draw(ScreenManager.Textures2D["tower_" + room.TileBuilding.Level], (room.BuildingPosition), null, Color.White);
+            {
+                string imgName;
+                switch(room.TileBuilding.TType)
+                {
+                    case BuildingType.Tower_Normal:
+                        imgName = "tower_" + room.TileBuilding.Level;
+                        break;
+                    case BuildingType.Spawn_Enemy_Basic:
+                        imgName = "spawn_0";
+                        break;
+                    default:
+                        imgName = "tower_0";
+                        break;
+                }
+                ScreenManager.Sprites.Draw(ScreenManager.Textures2D[imgName], (room.BuildingPosition), null, Color.White);
+            }
+                
 
         }
 

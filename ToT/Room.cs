@@ -39,7 +39,15 @@ namespace ToT
 
         public Vector2 BuildingPosition
         {
-            get { return RoomPosition + ScreenManager.TileSize/2 - new Vector2(64, 64)/2; }
+            get
+            {
+                Vector2 tPos;
+                if (TileBuilding != null)
+                    tPos = new Vector2(ScreenManager.Textures2D[TileBuilding.ImageName].Width, ScreenManager.Textures2D[TileBuilding.ImageName].Height);
+                else
+                    tPos = new Vector2(64, 64);
+                return RoomPosition + ScreenManager.TileSize / 2 - tPos / 2;
+            }
         }
 
         public void Initialize()
@@ -87,17 +95,18 @@ namespace ToT
             switch(tType)
             {
                 case ThingType.Tower:
-                    SetBuilding(BuildingType.Tower_Normal, qty);
+                    SetBuilding(BuildingType.Tower_Normal, qty, "tower_" + qty);
                     break;
             }
         }
 
-        public void SetBuilding(BuildingType tType, int lvl)
+        public void SetBuilding(BuildingType tType, int lvl, string imgName)
         {
             TileBuilding = new Building
             {
                 TType = tType,
-                Level = lvl
+                Level = lvl,
+                ImageName = imgName
             };
         }
 
@@ -206,7 +215,7 @@ namespace ToT
             if (iRand >= breakpoint)
             {
                 IsSpawn = true;
-                SetBuilding(BuildingType.Spawn_Enemy_Basic, Lvl);
+                SetBuilding(BuildingType.Spawn_Enemy_Basic, Lvl, "spawn_0");
             }
         }
 

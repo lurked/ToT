@@ -158,7 +158,13 @@ namespace ToT
 
         }
 
-
+        public static void AddOrReplaceUI(UITemplate tUIT, UI tUI)
+        {
+            if (GameUIs.ContainsKey(tUIT))
+                GameUIs[tUIT] = tUI;
+            else
+                GameUIs.Add(tUIT, tUI);
+        }
 
         protected override void Update(GameTime gameTime)
         {
@@ -171,14 +177,24 @@ namespace ToT
                 CheckHoverUI(Input.MousePosition() + PlayerCamera.Position);
                 if (Input.MousePressed())
                 {
-                    if (ActiveUI != null)
+                    if (State == ClientState.GameOver)
                     {
-                        if (ActiveUI.ToDraw)
+                        State = ClientState.MainMenu;
+                        MMenuScreen = new MainMenuScreen();
+
+                        ChangeScreens(GOScreen, MMenuScreen);
+                    }
+                    else
+                    {
+                        if (ActiveUI != null)
                         {
-                            foreach (UIItem uiI in ActiveUI.Items)
+                            if (ActiveUI.ToDraw)
                             {
-                                if (Tools.Intersects(Input.MousePosition() + PlayerCamera.Position, new Rectangle(uiI.ItemRect.X + (int)ActiveUI.Position.X, uiI.ItemRect.Y + (int)ActiveUI.Position.Y, uiI.ItemRect.Width, uiI.ItemRect.Height)))
-                                    ExecuteMenuAction(uiI.Action, uiI.ActionText);
+                                foreach (UIItem uiI in ActiveUI.Items)
+                                {
+                                    if (Tools.Intersects(Input.MousePosition() + PlayerCamera.Position, new Rectangle(uiI.ItemRect.X + (int)ActiveUI.Position.X, uiI.ItemRect.Y + (int)ActiveUI.Position.Y, uiI.ItemRect.Width, uiI.ItemRect.Height)))
+                                        ExecuteMenuAction(uiI.Action, uiI.ActionText);
+                                }
                             }
                         }
                     }
@@ -497,6 +513,7 @@ namespace ToT
             GameUIs[UITemplate.mainLoadSaves].ToDraw = visibleOrNot;
             GameUIs[UITemplate.mainOptions].ToDraw = visibleOrNot;
             GameUIs[UITemplate.mainExit].ToDraw = visibleOrNot;
+            LoadToggled = visibleOrNot;
         }
 
         public void LoadSavedGames()
@@ -504,8 +521,8 @@ namespace ToT
 
             if (LoadToggled)
             {
-
                 LoadToggled = false;
+                GameUIs[UITemplate.mainLoadSaves].ToDraw = false;
             }
             else
             {
@@ -559,7 +576,9 @@ namespace ToT
                     {
                         State = ClientState.GameOver;
                         GOScreen = new GameOverScreen();
-                        AddScreen(GOScreen);
+                        ChangeScreens(GGPScreen, GOScreen);
+
+                        PlayerCamera.SetFocalPoint(Resolution / 2);
                     }
                         
                     break;
@@ -846,8 +865,19 @@ namespace ToT
                 ScreenList[i].Draw(gameTime);
             }
 
+            int maxUII = 999;
+            int currUII = 0;
             foreach (KeyValuePair<UITemplate, UI> ui in GameUIs)
-                ui.Value.Draw(gameTime);
+            {
+                if (State == ClientState.MainMenu || State == ClientState.GameOver)
+                    maxUII = 4;
+
+                if (currUII <= maxUII || maxUII == 0)
+                    ui.Value.Draw(gameTime);
+                else
+                    break;
+                currUII++;
+            }                
 
             if (DebugMode)
             {

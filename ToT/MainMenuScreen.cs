@@ -35,11 +35,16 @@ namespace ToT
             //Menus.Add(mainMenu);
             //mainMenuIndex = Menus.Count - 1;
 
-            ScreenManager.GameUIs.Add(UITemplate.mainNew, ScreenManager.GenerateUI(UITemplate.mainNew));
-            ScreenManager.GameUIs.Add(UITemplate.mainLoad, ScreenManager.GenerateUI(UITemplate.mainLoad));
-            ScreenManager.GameUIs.Add(UITemplate.mainLoadSaves, ScreenManager.GenerateUI(UITemplate.mainLoadSaves));
-            ScreenManager.GameUIs.Add(UITemplate.mainOptions, ScreenManager.GenerateUI(UITemplate.mainOptions));
-            ScreenManager.GameUIs.Add(UITemplate.mainExit, ScreenManager.GenerateUI(UITemplate.mainExit));
+            ScreenManager.AddOrReplaceUI(UITemplate.mainNew, ScreenManager.GenerateUI(UITemplate.mainNew));
+            //ScreenManager.AddOrReplaceUI(UITemplate.mainNew, ScreenManager.GenerateUI(UITemplate.mainNew));
+            //ScreenManager.AddOrReplaceUI(UITemplate.mainLoad, ScreenManager.GenerateUI(UITemplate.mainLoad));
+            //ScreenManager.AddOrReplaceUI(UITemplate.mainLoadSaves, ScreenManager.GenerateUI(UITemplate.mainLoadSaves));
+            //ScreenManager.AddOrReplaceUI(UITemplate.mainOptions, ScreenManager.GenerateUI(UITemplate.mainOptions));
+            //ScreenManager.AddOrReplaceUI(UITemplate.mainExit, ScreenManager.GenerateUI(UITemplate.mainExit));
+            ScreenManager.AddOrReplaceUI(UITemplate.mainLoad, ScreenManager.GenerateUI(UITemplate.mainLoad));
+            ScreenManager.AddOrReplaceUI(UITemplate.mainLoadSaves, ScreenManager.GenerateUI(UITemplate.mainLoadSaves));
+            ScreenManager.AddOrReplaceUI(UITemplate.mainOptions, ScreenManager.GenerateUI(UITemplate.mainOptions));
+            ScreenManager.AddOrReplaceUI(UITemplate.mainExit, ScreenManager.GenerateUI(UITemplate.mainExit));
         }
 
         public override void Update(GameTime gameTime, InputManager input)
