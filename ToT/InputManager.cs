@@ -36,6 +36,11 @@ namespace ToT
             mouseState = Mouse.GetState();
         }
 
+        public Rectangle MouseRect()
+        {
+            return new Rectangle((int)MousePosition().X - 1, (int)MousePosition().Y - 1, 2, 2);
+        }
+
         public bool MouseDown()
         {
             if (mouseState.LeftButton == ButtonState.Pressed)

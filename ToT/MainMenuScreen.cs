@@ -45,6 +45,8 @@ namespace ToT
             ScreenManager.AddOrReplaceUI(UITemplate.mainLoadSaves, ScreenManager.GenerateUI(UITemplate.mainLoadSaves));
             ScreenManager.AddOrReplaceUI(UITemplate.mainOptions, ScreenManager.GenerateUI(UITemplate.mainOptions));
             ScreenManager.AddOrReplaceUI(UITemplate.mainExit, ScreenManager.GenerateUI(UITemplate.mainExit));
+            ScreenManager.AddOrReplaceUI(UITemplate.mainNewMenu, ScreenManager.GenerateUI(UITemplate.mainNewMenu));
+            ScreenManager.GameUIs[UITemplate.mainNewMenu].ToDraw = false;
         }
 
         public override void Update(GameTime gameTime, InputManager input)

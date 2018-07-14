@@ -26,6 +26,13 @@ public enum Font
     menuItem03
 }
 
+public enum GameType
+{
+    Survival,
+    Exploration,
+    Defense,
+    Load
+}
 public enum ThingType
 {
     Container,
@@ -112,7 +119,11 @@ public enum UIAction
     LoadGame,
     Options,
     Exit,
-    BuildTile
+    BuildTile,
+    NewGameMenu,
+    NewGameSurvival,
+    NewGameExploration,
+    NewGameDefense
 }
 
 public enum UIItemsFlow
@@ -143,7 +154,8 @@ public enum UITemplate
     mainLoadSaves,
     improveUI,
     buildUI,
-    selectionUI
+    selectionUI,
+    mainNewMenu
 }
 
 public enum BuildingType

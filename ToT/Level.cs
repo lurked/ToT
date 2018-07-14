@@ -12,6 +12,7 @@ namespace ToT
     public class Level
     {
         public LevelType LType;
+        public GameType GameMode;
         public string Name;
         public string Params;
         public List<Decor> Decors;

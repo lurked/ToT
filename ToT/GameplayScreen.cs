@@ -29,7 +29,7 @@ namespace ToT
 
         }
 
-        public void Initialize(string levelToLoad = "")
+        public void Initialize(GameType gameMode = GameType.Survival, string levelToLoad = "")
         {
             InitTileLevelReqs();
 
@@ -44,6 +44,7 @@ namespace ToT
             CurrentLevel = new Level();
             if (levelToLoad == "")
             {
+                CurrentLevel.GameMode = gameMode;
                 CurrentLevel.GenerateLevel(LevelType.Static, "base01", "");
 
                 CurrentLevel.Resources.Add(ResourceType.Gold, 0);
@@ -395,10 +396,10 @@ namespace ToT
         public void RefreshResourcesUI(UI tUI)
         {
             List<UIItem> tUIItems = new List<UIItem>();
-            tUIItems.Add(new UIItem(UIItemType.TextFix, "Turn " + CurrentLevel.Turn, Color.CornflowerBlue, ScreenManager.Fonts[Font.menuItem03.ToString()], UIItemsFlow.Horizontal, UIAction.None));
+            tUIItems.Add(new UIItem(UIItemType.TextFix, CurrentLevel.GameMode.ToString() + " : Turn " + CurrentLevel.Turn + "  ", Color.CornflowerBlue, ScreenManager.Fonts[Font.menuItem03.ToString()], UIItemsFlow.Horizontal, UIAction.None));
             //tUIItems.Add(new UIItem(UIItemType.TextFix, "Tile lvl " + CurrentTileLevel, Color.CornflowerBlue, ScreenManager.Fonts[Font.menuItem03.ToString()], UIItemsFlow.Vertical, UIAction.None));
             foreach (KeyValuePair<ResourceType, int> res in CurrentLevel.Resources)
-                tUIItems.Add(new UIItem(UIItemType.ImageText, res.Value.ToString(), Color.White, ScreenManager.Fonts[Font.menuItem03.ToString()], UIItemsFlow.Horizontal, UIAction.None, "resource_" + res.Key.ToString().ToLower()));
+                tUIItems.Add(new UIItem(UIItemType.ImageText, res.Value.ToString() + "  ", Color.White, ScreenManager.Fonts[Font.menuItem03.ToString()], UIItemsFlow.Horizontal, UIAction.None, "resource_" + res.Key.ToString().ToLower()));
             tUIItems.Add(new UIItem(UIItemType.ImageText, CurrentLevel.Stage[Vector2.Zero].Durability.ToString(), Color.White, ScreenManager.Fonts[Font.menuItem03.ToString()], UIItemsFlow.Horizontal, UIAction.None, "durability_16"));
 
             tUI.SetUIItems(tUIItems);

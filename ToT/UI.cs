@@ -59,6 +59,11 @@ namespace ToT
             BackColor = Color.DarkSlateGray;
         }
 
+        public void Toggle()
+        {
+            ToDraw = !ToDraw;
+        }
+
         public void SetUIItems(List<UIItem> menuItems)
         {
             Items = menuItems;
@@ -162,8 +167,8 @@ namespace ToT
         {
             if (ToDraw)
             {
-
                 Color SelectColor = Color.White;
+                Color SelectTextColor = Color.Black;
                 float tBack = BackAlpha;
                 if (IsActive)
                 {
@@ -185,24 +190,33 @@ namespace ToT
                 foreach (UIItem tUII in Items)
                 {
                     if (tUII.ToShow)
+                    {
+                        SelectTextColor = tUII.TextColor;
+
+                        if (IsActive)
+                        {
+                            if (Tools.Intersects(ScreenManager.Input.MousePosition() + ScreenManager.PlayerCamera.Position, new Rectangle(tUII.ItemRect.X + (int)Position.X, tUII.ItemRect.Y + (int)Position.Y, tUII.ItemRect.Width, tUII.ItemRect.Height)))
+                                SelectTextColor = Color.Black;
+                        }
+
                         switch (tUII.ItemType)
                         {
                             case UIItemType.ImageFix:
                                 ScreenManager.Sprites.Draw(ScreenManager.Textures2D[tUII.ImageName], tUII.Position + Position, null, Color.White);
                                 break;
                             case UIItemType.TextImage:
-                                ScreenManager.Sprites.DrawString(tUII.TextFont, tUII.Text, tUII.Position + Position, tUII.TextColor);
+                                ScreenManager.Sprites.DrawString(tUII.TextFont, tUII.Text, tUII.Position + Position, SelectTextColor);
                                 ScreenManager.Sprites.Draw(ScreenManager.Textures2D[tUII.ImageName], tUII.Position + Position + new Vector2(tUII.ItemSize.X, 0), null, Color.White);
                                 break;
                             case UIItemType.ImageText:
                                 ScreenManager.Sprites.Draw(ScreenManager.Textures2D[tUII.ImageName], tUII.Position + Position, null, Color.White);
-                                ScreenManager.Sprites.DrawString(tUII.TextFont, tUII.Text, tUII.Position + Position + new Vector2(ScreenManager.Textures2D[tUII.ImageName].Width, 0), tUII.TextColor);
+                                ScreenManager.Sprites.DrawString(tUII.TextFont, tUII.Text, tUII.Position + Position + new Vector2(ScreenManager.Textures2D[tUII.ImageName].Width, 0), SelectTextColor);
                                 break;
                             default:
-                                ScreenManager.Sprites.DrawString(tUII.TextFont, tUII.Text, tUII.Position + Position, tUII.TextColor);
+                                ScreenManager.Sprites.DrawString(tUII.TextFont, tUII.Text, tUII.Position + Position, SelectTextColor);
                                 break;
                         }
-
+                    }
                 }
                 if (ScreenManager.DebugMode)
                     ScreenManager.Sprites.DrawString(ScreenManager.Fonts[Font.debug01.ToString()], Position.X + ":" + Position.Y + "|Size=" + Size.X + ":" + Size.Y, Position, Color.Red, 0f, Vector2.Zero, 0.6f, SpriteEffects.None, 0f);

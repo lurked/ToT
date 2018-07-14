@@ -509,6 +509,7 @@ namespace ToT
         public static void ToggleMainMenu(bool visibleOrNot)
         {
             GameUIs[UITemplate.mainNew].ToDraw = visibleOrNot;
+            GameUIs[UITemplate.mainNewMenu].ToDraw = false;
             GameUIs[UITemplate.mainLoad].ToDraw = visibleOrNot;
             GameUIs[UITemplate.mainLoadSaves].ToDraw = visibleOrNot;
             GameUIs[UITemplate.mainOptions].ToDraw = visibleOrNot;
@@ -532,7 +533,7 @@ namespace ToT
                 foreach (string save in tSaves)
                     tUIItems.Add(new UIItem(UIItemType.TextFix, save, Color.White, Fonts[Font.menuItem03.ToString()], UIItemsFlow.Vertical, UIAction.LoadGame, "", save));
 
-                GameUIs[UITemplate.mainLoadSaves].Position = new Vector2(152, Resolution.Y - 90);
+                GameUIs[UITemplate.mainLoadSaves].Position = new Vector2(GameUIs[UITemplate.mainLoad].Size.X + 4, Resolution.Y - 90);
                 GameUIs[UITemplate.mainLoadSaves].SetUIItems(tUIItems);
                 GameUIs[UITemplate.mainLoadSaves].ToDraw = true;
                 LoadToggled = true;
@@ -546,6 +547,19 @@ namespace ToT
                 case UIAction.Exit:
                     Exit();
                     break;
+                case UIAction.NewGameMenu:
+                    GameUIs[UITemplate.mainLoadSaves].ToDraw = false;
+                    LoadToggled = false;
+                    GameUIs[UITemplate.mainNewMenu].Toggle();
+                    break;
+                case UIAction.NewGameSurvival:
+                    GGPScreen = new GameplayScreen();
+                    GGPScreen.Initialize();
+
+                    ToggleMainMenu(false);
+                    ChangeScreens(MMenuScreen, GGPScreen);
+                    State = ClientState.Game;
+                    break;
                 case UIAction.NewGame:
                     GGPScreen = new GameplayScreen();
                     GGPScreen.Initialize();
@@ -555,6 +569,7 @@ namespace ToT
                     State = ClientState.Game;
                     break;
                 case UIAction.LoadGame:
+                    GameUIs[UITemplate.mainNewMenu].ToDraw = false;
                     if (actionText == "")
                     {
                         LoadSavedGames();
@@ -562,7 +577,7 @@ namespace ToT
                     else
                     {
                         GGPScreen = new GameplayScreen();
-                        GGPScreen.Initialize(actionText);
+                        GGPScreen.Initialize(GameType.Load, actionText);
 
                         ToggleMainMenu(false);
                         ChangeScreens(MMenuScreen, GGPScreen);
@@ -694,8 +709,19 @@ namespace ToT
                     tUI.BackAlpha = 0.0f;
                     tUI.ItemsFlow = UIItemsFlow.Vertical;
                     List<UIItem> tUIItems = new List<UIItem>();
-                    tUIItems.Add(new UIItem(UIItemType.TextFix, "New Game", Color.White, Fonts[Font.menuItem01.ToString()], UIItemsFlow.Vertical, UIAction.NewGame, ""));
+                    tUIItems.Add(new UIItem(UIItemType.TextFix, "New Game", Color.White, Fonts[Font.menuItem01.ToString()], UIItemsFlow.Vertical, UIAction.NewGameMenu, ""));
                     tUI.Position = new Vector2(2, Resolution.Y - 120);
+                    tUI.SetUIItems(tUIItems);
+                    break;
+                case UITemplate.mainNewMenu:
+                    tUI = new UI(UIType.Basic, uiName.ToString(), "Main Menu - New Game Menu", new Vector2(300, 300), Resolution / 2);
+                    tUI.BackAlpha = 0.0f;
+                    tUI.ItemsFlow = UIItemsFlow.Vertical;
+                    tUIItems = new List<UIItem>();
+                    tUIItems.Add(new UIItem(UIItemType.TextFix, GameType.Survival.ToString(), Color.CornflowerBlue, Fonts[Font.menuItem02.ToString()], UIItemsFlow.Vertical, UIAction.NewGameSurvival, ""));
+                    tUIItems.Add(new UIItem(UIItemType.TextFix, GameType.Exploration.ToString(), Color.CornflowerBlue, Fonts[Font.menuItem02.ToString()], UIItemsFlow.Vertical, UIAction.NewGameExploration, ""));
+                    tUIItems.Add(new UIItem(UIItemType.TextFix, GameType.Defense.ToString(), Color.CornflowerBlue, Fonts[Font.menuItem02.ToString()], UIItemsFlow.Vertical, UIAction.NewGameDefense, ""));
+                    tUI.Position = new Vector2(GameUIs[UITemplate.mainLoad].Size.X + 4, Resolution.Y - 120);
                     tUI.SetUIItems(tUIItems);
                     break;
                 case UITemplate.mainLoad:
@@ -870,7 +896,7 @@ namespace ToT
             foreach (KeyValuePair<UITemplate, UI> ui in GameUIs)
             {
                 if (State == ClientState.MainMenu || State == ClientState.GameOver)
-                    maxUII = 4;
+                    maxUII = 5;
 
                 if (currUII <= maxUII || maxUII == 0)
                     ui.Value.Draw(gameTime);
