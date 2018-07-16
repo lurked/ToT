@@ -876,6 +876,20 @@ namespace ToT
                     tUI.Position = Input.MousePosition();
                     tUI.ToDraw = false;
                     break;
+                case UITemplate.healthBar:
+                    tUI = new UI(UIType.BasicInvis, uiName.ToString(), "Health Bar", new Vector2(80, 10), new Vector2(2, 2));
+                    tUI.BackAlpha = 0.35f;
+                    tUI.ItemsFlow = UIItemsFlow.Horizontal;
+                    GGPScreen.RefreshHealthUI(tUI);
+                    tUI.Position = (Resolution / 2) + PlayerCamera.Position;
+                    break;
+                case UITemplate.moveBar:
+                    tUI = new UI(UIType.BasicInvis, uiName.ToString(), "Move Bar", new Vector2(80, 10), new Vector2(2, 2));
+                    tUI.BackAlpha = 0.35f;
+                    tUI.ItemsFlow = UIItemsFlow.Horizontal;
+                    GGPScreen.RefreshMoveUI(tUI);
+                    tUI.Position = (Resolution / 2) + PlayerCamera.Position;
+                    break;
                 default:
                     tUI = new UI();
                     break;

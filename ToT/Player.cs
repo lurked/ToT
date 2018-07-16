@@ -37,7 +37,7 @@ namespace ToT
 
         public void InitPlayer(string template = "base01")
         {
-            stats.Add(StatType.HP.ToString(), 5f);
+            stats.Add(StatType.HP.ToString(), 10f);
             stats.Add("+" + StatType.HP.ToString(), 0f);
             stats.Add(StatType.MoveSpeed.ToString(), 10f);
             stats.Add("+" + StatType.MoveSpeed.ToString(), 0f);
@@ -48,6 +48,8 @@ namespace ToT
         public void RegenHero()
         {
             stats[StatType.UsedMove.ToString()] = 0;
+
+            ScreenManager.GGPScreen.RefreshMoveUI(ScreenManager.GameUIs[UITemplate.moveBar]);
         }
 
         public Vector2 FindClickedThing(Vector2 ClickedPosition)
@@ -86,7 +88,11 @@ namespace ToT
             ScreenManager.GameUIs[UITemplate.tileExpendSouth].Position = ActiveRoom.RoomPosition + new Vector2((ScreenManager.TileSize.X / 2) - 14, (ScreenManager.TileSize.Y) - 14);
             ScreenManager.GameUIs[UITemplate.tileExpendWest].Position = ActiveRoom.RoomPosition + new Vector2(-14, (ScreenManager.TileSize.Y / 2) - 14);
             ScreenManager.GameUIs[UITemplate.turn01].Position = ScreenManager.Resolution - ScreenManager.GameUIs[UITemplate.turn01].Size + ScreenManager.PlayerCamera.Position;
+            ScreenManager.GameUIs[UITemplate.healthBar].Position = ActiveRoom.RoomPosition + ScreenManager.TileSize / 2 - new Vector2(Rect.Width / 2 + 1, -(Rect.Height / 2) + 1);
+            ScreenManager.GameUIs[UITemplate.moveBar].Position = ActiveRoom.RoomPosition + ScreenManager.TileSize / 2 - new Vector2(Rect.Width / 2 + 1, -(Rect.Height / 2) - 6);
             ScreenManager.GameUIs[UITemplate.log].Position = new Vector2(2, ScreenManager.Resolution.Y - ScreenManager.GameUIs[UITemplate.log].Size.Y) + ScreenManager.PlayerCamera.Position;
+            ScreenManager.GameUIs[UITemplate.healthBar].ToDraw = true;
+            ScreenManager.GameUIs[UITemplate.moveBar].ToDraw = true;
             if (ScreenManager.TTToggled)
             {
                 ScreenManager.GameUIs[UITemplate.tooltip].ToDraw = true;
@@ -123,6 +129,7 @@ namespace ToT
                         SetActiveRoom(Stage[tV]);
                     }
                     stats[StatType.UsedMove.ToString()]++;
+                    ScreenManager.GGPScreen.RefreshMoveUI(ScreenManager.GameUIs[UITemplate.moveBar]);
                 }
                 else
                     ScreenManager.Log.Add(new LogEntry("You are too tired to move any more this turn."));
@@ -137,6 +144,7 @@ namespace ToT
                         SetActiveRoom(Stage[tV]);
                     }
                     stats[StatType.UsedMove.ToString()]++;
+                    ScreenManager.GGPScreen.RefreshMoveUI(ScreenManager.GameUIs[UITemplate.moveBar]);
                 }
                 else
                     ScreenManager.Log.Add(new LogEntry("You are too tired to move any more this turn."));
@@ -152,6 +160,7 @@ namespace ToT
                         SetActiveRoom(Stage[tV]);
                     }
                     stats[StatType.UsedMove.ToString()]++;
+                    ScreenManager.GGPScreen.RefreshMoveUI(ScreenManager.GameUIs[UITemplate.moveBar]);
                 }
                 else
                     ScreenManager.Log.Add(new LogEntry("You are too tired to move any more this turn."));
@@ -166,6 +175,7 @@ namespace ToT
                         SetActiveRoom(Stage[tV]);
                     }
                     stats[StatType.UsedMove.ToString()]++;
+                    ScreenManager.GGPScreen.RefreshMoveUI(ScreenManager.GameUIs[UITemplate.moveBar]);
                 }
                 else
                     ScreenManager.Log.Add(new LogEntry("You are too tired to move any more this turn."));

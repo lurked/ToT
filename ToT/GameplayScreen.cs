@@ -79,6 +79,8 @@ namespace ToT
             ScreenManager.AddOrReplaceUI(UITemplate.improveUI, ScreenManager.GenerateUI(UITemplate.improveUI));                        //Improvements available to build on the current tile.
             ScreenManager.AddOrReplaceUI(UITemplate.buildUI, ScreenManager.GenerateUI(UITemplate.buildUI));                            //Buildings available to build on the current tile.
             ScreenManager.AddOrReplaceUI(UITemplate.selectionUI, ScreenManager.GenerateUI(UITemplate.selectionUI));                    //Shows actions for the currently selected thing.
+            ScreenManager.AddOrReplaceUI(UITemplate.healthBar, ScreenManager.GenerateUI(UITemplate.healthBar));                        //Shows Health Bar.
+            ScreenManager.AddOrReplaceUI(UITemplate.moveBar, ScreenManager.GenerateUI(UITemplate.moveBar));                        //Shows Health Bar.
 
             IncrementResources();
             RefreshIncome();
@@ -426,6 +428,28 @@ namespace ToT
             List<UIItem> tUIItems = new List<UIItem>();
             foreach (KeyValuePair<ResourceType, int> res in Income)
                 tUIItems.Add(new UIItem(UIItemType.ImageText, res.Value.ToString(), Color.White, ScreenManager.Fonts[Font.menuItem03.ToString()], UIItemsFlow.Vertical, UIAction.None, "resource_" + res.Key.ToString().ToLower()));
+            tUI.SetUIItems(tUIItems);
+        }
+
+        public void RefreshHealthUI(UI tUI)
+        {
+            List<UIItem> tUIItems = new List<UIItem>();
+
+            for (int i = 0; i < Player1.GetStat(StatType.HP.ToString()); i++)
+            {
+                tUIItems.Add(new UIItem(UIItemType.ImageFix, "", Color.White, ScreenManager.Fonts[Font.menuItem01.ToString()], UIItemsFlow.Horizontal, UIAction.None, "stats_hp"));
+            }
+            tUI.SetUIItems(tUIItems);
+        }
+
+        public void RefreshMoveUI(UI tUI)
+        {
+            List<UIItem> tUIItems = new List<UIItem>();
+
+            for (int i = 0; i < (Player1.GetStat(StatType.MoveSpeed.ToString()) - Player1.GetStat(StatType.UsedMove.ToString())); i++)
+            {
+                tUIItems.Add(new UIItem(UIItemType.ImageFix, "", Color.White, ScreenManager.Fonts[Font.menuItem01.ToString()], UIItemsFlow.Horizontal, UIAction.None, "stats_movespeed"));
+            }
             tUI.SetUIItems(tUIItems);
         }
 

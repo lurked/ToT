@@ -163,7 +163,9 @@ public enum UITemplate
     improveUI,
     buildUI,
     selectionUI,
-    mainNewMenu
+    mainNewMenu,
+    healthBar,
+    moveBar
 }
 
 public enum BuildingType
