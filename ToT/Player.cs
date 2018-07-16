@@ -44,6 +44,11 @@ namespace ToT
             stats.Add(StatType.UsedMove.ToString(), 0f);
             Velocity = Vector2.Zero;
         }
+        
+        public void RegenHero()
+        {
+            stats[StatType.UsedMove.ToString()] = 0;
+        }
 
         public Vector2 FindClickedThing(Vector2 ClickedPosition)
         {
@@ -96,49 +101,74 @@ namespace ToT
         {
             Vector2 tV;
 
-            if (ScreenManager.Input.MouseRightPressed())
+            //if (ScreenManager.Input.MouseRightPressed())
+            //{
+            //    tV = FindClickedThing(ScreenManager.Input.MousePosition() + ScreenManager.PlayerCamera.Position);
+            //    if (tV != new Vector2(999999, 999999))
+            //    {
+            //        SetActiveRoom(Stage[tV]);
+            //    }
+            //}
+            //else
+            //{
+            bool bHasMove = stats[StatType.MoveSpeed.ToString()] - stats[StatType.UsedMove.ToString()] > 0;
+
+            if (ScreenManager.Input.KeyPressed(Keys.Right, Keys.D) || ScreenManager.Input.ButtonPressed(Buttons.DPadRight, Buttons.LeftThumbstickRight))
             {
-                tV = FindClickedThing(ScreenManager.Input.MousePosition() + ScreenManager.PlayerCamera.Position);
-                if (tV != new Vector2(999999, 999999))
-                {
-                    SetActiveRoom(Stage[tV]);
-                }
-            }
-            else
-            {
-                if (ScreenManager.Input.KeyPressed(Keys.Right, Keys.D) || ScreenManager.Input.ButtonPressed(Buttons.DPadRight, Buttons.LeftThumbstickRight))
+                if (bHasMove)
                 {
                     tV = new Vector2(ActiveRoom.Position.X + 1, ActiveRoom.Position.Y);
                     if (Stage.ContainsKey(tV))
                     {
                         SetActiveRoom(Stage[tV]);
                     }
+                    stats[StatType.UsedMove.ToString()]++;
                 }
-                else if (ScreenManager.Input.KeyPressed(Keys.Left, Keys.A) || ScreenManager.Input.ButtonPressed(Buttons.DPadLeft, Buttons.LeftThumbstickLeft))
+                else
+                    ScreenManager.Log.Add(new LogEntry("You are too tired to move any more this turn."));
+            }
+            else if (ScreenManager.Input.KeyPressed(Keys.Left, Keys.A) || ScreenManager.Input.ButtonPressed(Buttons.DPadLeft, Buttons.LeftThumbstickLeft))
+            {
+                if (bHasMove)
                 {
                     tV = new Vector2(ActiveRoom.Position.X - 1, ActiveRoom.Position.Y);
                     if (Stage.ContainsKey(tV))
                     {
                         SetActiveRoom(Stage[tV]);
                     }
+                    stats[StatType.UsedMove.ToString()]++;
                 }
+                else
+                    ScreenManager.Log.Add(new LogEntry("You are too tired to move any more this turn."));
+            }
 
-                if (ScreenManager.Input.KeyPressed(Keys.Down, Keys.S) || ScreenManager.Input.ButtonPressed(Buttons.DPadDown, Buttons.LeftThumbstickDown))
+            if (ScreenManager.Input.KeyPressed(Keys.Down, Keys.S) || ScreenManager.Input.ButtonPressed(Buttons.DPadDown, Buttons.LeftThumbstickDown))
+            {
+                if (bHasMove)
                 {
                     tV = new Vector2(ActiveRoom.Position.X, ActiveRoom.Position.Y + 1);
                     if (Stage.ContainsKey(tV))
                     {
                         SetActiveRoom(Stage[tV]);
                     }
+                    stats[StatType.UsedMove.ToString()]++;
                 }
-                else if (ScreenManager.Input.KeyPressed(Keys.Up, Keys.W) || ScreenManager.Input.ButtonPressed(Buttons.DPadUp, Buttons.LeftThumbstickUp))
+                else
+                    ScreenManager.Log.Add(new LogEntry("You are too tired to move any more this turn."));
+            }
+            else if (ScreenManager.Input.KeyPressed(Keys.Up, Keys.W) || ScreenManager.Input.ButtonPressed(Buttons.DPadUp, Buttons.LeftThumbstickUp))
+            {
+                if (bHasMove)
                 {
                     tV = new Vector2(ActiveRoom.Position.X, ActiveRoom.Position.Y - 1);
                     if (Stage.ContainsKey(tV))
                     {
                         SetActiveRoom(Stage[tV]);
                     }
+                    stats[StatType.UsedMove.ToString()]++;
                 }
+                else
+                    ScreenManager.Log.Add(new LogEntry("You are too tired to move any more this turn."));
             }
 
             ScreenManager.PlayerCamera.SetFocalPoint(Position + (ScreenManager.TileSize / 2));

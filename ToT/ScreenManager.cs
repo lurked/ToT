@@ -124,9 +124,6 @@ namespace ToT
             State = ClientState.Splashscreen;
             SSplashScreen = new SplashScreen();
             AddScreen(SSplashScreen);
-            //State = ClientState.MainMenu;
-            //MMenuScreen = new MainMenuScreen();
-            //AddScreen(MMenuScreen);
         }
 
         protected override void UnloadContent()

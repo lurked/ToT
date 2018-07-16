@@ -162,6 +162,7 @@ namespace ToT
             ScreenManager.Log.Add(new LogEntry("End of turn " + CurrentLevel.Turn + ". Beginning of turn " + (CurrentLevel.Turn + 1) + "."));
 
             CurrentLevel.Turn += 1;
+            Player1.RegenHero();
             MoveEnemies();
             SpawnEnemies();
             IncrementResources();            
