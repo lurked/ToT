@@ -196,7 +196,7 @@ namespace ToT
                         if (IsActive)
                         {
                             if (Tools.Intersects(ScreenManager.Input.MousePosition() + ScreenManager.PlayerCamera.Position, new Rectangle(tUII.ItemRect.X + (int)Position.X, tUII.ItemRect.Y + (int)Position.Y, tUII.ItemRect.Width, tUII.ItemRect.Height)))
-                                SelectTextColor = Color.Black;
+                                SelectTextColor = Color.DarkGray;
                         }
 
                         switch (tUII.ItemType)

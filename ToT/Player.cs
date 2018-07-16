@@ -37,12 +37,11 @@ namespace ToT
 
         public void InitPlayer(string template = "base01")
         {
-            stats.Add("hp", 5f);
-            stats.Add("+hp", 0f);
-            stats.Add("movespeed", 2f);
-            stats.Add("+movespeed", 0f);
-            stats.Add("maxspeed", 1.25f);
-            stats.Add("+maxspeed", 0f);
+            stats.Add(StatType.HP.ToString(), 5f);
+            stats.Add("+" + StatType.HP.ToString(), 0f);
+            stats.Add(StatType.MoveSpeed.ToString(), 10f);
+            stats.Add("+" + StatType.MoveSpeed.ToString(), 0f);
+            stats.Add(StatType.UsedMove.ToString(), 0f);
             Velocity = Vector2.Zero;
         }
 

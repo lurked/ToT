@@ -354,7 +354,7 @@ namespace ToT
                     {
                         for (int i = 0; i < room.Resources[ResourceType.Empty]; i++)
                         {
-                            ScreenManager.Sprites.Draw(ScreenManager.Textures2D["resource_" + ResourceType.Empty.ToString().ToLower()], (room.Position + new Vector2(resX + (ScreenManager.Textures2D["resource_" + ResourceType.Empty.ToString().ToLower()].Width * i), resY)) + (room.Position * ScreenManager.TSize), null, Color.White * 0.4f);
+                            ScreenManager.Sprites.Draw(ScreenManager.Textures2D["resource_" + ResourceType.Empty.ToString().ToLower()], (room.Position + new Vector2(resX + (ScreenManager.Textures2D["resource_" + ResourceType.Empty.ToString().ToLower()].Width * i), resY)) + (room.Position * ScreenManager.TSize), null, Color.White * 0.5f);
                         }
                         resY += 16;
                     }

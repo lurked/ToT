@@ -122,7 +122,7 @@ namespace ToT
                 Resources.Add(ResourceType.Energy, 1);
                 Resources.Add(ResourceType.Empty, 4);
             }
-            else if (Position.X == 0 || Position.Y == 0)
+            else if (ScreenManager.GGPScreen.CurrentLevel.GameMode == GameType.Defense && (Position.X == 0 || Position.Y == 0))
                 MaybeSetAsSpawn(Lvl);
             else
                 switch (Lvl)

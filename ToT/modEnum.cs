@@ -47,6 +47,13 @@ public enum ThingType
     Special
 }
 
+public enum StatType
+{
+    HP,
+    MoveSpeed,
+    UsedMove,
+}
+
 public enum LevelType
 {
     Static,

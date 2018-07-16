@@ -38,17 +38,17 @@ namespace ToT
             switch(template)
             {
                 case "base_1":
-                    stats.Add("hp", 2f);
-                    stats.Add("+hp", 0f);
-                    stats.Add("movespeed", 0.34f);
-                    stats.Add("+movespeed", 0f);
+                    stats.Add(StatType.HP.ToString(), 2f);
+                    stats.Add("+" + StatType.HP.ToString(), 0f);
+                    stats.Add(StatType.MoveSpeed.ToString(), 0.34f);
+                    stats.Add("+" + StatType.MoveSpeed.ToString(), 0f);
                     ImageName = "creature_robot_32";
                     break;
                 default:
-                    stats.Add("hp", 2f);
-                    stats.Add("+hp", 0f);
-                    stats.Add("movespeed", 0.34f);
-                    stats.Add("+movespeed", 0f);
+                    stats.Add(StatType.HP.ToString(), 2f);
+                    stats.Add("+" + StatType.HP.ToString(), 0f);
+                    stats.Add(StatType.MoveSpeed.ToString(), 0.34f);
+                    stats.Add("+" + StatType.MoveSpeed.ToString(), 0f);
                     ImageName = "creature_robot_32";
                     break;
             }
