@@ -22,7 +22,7 @@ namespace ToT
         public override void LoadAssets()
         {
             base.LoadAssets();
-            
+
             logoPosition = new Vector2(10, 10);
             //mainMenu = new Menu();
             //mainMenu.Items.Add(new Menu.MenuItem("New Game", MenuType.Text, Color.White, "newgame"));

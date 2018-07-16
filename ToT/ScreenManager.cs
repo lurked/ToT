@@ -47,6 +47,7 @@ namespace ToT
         public static string TTText = "";
         public static UI ActiveUI;
         public static bool LoadToggled = false;
+        public static bool IsInit = false;
 
         public ScreenManager()
         {
@@ -56,45 +57,46 @@ namespace ToT
             GraphicsDeviceMgr.IsFullScreen = false;
             Content.RootDirectory = "Content";
         }
-
+        
         protected override void Initialize()
         {
-            Textures2D = new Dictionary<string, Texture2D>();
-            Textures3D = new Dictionary<string, Texture3D>();
-            Models = new Dictionary<string, Model>();
-            Fonts = new Dictionary<string, SpriteFont>();
-            base.Initialize();
-            Input = new InputManager();
-            Camera tCam = new Camera(GraphicsDeviceMgr.PreferredBackBufferWidth, GraphicsDeviceMgr.PreferredBackBufferHeight);
-            this.IsMouseVisible = true;
-            PlayerCamera = tCam;
-            PlayerCamera.SetFocalPoint(new Vector2(GraphicsDeviceMgr.PreferredBackBufferWidth / 2, GraphicsDeviceMgr.PreferredBackBufferHeight / 2));
+            if (!IsInit)
+            {
+                Textures2D = new Dictionary<string, Texture2D>();
+                Textures3D = new Dictionary<string, Texture3D>();
+                Models = new Dictionary<string, Model>();
+                Fonts = new Dictionary<string, SpriteFont>();
+                base.Initialize();
+                Input = new InputManager();
+                Camera tCam = new Camera(GraphicsDeviceMgr.PreferredBackBufferWidth, GraphicsDeviceMgr.PreferredBackBufferHeight);
+                this.IsMouseVisible = true;
+                PlayerCamera = tCam;
+                PlayerCamera.SetFocalPoint(new Vector2(GraphicsDeviceMgr.PreferredBackBufferWidth / 2, GraphicsDeviceMgr.PreferredBackBufferHeight / 2));
 
+                InitializeTextures();
 
-            SpriteFont logoFont = ContentMgr.Load<SpriteFont>("Fonts/AlinCartoon1");
-            Fonts.Add(Font.logo01.ToString(), logoFont);
-            SpriteFont debug01Font = ContentMgr.Load<SpriteFont>("Fonts/Earth2073");
-            Fonts.Add(Font.debug01.ToString(), debug01Font);
-            SpriteFont debug02Font = ContentMgr.Load<SpriteFont>("Fonts/Earth2073");
-            Fonts.Add(Font.debug02.ToString(), debug02Font);
-            SpriteFont menuItem01 = ContentMgr.Load<SpriteFont>("Fonts/TECHNOLIN");
-            Fonts.Add(Font.menuItem01.ToString(), menuItem01);
-            SpriteFont menuItem02 = ContentMgr.Load<SpriteFont>("Fonts/nasalization-rg");
-            Fonts.Add(Font.menuItem02.ToString(), menuItem02);
-            SpriteFont menuItem03 = ContentMgr.Load<SpriteFont>("Fonts/nasalization-rg-small");
-            Fonts.Add(Font.menuItem03.ToString(), menuItem03);
+                SpriteFont logoFont = ContentMgr.Load<SpriteFont>("Fonts/AlinCartoon1");
+                Fonts.Add(Font.logo01.ToString(), logoFont);
+                SpriteFont debug01Font = ContentMgr.Load<SpriteFont>("Fonts/Earth2073");
+                Fonts.Add(Font.debug01.ToString(), debug01Font);
+                SpriteFont debug02Font = ContentMgr.Load<SpriteFont>("Fonts/Earth2073");
+                Fonts.Add(Font.debug02.ToString(), debug02Font);
+                SpriteFont menuItem01 = ContentMgr.Load<SpriteFont>("Fonts/TECHNOLIN");
+                Fonts.Add(Font.menuItem01.ToString(), menuItem01);
+                SpriteFont menuItem02 = ContentMgr.Load<SpriteFont>("Fonts/nasalization-rg");
+                Fonts.Add(Font.menuItem02.ToString(), menuItem02);
+                SpriteFont menuItem03 = ContentMgr.Load<SpriteFont>("Fonts/nasalization-rg-small");
+                Fonts.Add(Font.menuItem03.ToString(), menuItem03);
 
-            InitializeTextures();
+                Log = new List<LogEntry>();
+                GameUIs = new Dictionary<UITemplate, UI>();
 
-            GraphicsDeviceMgr.SynchronizeWithVerticalRetrace = false;
+                GraphicsDeviceMgr.SynchronizeWithVerticalRetrace = false;
 
-            IsFixedTimeStep = false;
-            GraphicsDeviceMgr.ApplyChanges();
-
-            
-            Log = new List<LogEntry>();
-            GameUIs = new Dictionary<UITemplate, UI>();
-
+                IsFixedTimeStep = false;
+                GraphicsDeviceMgr.ApplyChanges();
+                IsInit = false;
+            }
         }
 
         private void InitializeTextures()
@@ -122,7 +124,9 @@ namespace ToT
             State = ClientState.Splashscreen;
             SSplashScreen = new SplashScreen();
             AddScreen(SSplashScreen);
-
+            //State = ClientState.MainMenu;
+            //MMenuScreen = new MainMenuScreen();
+            //AddScreen(MMenuScreen);
         }
 
         protected override void UnloadContent()
@@ -220,17 +224,17 @@ namespace ToT
                 switch (State)
                 {
                     case ClientState.Splashscreen:
-                        if (Input.KeyDown(Keys.Space, Keys.Enter) || Input.ButtonDown(Buttons.A, Buttons.Start) || Input.MousePressed())
-                        {
+                        //if (Input.KeyDown(Keys.Space, Keys.Enter) || Input.ButtonDown(Buttons.A, Buttons.Start) || Input.MousePressed())
+                        //{
                             State = ClientState.MainMenu;
                             MMenuScreen = new MainMenuScreen();
 
                             ChangeScreens(SSplashScreen, MMenuScreen);
-                        }
-                        else if (Input.KeyPressed(Keys.Escape) || Input.ButtonPressed(Buttons.Back))
-                        {
-                            Exit();
-                        }
+                        //}
+                        //else if (Input.KeyPressed(Keys.Escape) || Input.ButtonPressed(Buttons.Back))
+                        //{
+                        //    Exit();
+                        //}
                         break;
                     case ClientState.MainMenu:
                         if (Input.KeyPressed(Keys.Escape) || Input.ButtonPressed(Buttons.Back))
