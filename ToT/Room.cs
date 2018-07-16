@@ -20,6 +20,7 @@ namespace ToT
         public bool IsSpawn;
         public Building TileBuilding;
         public int Durability;
+        public int Slots;
 
         public Tile()
         { 
@@ -87,6 +88,7 @@ namespace ToT
                 Resources[res] += qty;
             else
                 Resources.Add(res, qty);
+            Resources[ResourceType.Empty]--;
             ScreenManager.GGPScreen.RefreshIncome();
         }
 
@@ -118,6 +120,7 @@ namespace ToT
                 Resources.Add(ResourceType.Food, 1);
                 Resources.Add(ResourceType.Production, 1);
                 Resources.Add(ResourceType.Energy, 1);
+                Resources.Add(ResourceType.Empty, 4);
             }
             else if (Position.X == 0 || Position.Y == 0)
                 MaybeSetAsSpawn(Lvl);
@@ -132,36 +135,42 @@ namespace ToT
                         AddRandomResources(ResourceType.Food, 0, 1);
                         AddRandomResources(ResourceType.Production, 0, 1);
                         AddRandomResources(ResourceType.Energy, 0, 1);
+                        AddRandomResources(ResourceType.Empty, 0, 2);
                         break;
                     case 2:
                         AddRandomResources(ResourceType.Gold, 0, 2);
                         AddRandomResources(ResourceType.Food, 0, 2);
                         AddRandomResources(ResourceType.Production, 0, 2);
                         AddRandomResources(ResourceType.Energy, 0, 2);
+                        AddRandomResources(ResourceType.Empty, 2, 3);
                         break;
                     case 3:
                         AddRandomResources(ResourceType.Gold, 0, 3);
                         AddRandomResources(ResourceType.Food, 0, 3);
                         AddRandomResources(ResourceType.Production, 0, 3);
                         AddRandomResources(ResourceType.Energy, 0, 3);
+                        AddRandomResources(ResourceType.Empty, 3, 4);
                         break;
                     case 4:
                         AddRandomResources(ResourceType.Gold, 0, 4);
                         AddRandomResources(ResourceType.Food, 0, 4);
                         AddRandomResources(ResourceType.Production, 0, 4);
                         AddRandomResources(ResourceType.Energy, 0, 4);
+                        AddRandomResources(ResourceType.Empty, 4, 5);
                         break;
                     case 5:
                         AddRandomResources(ResourceType.Gold, 0, 5);
                         AddRandomResources(ResourceType.Food, 0, 5);
                         AddRandomResources(ResourceType.Production, 0, 5);
                         AddRandomResources(ResourceType.Energy, 0, 5);
+                        AddRandomResources(ResourceType.Empty, 5, 6);
                         break;
                     default:
                         AddRandomResources(ResourceType.Gold, 0, 1);
                         AddRandomResources(ResourceType.Food, 0, 1);
                         AddRandomResources(ResourceType.Production, 0, 1);
                         AddRandomResources(ResourceType.Energy, 0, 1);
+                        AddRandomResources(ResourceType.Empty, 1, 2);
                         break;
                 }
         }

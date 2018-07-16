@@ -240,7 +240,8 @@ namespace ToT
 
             foreach (KeyValuePair<Vector2, Tile> room in CurrentLevel.Stage)
                 foreach (KeyValuePair<ResourceType, int> res in room.Value.Resources)
-                    Income[res.Key] += res.Value;
+                    if (res.Key != ResourceType.Empty)
+                        Income[res.Key] += res.Value;
 
             RefreshIncomeUI(ScreenManager.GameUIs[UITemplate.income]);
         }
@@ -249,7 +250,8 @@ namespace ToT
         {
             foreach (KeyValuePair<Vector2, Tile> room in CurrentLevel.Stage)
                 foreach (KeyValuePair<ResourceType, int> res in room.Value.Resources)
-                    CurrentLevel.Resources[res.Key] += res.Value;
+                    if (res.Key != ResourceType.Empty)
+                        CurrentLevel.Resources[res.Key] += res.Value;
 
             RefreshResourcesUI(ScreenManager.GameUIs[UITemplate.toolbar01]);
         }
@@ -347,13 +349,26 @@ namespace ToT
                     float resY = 1f;
                     //ScreenManager.Sprites.Draw(ScreenManager.Textures2D[tT.ImageName], tT.Position + (room.Position * ScreenManager.TSize), null, room.IsSpawn ? Color.Red : tCol);
                     ScreenManager.Sprites.Draw(ScreenManager.Textures2D[tT.ImageName], tT.Position + (room.Position * ScreenManager.TSize), null, tCol);
+
+                    if (room.Resources.ContainsKey(ResourceType.Empty))
+                    {
+                        for (int i = 0; i < room.Resources[ResourceType.Empty]; i++)
+                        {
+                            ScreenManager.Sprites.Draw(ScreenManager.Textures2D["resource_" + ResourceType.Empty.ToString().ToLower()], (room.Position + new Vector2(resX + (ScreenManager.Textures2D["resource_" + ResourceType.Empty.ToString().ToLower()].Width * i), resY)) + (room.Position * ScreenManager.TSize), null, Color.White * 0.4f);
+                        }
+                        resY += 16;
+                    }
+
                     foreach (KeyValuePair<ResourceType, int> res in room.Resources)
                     {
-                        for (int i = 0; i < res.Value; i++)
+                        if (res.Key != ResourceType.Empty)
                         {
-                            ScreenManager.Sprites.Draw(ScreenManager.Textures2D["resource_" + res.Key.ToString().ToLower()], (room.Position + new Vector2(resX + (ScreenManager.Textures2D["resource_" + res.Key.ToString().ToLower()].Width * i), resY)) + (room.Position * ScreenManager.TSize), null, Color.White);
+                            for (int i = 0; i < res.Value; i++)
+                            {
+                                ScreenManager.Sprites.Draw(ScreenManager.Textures2D["resource_" + res.Key.ToString().ToLower()], (room.Position + new Vector2(resX + (ScreenManager.Textures2D["resource_" + res.Key.ToString().ToLower()].Width * i), resY)) + (room.Position * ScreenManager.TSize), null, Color.White);
+                            }
+                            resY += 16;
                         }
-                        resY += 16;                      
                     }
                 }
             

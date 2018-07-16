@@ -638,20 +638,16 @@ namespace ToT
                             switch (split[1].ToLower())
                             {
                                 case "gold":
-                                    GGPScreen.Player1.ActiveRoom.AddResources(int.Parse(split[0]), ResourceType.Gold);
-                                    TogImproveUI(false);
+                                    AddPod(split, ResourceType.Gold);
                                     break;
                                 case "food":
-                                    GGPScreen.Player1.ActiveRoom.AddResources(int.Parse(split[0]), ResourceType.Food);
-                                    TogImproveUI(false);
+                                    AddPod(split, ResourceType.Food);
                                     break;
                                 case "production":
-                                    GGPScreen.Player1.ActiveRoom.AddResources(int.Parse(split[0]), ResourceType.Production);
-                                    TogImproveUI(false);
+                                    AddPod(split, ResourceType.Production);
                                     break;
                                 case "energy":
-                                    GGPScreen.Player1.ActiveRoom.AddResources(int.Parse(split[0]), ResourceType.Energy);
-                                    TogImproveUI(false);
+                                    AddPod(split, ResourceType.Energy);
                                     break;
                                 case "tower":
                                     GGPScreen.Player1.ActiveRoom.AddThing(int.Parse(split[0]), ThingType.Tower);
@@ -678,6 +674,19 @@ namespace ToT
                 default:
 
                     break;
+            }
+        }
+
+        private static void AddPod(string[] split, ResourceType resType)
+        {
+            if (GGPScreen.Player1.ActiveRoom.Resources[ResourceType.Empty] > 0)
+            {
+                GGPScreen.Player1.ActiveRoom.AddResources(int.Parse(split[0]), resType);
+                TogImproveUI(false);
+            }
+            else
+            {
+                ScreenManager.Log.Add(new LogEntry("There is no more available room on this tile."));
             }
         }
 

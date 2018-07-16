@@ -69,7 +69,8 @@ public enum ResourceType
     Gold,
     Food,
     Production,
-    Energy
+    Energy,
+    Empty
 }
 
 public enum UpgradeType
