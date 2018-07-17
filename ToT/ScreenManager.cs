@@ -561,6 +561,22 @@ namespace ToT
                     ChangeScreens(MMenuScreen, GGPScreen);
                     State = ClientState.Game;
                     break;
+                case UIAction.NewGameDefense:
+                    GGPScreen = new GameplayScreen();
+                    GGPScreen.Initialize(GameType.Defense);
+
+                    ToggleMainMenu(false);
+                    ChangeScreens(MMenuScreen, GGPScreen);
+                    State = ClientState.Game;
+                    break;
+                case UIAction.NewGameExploration:
+                    GGPScreen = new GameplayScreen();
+                    GGPScreen.Initialize(GameType.Exploration);
+
+                    ToggleMainMenu(false);
+                    ChangeScreens(MMenuScreen, GGPScreen);
+                    State = ClientState.Game;
+                    break;
                 case UIAction.NewGame:
                     GGPScreen = new GameplayScreen();
                     GGPScreen.Initialize();
@@ -799,6 +815,18 @@ namespace ToT
                     tUI.SetUIItems(tUIItems);
                     tUI.Position = GGPScreen.Player1.ActiveRoom.Position + new Vector2(TileSize.X - 28, 0);
                     break;
+                case UITemplate.townHall:
+                    tUI = new UI(UIType.BasicInvis, uiName.ToString(), "Town Hall UI", new Vector2(300, 300), new Vector2(2, 2));
+                    tUI.BackAlpha = 0.35f;
+                    tUIItems = new List<UIItem>();
+                    //ICITTE
+                    
+                    //tUIItems.Add(new UIItem(UIItemType.ImageFix, "", Color.CornflowerBlue, Fonts[Font.menuItem01.ToString()], UIItemsFlow.Vertical, UIAction.TileSheet, "gear_24"));
+                    //tUIItems.Add(new UIItem(UIItemType.TextFix, "Upgrade", Color.CornflowerBlue, Fonts[Font.menuItem03.ToString()], UIItemsFlow.Vertical, UIAction.UpgradeTile, "", "ImproveUI"));
+                    //tUIItems.Add(new UIItem(UIItemType.TextFix, "Building", Color.CornflowerBlue, Fonts[Font.menuItem03.ToString()], UIItemsFlow.Vertical, UIAction.UpgradeTile, "", "BuildUI"));
+                    tUI.SetUIItems(tUIItems);
+                    tUI.Position = GGPScreen.Player1.ActiveRoom.Position + new Vector2(TileSize.X - 28, 0);
+                    break;
                 case UITemplate.improveUI:
                     tUI = new UI(UIType.Basic, uiName.ToString(), "Upgrade UI", new Vector2(300, 300), new Vector2(2, 2));
                     tUI.BackAlpha = 0.35f;
@@ -890,6 +918,14 @@ namespace ToT
                     GGPScreen.RefreshMoveUI(tUI);
                     tUI.Position = (Resolution / 2) + PlayerCamera.Position;
                     break;
+                case UITemplate.minimap:
+                    Map tMap = new Map(UIType.Basic, uiName.ToString(), "Mini Map", new Vector2(80, 10), new Vector2(2, 2));
+                    tMap.BackAlpha = 0.35f;
+                    tMap.ItemsFlow = UIItemsFlow.Horizontal;
+                    tMap.Position = (Resolution / 2) + PlayerCamera.Position;
+                    tMap.RefreshMap(GGPScreen.CurrentLevel.Stage);
+                    tUI = (UI)tMap;
+                    break; ;
                 default:
                     tUI = new UI();
                     break;

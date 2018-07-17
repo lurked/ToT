@@ -25,9 +25,9 @@ namespace ToT
         public bool ToDraw = true;
         public string TTText;
 
-        Vector2 coor;
-        Texture2D rect;
-        Color[] data;
+        public Vector2 coor;
+        public Texture2D rect;
+        public Color[] data;
 
         public UI()
         {
@@ -71,7 +71,7 @@ namespace ToT
             UpdateItemsPosition();
         }
 
-        public void RefreshSize()
+        public virtual void RefreshSize()
         {
             float tX = 4f;
             float tY = 4f;
@@ -108,7 +108,7 @@ namespace ToT
             Size = new Vector2(tX, tY);
         }
 
-        public void UpdateItemsPosition()
+        public virtual void UpdateItemsPosition()
         {
             float tX = 2f;
             float tY = 2f;
@@ -163,7 +163,7 @@ namespace ToT
             }
         }
 
-        public void Draw(GameTime gameTime)
+        public virtual void Draw(GameTime gameTime)
         {
             if (ToDraw)
             {

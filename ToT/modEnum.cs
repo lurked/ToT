@@ -165,7 +165,9 @@ public enum UITemplate
     selectionUI,
     mainNewMenu,
     healthBar,
-    moveBar
+    moveBar,
+    townHall,
+    minimap
 }
 
 public enum BuildingType

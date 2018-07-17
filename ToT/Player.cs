@@ -79,6 +79,7 @@ namespace ToT
             UpdateMovement(gameTime);
             ScreenManager.GameUIs[UITemplate.toolbar01].Position = new Vector2(2, 2) + ScreenManager.PlayerCamera.Position;
             ScreenManager.GameUIs[UITemplate.income].Position = new Vector2(2 + ScreenManager.Resolution.X - ScreenManager.GameUIs[UITemplate.income].Size.X, 2) + ScreenManager.PlayerCamera.Position;
+            ScreenManager.GameUIs[UITemplate.minimap].Position = new Vector2(ScreenManager.Resolution.X - ScreenManager.GameUIs[UITemplate.minimap].Size.X - ScreenManager.GameUIs[UITemplate.income].Size.X, 2) + ScreenManager.PlayerCamera.Position;
             ScreenManager.GameUIs[UITemplate.tileSheet].Position = ActiveRoom.RoomPosition + new Vector2(ScreenManager.TileSize.X - 28, 0);
             ScreenManager.GameUIs[UITemplate.buildUI].Position = ActiveRoom.RoomPosition + new Vector2(ScreenManager.TileSize.X - 28, 0);
             ScreenManager.GameUIs[UITemplate.improveUI].Position = ActiveRoom.RoomPosition + new Vector2(ScreenManager.TileSize.X - 28, 0);
@@ -90,6 +91,7 @@ namespace ToT
             ScreenManager.GameUIs[UITemplate.healthBar].Position = ActiveRoom.RoomPosition + ScreenManager.TileSize / 2 - new Vector2(Rect.Width / 2 + 1, -(Rect.Height / 2) + 1);
             ScreenManager.GameUIs[UITemplate.moveBar].Position = ActiveRoom.RoomPosition + ScreenManager.TileSize / 2 - new Vector2(Rect.Width / 2 + 1, -(Rect.Height / 2) - 6);
             ScreenManager.GameUIs[UITemplate.log].Position = new Vector2(2, ScreenManager.Resolution.Y - ScreenManager.GameUIs[UITemplate.log].Size.Y) + ScreenManager.PlayerCamera.Position;
+            ScreenManager.GameUIs[UITemplate.minimap].ToDraw = true;
             ScreenManager.GameUIs[UITemplate.healthBar].ToDraw = true;
             ScreenManager.GameUIs[UITemplate.moveBar].ToDraw = true;
             if (ScreenManager.TTToggled)

@@ -58,15 +58,14 @@ namespace ToT
                 CurrentLevel = FileManager.LoadLevel(ScreenManager.SAVESPATH + levelToLoad + FileManager.GAMEFILES_EXT_LEVEL);
                 CurrentLevel.Stage[Vector2.Zero].IsActive = true;
             }
-
-
+            
 
             Player1 = new Player("Noob", ThingType.Player, ScreenManager.TileSize / 2, "player01", "A noob player");
             Player1.Initialize();
             Player1.SetStage(CurrentLevel.Stage);
             ScreenManager.Log.Add(new LogEntry("Generating Rivetting Tales of Tiles..."));
 
-            ScreenManager.AddOrReplaceUI(UITemplate.toolbar01, ScreenManager.GenerateUI(UITemplate.toolbar01));                         //
+            ScreenManager.AddOrReplaceUI(UITemplate.toolbar01, ScreenManager.GenerateUI(UITemplate.toolbar01));                         
             ScreenManager.AddOrReplaceUI(UITemplate.turn01, ScreenManager.GenerateUI(UITemplate.turn01));                               //Displays the "End of turn" options.
             ScreenManager.AddOrReplaceUI(UITemplate.income, ScreenManager.GenerateUI(UITemplate.income));                               //Player's income
             ScreenManager.AddOrReplaceUI(UITemplate.tileExpendNorth, ScreenManager.GenerateUI(UITemplate.tileExpendNorth));             //Tile expansion - North
@@ -74,14 +73,16 @@ namespace ToT
             ScreenManager.AddOrReplaceUI(UITemplate.tileExpendSouth, ScreenManager.GenerateUI(UITemplate.tileExpendSouth));             //Tile expansion - South
             ScreenManager.AddOrReplaceUI(UITemplate.tileExpendWest, ScreenManager.GenerateUI(UITemplate.tileExpendWest));               //Tile expansion - West
             ScreenManager.AddOrReplaceUI(UITemplate.tileSheet, ScreenManager.GenerateUI(UITemplate.tileSheet));                         //Available actions for the current tile.
-            ScreenManager.AddOrReplaceUI(UITemplate.log, ScreenManager.GenerateUI(UITemplate.log));                                     //Event Journal.
-            ScreenManager.RefreshLogEntries(ScreenManager.Log);
             ScreenManager.AddOrReplaceUI(UITemplate.tooltip, ScreenManager.GenerateUI(UITemplate.tooltip));                             //Things tooltips
             ScreenManager.AddOrReplaceUI(UITemplate.improveUI, ScreenManager.GenerateUI(UITemplate.improveUI));                         //Improvements available to build on the current tile.
             ScreenManager.AddOrReplaceUI(UITemplate.buildUI, ScreenManager.GenerateUI(UITemplate.buildUI));                             //Buildings available to build on the current tile.
             ScreenManager.AddOrReplaceUI(UITemplate.selectionUI, ScreenManager.GenerateUI(UITemplate.selectionUI));                     //Shows actions for the currently selected thing.
             ScreenManager.AddOrReplaceUI(UITemplate.healthBar, ScreenManager.GenerateUI(UITemplate.healthBar));                         //Shows Health Bar.
             ScreenManager.AddOrReplaceUI(UITemplate.moveBar, ScreenManager.GenerateUI(UITemplate.moveBar));                             //Shows Movement Bar.
+            ScreenManager.AddOrReplaceUI(UITemplate.log, ScreenManager.GenerateUI(UITemplate.log));                                     //Event Journal.
+            //ScreenManager.AddOrReplaceUI(UITemplate.townHall, ScreenManager.GenerateUI(UITemplate.townHall));                           //Town hall and improvements
+            ScreenManager.AddOrReplaceUI(UITemplate.minimap, ScreenManager.GenerateUI(UITemplate.minimap));                           //Town hall and improvements
+            ScreenManager.RefreshLogEntries(ScreenManager.Log);
 
             IncrementResources();
             RefreshIncome();
@@ -168,7 +169,8 @@ namespace ToT
 
             CurrentLevel.Turn += 1;
             Player1.RegenHero();
-            MoveEnemies();
+            if (ScreenManager.GGPScreen.CurrentLevel.GameMode == GameType.Defense)
+                MoveEnemies();
             SpawnEnemies();
             IncrementResources();            
         }
@@ -186,7 +188,7 @@ namespace ToT
                 else
                 {
                     if (tE.TileProgress < 1)
-                        tE.TileProgress += tE.GetStat("movespeed");
+                        tE.TileProgress += tE.GetStat(StatType.MoveSpeed.ToString());
                     if (tE.TileProgress >= 1)
                     {
                         if (tE.Position.X != 0)
@@ -285,6 +287,7 @@ namespace ToT
             RefreshResourcesUI(ScreenManager.GameUIs[UITemplate.toolbar01]);
             Player1.RefreshExpendUIs();
             CurrentLevel.Save();
+            RefreshMapUI((Map)ScreenManager.GameUIs[UITemplate.minimap]);
         }
 
         public override void Update(GameTime gameTime, InputManager input)
@@ -402,8 +405,6 @@ namespace ToT
                 }
                 ScreenManager.Sprites.Draw(ScreenManager.Textures2D[imgName], (room.BuildingPosition), null, Color.White);
             }
-                
-
         }
 
 #endregion
@@ -456,6 +457,11 @@ namespace ToT
                 tUIItems.Add(new UIItem(UIItemType.ImageFix, "", Color.White, ScreenManager.Fonts[Font.menuItem01.ToString()], UIItemsFlow.Horizontal, UIAction.None, "stats_movespeed"));
             }
             tUI.SetUIItems(tUIItems);
+        }
+
+        public void RefreshMapUI(Map tUI)
+        {
+            tUI.RefreshMap(CurrentLevel.Stage);
         }
 
         #endregion

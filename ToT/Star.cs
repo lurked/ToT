@@ -16,7 +16,8 @@ namespace ToT
         private Vector2 Velocity { get; set; }
         private Rectangle InitialFrame { get; set; }
         private Vector2 StarfieldPosition { get; set; }
-
+        private float Scale { get; set; }
+        
         public Star(Vector2 location, Texture2D texture, Rectangle initialFrame, Vector2 velocity)
         {
             Location = location;
