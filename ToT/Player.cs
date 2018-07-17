@@ -48,7 +48,6 @@ namespace ToT
         public void RegenHero()
         {
             stats[StatType.UsedMove.ToString()] = 0;
-
             ScreenManager.GGPScreen.RefreshMoveUI(ScreenManager.GameUIs[UITemplate.moveBar]);
         }
 
@@ -106,18 +105,12 @@ namespace ToT
         private void UpdateMovement(GameTime gameTime)
         {
             Vector2 tV;
-
-            //if (ScreenManager.Input.MouseRightPressed())
-            //{
-            //    tV = FindClickedThing(ScreenManager.Input.MousePosition() + ScreenManager.PlayerCamera.Position);
-            //    if (tV != new Vector2(999999, 999999))
-            //    {
-            //        SetActiveRoom(Stage[tV]);
-            //    }
-            //}
-            //else
-            //{
             bool bHasMove = stats[StatType.MoveSpeed.ToString()] - stats[StatType.UsedMove.ToString()] > 0;
+            string cantMoveLog = "You are too tired to move any more this turn.";
+            Vector2 currRoom = Vector2.Zero;
+
+            if (bHasMove)
+                currRoom = ActiveRoom.Position;
 
             if (ScreenManager.Input.KeyPressed(Keys.Right, Keys.D) || ScreenManager.Input.ButtonPressed(Buttons.DPadRight, Buttons.LeftThumbstickRight))
             {
@@ -128,11 +121,9 @@ namespace ToT
                     {
                         SetActiveRoom(Stage[tV]);
                     }
-                    stats[StatType.UsedMove.ToString()]++;
-                    ScreenManager.GGPScreen.RefreshMoveUI(ScreenManager.GameUIs[UITemplate.moveBar]);
                 }
                 else
-                    ScreenManager.Log.Add(new LogEntry("You are too tired to move any more this turn."));
+                    ScreenManager.Log.Add(new LogEntry(cantMoveLog));
             }
             else if (ScreenManager.Input.KeyPressed(Keys.Left, Keys.A) || ScreenManager.Input.ButtonPressed(Buttons.DPadLeft, Buttons.LeftThumbstickLeft))
             {
@@ -143,11 +134,9 @@ namespace ToT
                     {
                         SetActiveRoom(Stage[tV]);
                     }
-                    stats[StatType.UsedMove.ToString()]++;
-                    ScreenManager.GGPScreen.RefreshMoveUI(ScreenManager.GameUIs[UITemplate.moveBar]);
                 }
                 else
-                    ScreenManager.Log.Add(new LogEntry("You are too tired to move any more this turn."));
+                    ScreenManager.Log.Add(new LogEntry(cantMoveLog));
             }
 
             if (ScreenManager.Input.KeyPressed(Keys.Down, Keys.S) || ScreenManager.Input.ButtonPressed(Buttons.DPadDown, Buttons.LeftThumbstickDown))
@@ -159,11 +148,9 @@ namespace ToT
                     {
                         SetActiveRoom(Stage[tV]);
                     }
-                    stats[StatType.UsedMove.ToString()]++;
-                    ScreenManager.GGPScreen.RefreshMoveUI(ScreenManager.GameUIs[UITemplate.moveBar]);
                 }
                 else
-                    ScreenManager.Log.Add(new LogEntry("You are too tired to move any more this turn."));
+                    ScreenManager.Log.Add(new LogEntry(cantMoveLog));
             }
             else if (ScreenManager.Input.KeyPressed(Keys.Up, Keys.W) || ScreenManager.Input.ButtonPressed(Buttons.DPadUp, Buttons.LeftThumbstickUp))
             {
@@ -174,12 +161,16 @@ namespace ToT
                     {
                         SetActiveRoom(Stage[tV]);
                     }
+                }
+                else
+                    ScreenManager.Log.Add(new LogEntry(cantMoveLog));
+            }
+            if (bHasMove)
+                if (ActiveRoom.Position != currRoom)
+                {
                     stats[StatType.UsedMove.ToString()]++;
                     ScreenManager.GGPScreen.RefreshMoveUI(ScreenManager.GameUIs[UITemplate.moveBar]);
                 }
-                else
-                    ScreenManager.Log.Add(new LogEntry("You are too tired to move any more this turn."));
-            }
 
             ScreenManager.PlayerCamera.SetFocalPoint(Position + (ScreenManager.TileSize / 2));
         }

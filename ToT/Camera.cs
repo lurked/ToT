@@ -40,6 +40,8 @@ namespace ToT
             tPosition.Y = focalPosition.Y - ScreenDimensions.Y / 2;
 
             position = tPosition;
+            if (ScreenManager.GGPScreen != null)
+                ScreenManager.GGPScreen.Starsfield.StarfieldPosition = position;
         }
 
         public void Update()

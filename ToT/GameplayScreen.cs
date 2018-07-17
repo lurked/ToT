@@ -23,6 +23,7 @@ namespace ToT
         public Dictionary<int, int> TileLevelReqs;
         public Dictionary<int, Dictionary<ResourceType, int>> TileLevelCosts;
         public int nbTilesToDraw;
+        public Starfield Starsfield;
 
         public GameplayScreen()
         {
@@ -91,6 +92,9 @@ namespace ToT
             ScreenManager.TogImproveUI(false);
             ScreenManager.TogBuildUI(false);
             ScreenManager.TogSelectionUI(false);
+            //starfield = new Starfield((int)ScreenManager.Resolution.X, (int)ScreenManager.Resolution.Y, 100, new Vector2(5, 5), ScreenManager.Textures2D["star01"], new Rectangle((int)ScreenManager.PlayerCamera.Position.X, (int)ScreenManager.PlayerCamera.Position.Y, (int)ScreenManager.Resolution.X, (int)ScreenManager.Resolution.Y));
+            Starsfield = new Starfield((int)(ScreenManager.Resolution.X * 1.5f), (int)(ScreenManager.Resolution.Y * 1.5f), 100, new Vector2(10, 10), ScreenManager.Textures2D["star01"], new Rectangle(0, 0, 8, 8));
+            
         }
 
         private void InitTileLevelCosts()
@@ -285,8 +289,9 @@ namespace ToT
         }
 
         public override void Update(GameTime gameTime, InputManager input)
-        { 
+        {
             base.Update(gameTime, input);
+            Starsfield.Update(gameTime);
         }
 
         #region Draw
@@ -294,6 +299,7 @@ namespace ToT
         public override void Draw(GameTime gameTime)
         {
             base.Draw(gameTime);
+            Starsfield.Draw(ScreenManager.Sprites);
             nbTilesToDraw = 0;
             foreach (KeyValuePair<Vector2, Tile> room in CurrentLevel.Stage)
                 if (room.Key.X > Player1.ActiveRoom.Position.X + 10 ||
