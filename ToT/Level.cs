@@ -36,35 +36,81 @@ namespace ToT
             Params = lParams;
             Turn = 1;
 
-            if (name == "base01")
+            switch(name)
             {
+                case "base01":
 
-                AddRoom(Vector2.Zero, 0);
-                AddRoom(new Vector2(1, 0), 1);
-                AddRoom(new Vector2(1, 1), 1);
-                AddRoom(new Vector2(2, 0), 1);
-                AddRoom(new Vector2(3, 0), 2);
-                //AddRoom(new Vector2(3, 3));
+                    AddRoom(Vector2.Zero, 0);
+                    AddRoom(new Vector2(1, 0), 1);
+                    AddRoom(new Vector2(1, 1), 1);
+                    AddRoom(new Vector2(2, 0), 1);
+                    AddRoom(new Vector2(3, 0), 2);
+                    //AddRoom(new Vector2(2, 2), 1);
+                    //AddRoom(new Vector2(2, 1), 1);
+                    //AddRoom(new Vector2(1, 2), 1);
 
-                AddRoom(new Vector2(0, 1), 1);
-                AddRoom(new Vector2(-1, 1), 1);
-                AddRoom(new Vector2(0, 2), 1);
-                AddRoom(new Vector2(0, 3), 2);
-                //AddRoom(new Vector2(-3, 3));
+                    AddRoom(new Vector2(0, 1), 1);
+                    AddRoom(new Vector2(-1, 1), 1);
+                    AddRoom(new Vector2(0, 2), 1);
+                    AddRoom(new Vector2(0, 3), 2);
+                    //AddRoom(new Vector2(-1, 2), 1);
+                    //AddRoom(new Vector2(-2, 1), 1);
+                    //AddRoom(new Vector2(-2, 2), 1);
 
-                AddRoom(new Vector2(-1, 0), 1);
-                AddRoom(new Vector2(1, -1), 1);
-                AddRoom(new Vector2(-2, 0), 1);
-                AddRoom(new Vector2(-3, 0), 2);
-                //AddRoom(new Vector2(-3, -3));
+                    AddRoom(new Vector2(-1, 0), 1);
+                    AddRoom(new Vector2(1, -1), 1);
+                    AddRoom(new Vector2(-2, 0), 1);
+                    AddRoom(new Vector2(-3, 0), 2);
+                    //AddRoom(new Vector2(-2, -2), 1);
+                    //AddRoom(new Vector2(-2, -1), 1);
+                    //AddRoom(new Vector2(-1, -2), 1);
 
-                AddRoom(new Vector2(0, -1), 1);
-                AddRoom(new Vector2(-1, -1), 1);
-                AddRoom(new Vector2(0, -2), 1);
-                AddRoom(new Vector2(0, -3), 2);
-                //AddRoom(new Vector2(3, -3));
+                    AddRoom(new Vector2(0, -1), 1);
+                    AddRoom(new Vector2(-1, -1), 1);
+                    AddRoom(new Vector2(0, -2), 1);
+                    AddRoom(new Vector2(0, -3), 2);
+                    //AddRoom(new Vector2(1, -2), 1);
+                    //AddRoom(new Vector2(2, -2), 1);
+                    //AddRoom(new Vector2(2, -1), 1);
 
-                Stage[Vector2.Zero].IsActive = true;
+                    Stage[Vector2.Zero].IsActive = true;
+                    break;
+                case "base02":
+                    AddRoom(Vector2.Zero, 0);
+                    AddRoom(new Vector2(1, 0), 1);
+                    AddRoom(new Vector2(1, 1), 1);
+                    AddRoom(new Vector2(2, 0), 1);
+                    AddRoom(new Vector2(3, 0), 2);
+                    AddRoom(new Vector2(2, 2), 1);
+                    AddRoom(new Vector2(2, 1), 1);
+                    AddRoom(new Vector2(1, 2), 1);
+
+                    AddRoom(new Vector2(0, 1), 1);
+                    AddRoom(new Vector2(-1, 1), 1);
+                    AddRoom(new Vector2(0, 2), 1);
+                    AddRoom(new Vector2(0, 3), 2);
+                    AddRoom(new Vector2(-1, 2), 1);
+                    AddRoom(new Vector2(-2, 1), 1);
+                    AddRoom(new Vector2(-2, 2), 1);
+
+                    AddRoom(new Vector2(-1, 0), 1);
+                    AddRoom(new Vector2(1, -1), 1);
+                    AddRoom(new Vector2(-2, 0), 1);
+                    AddRoom(new Vector2(-3, 0), 2);
+                    AddRoom(new Vector2(-2, -2), 1);
+                    AddRoom(new Vector2(-2, -1), 1);
+                    AddRoom(new Vector2(-1, -2), 1);
+
+                    AddRoom(new Vector2(0, -1), 1);
+                    AddRoom(new Vector2(-1, -1), 1);
+                    AddRoom(new Vector2(0, -2), 1);
+                    AddRoom(new Vector2(0, -3), 2);
+                    AddRoom(new Vector2(1, -2), 1);
+                    AddRoom(new Vector2(2, -2), 1);
+                    AddRoom(new Vector2(2, -1), 1);
+               
+                    Stage[Vector2.Zero].IsActive = true;
+                    break;
             }
         }
 

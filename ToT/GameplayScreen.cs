@@ -92,7 +92,7 @@ namespace ToT
             ScreenManager.TogImproveUI(false);
             ScreenManager.TogBuildUI(false);
             ScreenManager.TogSelectionUI(false);
-            Starsfield = new Starfield((int)(ScreenManager.Resolution.X * 1.5f), (int)(ScreenManager.Resolution.Y * 1.5f), 100, new Vector2(5, 10), ScreenManager.Textures2D["star03"], new Rectangle(0, 0, 7, 7));
+            Starsfield = new Starfield((int)(ScreenManager.Resolution.X * 1.5f), (int)(ScreenManager.Resolution.Y * 1.5f), 100, new Vector2(1, 2), ScreenManager.Textures2D["star03"], new Rectangle(0, 0, 7, 7));
             
         }
 
