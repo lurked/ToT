@@ -92,8 +92,7 @@ namespace ToT
             ScreenManager.TogImproveUI(false);
             ScreenManager.TogBuildUI(false);
             ScreenManager.TogSelectionUI(false);
-            //starfield = new Starfield((int)ScreenManager.Resolution.X, (int)ScreenManager.Resolution.Y, 100, new Vector2(5, 5), ScreenManager.Textures2D["star01"], new Rectangle((int)ScreenManager.PlayerCamera.Position.X, (int)ScreenManager.PlayerCamera.Position.Y, (int)ScreenManager.Resolution.X, (int)ScreenManager.Resolution.Y));
-            Starsfield = new Starfield((int)(ScreenManager.Resolution.X * 1.5f), (int)(ScreenManager.Resolution.Y * 1.5f), 100, new Vector2(10, 10), ScreenManager.Textures2D["star01"], new Rectangle(0, 0, 8, 8));
+            Starsfield = new Starfield((int)(ScreenManager.Resolution.X * 1.5f), (int)(ScreenManager.Resolution.Y * 1.5f), 100, new Vector2(5, 10), ScreenManager.Textures2D["star03"], new Rectangle(0, 0, 7, 7));
             
         }
 

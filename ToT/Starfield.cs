@@ -11,13 +11,17 @@ namespace ToT
 {
     public class Starfield
     {
+        //------------------------------------------------------------------------------------------
+        //Base on Masoud Darvishian's Scrolling Star Field
+        //https://www.codeproject.com/Tips/706742/Building-a-Scrolling-Sprite-based-Star-Field-Backg
+        //------------------------------------------------------------------------------------------
         private List<Star> stars = new List<Star>();
         private int ScreenWidth { get; set; }
         private int ScreenHeight { get; set; }
         private Random rand = new Random();
         public Vector2 StarfieldPosition { get; set; }
         private Color[] colors = {
-            Color.White, Color.Yellow, Color.Red
+            Color.White, Color.LightGray, Color.Gray
         };
 
         public Starfield(int screenWidth, int screenHeight, int starCount, Vector2 starVelocity, Texture2D texture, Rectangle initialFrame)
