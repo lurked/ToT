@@ -66,22 +66,22 @@ namespace ToT
             Player1.SetStage(CurrentLevel.Stage);
             ScreenManager.Log.Add(new LogEntry("Generating Rivetting Tales of Tiles..."));
 
-            ScreenManager.AddOrReplaceUI(UITemplate.toolbar01, ScreenManager.GenerateUI(UITemplate.toolbar01));                        //
-            ScreenManager.AddOrReplaceUI(UITemplate.turn01, ScreenManager.GenerateUI(UITemplate.turn01));                              //Displays the "End of turn" options.
-            ScreenManager.AddOrReplaceUI(UITemplate.income, ScreenManager.GenerateUI(UITemplate.income));                              
-            ScreenManager.AddOrReplaceUI(UITemplate.tileExpendNorth, ScreenManager.GenerateUI(UITemplate.tileExpendNorth));
-            ScreenManager.AddOrReplaceUI(UITemplate.tileExpendEast, ScreenManager.GenerateUI(UITemplate.tileExpendEast));
-            ScreenManager.AddOrReplaceUI(UITemplate.tileExpendSouth, ScreenManager.GenerateUI(UITemplate.tileExpendSouth));
-            ScreenManager.AddOrReplaceUI(UITemplate.tileExpendWest, ScreenManager.GenerateUI(UITemplate.tileExpendWest));              
-            ScreenManager.AddOrReplaceUI(UITemplate.tileSheet, ScreenManager.GenerateUI(UITemplate.tileSheet));                        //Available actions for the current tile.
-            ScreenManager.AddOrReplaceUI(UITemplate.log, ScreenManager.GenerateUI(UITemplate.log));                                    //Event Journal.
+            ScreenManager.AddOrReplaceUI(UITemplate.toolbar01, ScreenManager.GenerateUI(UITemplate.toolbar01));                         //
+            ScreenManager.AddOrReplaceUI(UITemplate.turn01, ScreenManager.GenerateUI(UITemplate.turn01));                               //Displays the "End of turn" options.
+            ScreenManager.AddOrReplaceUI(UITemplate.income, ScreenManager.GenerateUI(UITemplate.income));                               //Player's income
+            ScreenManager.AddOrReplaceUI(UITemplate.tileExpendNorth, ScreenManager.GenerateUI(UITemplate.tileExpendNorth));             //Tile expansion - North
+            ScreenManager.AddOrReplaceUI(UITemplate.tileExpendEast, ScreenManager.GenerateUI(UITemplate.tileExpendEast));               //Tile expansion - East
+            ScreenManager.AddOrReplaceUI(UITemplate.tileExpendSouth, ScreenManager.GenerateUI(UITemplate.tileExpendSouth));             //Tile expansion - South
+            ScreenManager.AddOrReplaceUI(UITemplate.tileExpendWest, ScreenManager.GenerateUI(UITemplate.tileExpendWest));               //Tile expansion - West
+            ScreenManager.AddOrReplaceUI(UITemplate.tileSheet, ScreenManager.GenerateUI(UITemplate.tileSheet));                         //Available actions for the current tile.
+            ScreenManager.AddOrReplaceUI(UITemplate.log, ScreenManager.GenerateUI(UITemplate.log));                                     //Event Journal.
             ScreenManager.RefreshLogEntries(ScreenManager.Log);
-            ScreenManager.AddOrReplaceUI(UITemplate.tooltip, ScreenManager.GenerateUI(UITemplate.tooltip));
-            ScreenManager.AddOrReplaceUI(UITemplate.improveUI, ScreenManager.GenerateUI(UITemplate.improveUI));                        //Improvements available to build on the current tile.
-            ScreenManager.AddOrReplaceUI(UITemplate.buildUI, ScreenManager.GenerateUI(UITemplate.buildUI));                            //Buildings available to build on the current tile.
-            ScreenManager.AddOrReplaceUI(UITemplate.selectionUI, ScreenManager.GenerateUI(UITemplate.selectionUI));                    //Shows actions for the currently selected thing.
-            ScreenManager.AddOrReplaceUI(UITemplate.healthBar, ScreenManager.GenerateUI(UITemplate.healthBar));                        //Shows Health Bar.
-            ScreenManager.AddOrReplaceUI(UITemplate.moveBar, ScreenManager.GenerateUI(UITemplate.moveBar));                        //Shows Health Bar.
+            ScreenManager.AddOrReplaceUI(UITemplate.tooltip, ScreenManager.GenerateUI(UITemplate.tooltip));                             //Things tooltips
+            ScreenManager.AddOrReplaceUI(UITemplate.improveUI, ScreenManager.GenerateUI(UITemplate.improveUI));                         //Improvements available to build on the current tile.
+            ScreenManager.AddOrReplaceUI(UITemplate.buildUI, ScreenManager.GenerateUI(UITemplate.buildUI));                             //Buildings available to build on the current tile.
+            ScreenManager.AddOrReplaceUI(UITemplate.selectionUI, ScreenManager.GenerateUI(UITemplate.selectionUI));                     //Shows actions for the currently selected thing.
+            ScreenManager.AddOrReplaceUI(UITemplate.healthBar, ScreenManager.GenerateUI(UITemplate.healthBar));                         //Shows Health Bar.
+            ScreenManager.AddOrReplaceUI(UITemplate.moveBar, ScreenManager.GenerateUI(UITemplate.moveBar));                             //Shows Movement Bar.
 
             IncrementResources();
             RefreshIncome();
@@ -92,7 +92,7 @@ namespace ToT
             ScreenManager.TogImproveUI(false);
             ScreenManager.TogBuildUI(false);
             ScreenManager.TogSelectionUI(false);
-            Starsfield = new Starfield((int)(ScreenManager.Resolution.X * 1.5f), (int)(ScreenManager.Resolution.Y * 1.5f), 100, new Vector2(1, 2), ScreenManager.Textures2D["star03"], new Rectangle(0, 0, 7, 7));
+            Starsfield = new Starfield((int)(ScreenManager.Resolution.X * 1.5f), (int)(ScreenManager.Resolution.Y * 1.5f), 150, new Vector2(0.2f, 0.2f), ScreenManager.Textures2D["star03"], new Rectangle(0, 0, 7, 7));
             
         }
 
