@@ -60,6 +60,8 @@ namespace ToT
             ActiveRoom.IsActive = true;
 
             RefreshExpendUIs();
+            Map tMap = (Map)ScreenManager.GameUIs[UITemplate.minimap];
+            tMap.RefreshMap(ScreenManager.GGPScreen.CurrentLevel.Stage);
             ScreenManager.TogTileSheet(false);
             ScreenManager.TogBuildUI(false);
             ScreenManager.TogImproveUI(false);

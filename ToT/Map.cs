@@ -32,7 +32,7 @@ namespace ToT
         public void RefreshMap(Dictionary<Vector2, Tile> stage)
         {
             TilesPositions = new List<Vector2>();
-            Vector2 pPos = ScreenManager.GGPScreen.Player1.Coords;
+            Vector2 pPos = ScreenManager.GGPScreen.Player1.ActiveRoom.Position;
             foreach (KeyValuePair<Vector2, Tile> tTile in stage)
             {
                 if (tTile.Key.X >= pPos.X - MapSize.X &&
@@ -102,7 +102,7 @@ namespace ToT
                         sIName = "dirt_8";
                     else
                         sIName = "cotton_green_8";
-                    ScreenManager.Sprites.Draw(ScreenManager.Textures2D[sIName], ((tV * 8) + Position) + tHalf, null, Color.White);
+                    ScreenManager.Sprites.Draw(ScreenManager.Textures2D[sIName], (((tV - ScreenManager.GGPScreen.Player1.ActiveRoom.Position) * 8) + Position) + tHalf, null, Color.White);
                 }
             }
         }
