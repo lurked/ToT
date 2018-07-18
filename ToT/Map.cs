@@ -25,8 +25,6 @@ namespace ToT
             BackColor = Color.DarkSlateGray;
             TilesPositions = new List<Vector2>();
             MapSize = new Vector2(12, 12); //X tiles to the east and west, Y tiles to the north and south. So actually 12x12 = 25x25 minimap.
-
-
         }
 
         public void RefreshMap(Dictionary<Vector2, Tile> stage)
@@ -51,26 +49,6 @@ namespace ToT
         {
             Size = (new Vector2((MapSize.X * 2) + 1, (MapSize.Y * 2) + 1)) * new Vector2(8, 8);
         }
-
-        //public override void UpdateItemsPosition()
-        //{
-        //    switch (uiType)
-        //    {
-        //        case UIType.Basic:
-        //        case UIType.BasicOpaque:
-        //            rect = new Texture2D(ScreenManager.Sprites.GraphicsDevice, (int)Size.X, (int)Size.Y);
-        //            data = new Color[(int)Size.X * (int)Size.Y];
-        //            for (int i = 0; i < data.Length; ++i) data[i] = BackColor;
-        //            rect.SetData(data);
-        //            coor = Position;
-        //            break;
-        //        default:
-
-        //            break;
-        //    }
-
-        //}
-
 
         public override void Draw(GameTime gameTime)
         {

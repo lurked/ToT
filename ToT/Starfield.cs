@@ -44,6 +44,7 @@ namespace ToT
             {
                 star.TintColor = colors[rand.Next(0, colors.Length)];
                 star.TintColor *= (float)(rand.Next(30, 80) / 100f);
+                star.Scale = (float)rand.NextDouble() + 0.25f;
             }
         }
 

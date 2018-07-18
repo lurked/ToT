@@ -39,15 +39,16 @@ namespace ToT
             Stage = stage;
         }
 
-        public float GetStat(string stat)
+        public float GetStat(string stat, bool withBonuses = true)
         {
             float tStat = 0;
 
             if (stats.ContainsKey(stat))
                 tStat = stats[stat];
 
-            if (stats.ContainsKey("+" + stat))
-                tStat += stats["+" + stat];
+            if (withBonuses)
+                if (stats.ContainsKey("+" + stat))
+                    tStat += stats["+" + stat];
 
             return tStat;
         }

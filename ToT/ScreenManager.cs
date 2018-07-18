@@ -920,7 +920,7 @@ namespace ToT
                     break;
                 case UITemplate.minimap:
                     Map tMap = new Map(UIType.Basic, uiName.ToString(), "Mini Map", new Vector2(80, 10), new Vector2(2, 2));
-                    tMap.BackAlpha = 0.35f;
+                    tMap.BackAlpha = 0.15f;
                     tMap.ItemsFlow = UIItemsFlow.Horizontal;
                     tMap.Position = (Resolution / 2) + PlayerCamera.Position;
                     tMap.RefreshMap(GGPScreen.CurrentLevel.Stage);

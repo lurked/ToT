@@ -107,7 +107,7 @@ namespace ToT
         private void UpdateMovement(GameTime gameTime)
         {
             Vector2 tV;
-            bool bHasMove = stats[StatType.MoveSpeed.ToString()] - stats[StatType.UsedMove.ToString()] > 0;
+            bool bHasMove = GetStat(StatType.MoveSpeed.ToString()) - GetStat(StatType.UsedMove.ToString()) > 0;
             string cantMoveLog = "You are too tired to move any more this turn.";
             Vector2 currRoom = Vector2.Zero;
 
